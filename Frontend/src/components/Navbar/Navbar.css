@@ -1,9 +1,4 @@
 /*Aqui van los estilos de la barra de navegacion*/
-body{
-margin:0;
-font-family: 'Lexend', sans-serif;
-}
-
 .navbar{
 display:flex;
 justify-content:space-between;
@@ -11,7 +6,10 @@ align-items:center;
 padding:15px 40px;
 background:white;
 box-shadow:0 2px 5px rgba(0,0,0,0.1);
+border-bottom:3px solid #003DA5;
 }
+
+/* MENU */
 
 .menu{
 display:flex;
@@ -24,12 +22,27 @@ padding:0;
 .menu a{
 text-decoration:none;
 color:#333;
-font-family: 'Montserrat', sans-serif;
+font-family:'Montserrat', sans-serif;
+padding:8px 12px;
+border-radius:6px;
+transition:all 0.3s ease;
 }
 
+/* hover */
+
 .menu a:hover{
-color:#003DA5;
+background:#D6A600;
+color:rgb(251, 242, 242);
 }
+
+/* boton activo */
+
+.menu a.active{
+background:#003DA5;
+color:white;
+}
+
+/* LOGIN */
 
 .login-btn{
 background:#003DA5;
@@ -38,35 +51,18 @@ padding:8px 18px;
 border-radius:6px;
 text-decoration:none;
 }
-.menu a{
-text-decoration:none;
-color:#333;
-font-family:'Montserrat', sans-serif;
-padding:8px 12px;
-border-radius:6px;
-transition:all 0.3s ease;
-}
 
-/* Hover */
-.menu a:hover{
-background:#D6A600;
-color:white;
-}
+/* LOGO */
 
-/* Botón seleccionado */
-.menu a.active{
-background:#D6A600;
-color:white;
-}
 .logo{
-font-family:'Montserrat', sans-serif;
-font-size:25px;
+text-decoration:none;
 display:flex;
 align-items:center;
 gap:5px;
+font-family:'Montserrat', sans-serif;
+font-size:25px;
 white-space:nowrap;
 }
-
 .logo-pit{
 color:#D6A600;
 font-weight:700;
@@ -78,14 +74,11 @@ font-weight:600;
 }
 
 .logo-icon{
-font-size:30px;
+font-size:25px;
 color:#D6A600;
 transition:0.3s;
 }
 
 .logo:hover .logo-icon{
-transform:rotate(-10deg) scale(1.1);
-}
-.navbar{
-border-bottom:3px solid #003DA5;
+transform:rotate(-10deg) scale(1.5);
 }
