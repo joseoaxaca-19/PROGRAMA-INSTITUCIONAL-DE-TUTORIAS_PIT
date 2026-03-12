@@ -1,7 +1,10 @@
 import "./Navbar.css"
 import { NavLink } from "react-router-dom"
+import { useState } from "react"
 
 function Navbar() {
+
+const [menuOpen, setMenuOpen] = useState(false)
 
 return (
 
@@ -18,40 +21,48 @@ school
 
 </NavLink>
 
-<ul className="menu">
+{/* BOTON HAMBURGUESA */}
+
+<div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+<span className="material-symbols-outlined">
+menu
+</span>
+</div>
+
+<ul className={`menu ${menuOpen ? "open" : ""}`}>
 
 <li>
-<NavLink to="/" className={({isActive}) => isActive ? "active" : ""}>
+<NavLink to="/" onClick={()=>setMenuOpen(false)}>
 Inicio
 </NavLink>
 </li>
 
 <li>
-<NavLink to="/sobrenosotros" className={({isActive}) => isActive ? "active" : ""}>
+<NavLink to="/sobrenosotros" onClick={()=>setMenuOpen(false)}>
 Sobre nosotros
 </NavLink>
 </li>
 
 <li>
-<NavLink to="/servicios" className={({isActive}) => isActive ? "active" : ""}>
+<NavLink to="/servicios" onClick={()=>setMenuOpen(false)}>
 Servicios
 </NavLink>
 </li>
 
 <li>
-<NavLink to="/agenda" className={({isActive}) => isActive ? "active" : ""}>
+<NavLink to="/agenda" onClick={()=>setMenuOpen(false)}>
 Agenda
 </NavLink>
 </li>
 
 <li>
-<NavLink to="/repositorio" className={({isActive}) => isActive ? "active" : ""}>
+<NavLink to="/repositorio" onClick={()=>setMenuOpen(false)}>
 Repositorio
 </NavLink>
 </li>
 
 <li>
-<NavLink to="/contacto" className={({isActive}) => isActive ? "active" : ""}>
+<NavLink to="/contacto" onClick={()=>setMenuOpen(false)}>
 Contacto
 </NavLink>
 </li>

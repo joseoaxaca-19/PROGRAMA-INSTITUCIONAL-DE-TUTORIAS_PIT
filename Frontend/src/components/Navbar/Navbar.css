@@ -7,6 +7,7 @@ padding:15px 40px;
 background:white;
 box-shadow:0 2px 5px rgba(0,0,0,0.1);
 border-bottom:3px solid #003DA5;
+position:relative;
 }
 
 /* MENU */
@@ -32,7 +33,7 @@ transition:all 0.3s ease;
 
 .menu a:hover{
 background:#D6A600;
-color:rgb(251, 242, 242);
+color:rgb(251,242,242);
 }
 
 /* boton activo */
@@ -63,6 +64,7 @@ font-family:'Montserrat', sans-serif;
 font-size:25px;
 white-space:nowrap;
 }
+
 .logo-pit{
 color:#D6A600;
 font-weight:700;
@@ -81,4 +83,68 @@ transition:0.3s;
 
 .logo:hover .logo-icon{
 transform:rotate(-10deg) scale(1.5);
+}
+
+/* BOTON HAMBURGUESA */
+
+.hamburger{
+display:none;
+cursor:pointer;
+font-size:30px;
+}
+
+/* ---------------- */
+/* RESPONSIVE MOVIL */
+/* ---------------- */
+
+@media (max-width:768px){
+
+.navbar{
+padding:12px 20px;
+}
+
+/* mostrar icono hamburguesa */
+
+.hamburger{
+display:block;
+}
+
+/* ocultar login */
+
+.login-btn{
+display:none;
+}
+
+/* menu desplegable */
+
+.menu{
+position:absolute;
+top:70px;
+left:0;
+width:100%;
+background:white;
+flex-direction:column;
+align-items:center;
+gap:15px;
+padding:20px 0;
+display:none;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* cuando se abre */
+
+.menu.open{
+display:flex;
+}
+
+/* logo un poco más pequeño */
+
+.logo{
+font-size:20px;
+}
+
+.logo-icon{
+font-size:20px;
+}
+
 }
