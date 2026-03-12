@@ -9,7 +9,10 @@ justify-content:center;
 text-align:center;
 color:white;
 position:relative;
+padding:20px;
 }
+
+/* capa oscura */
 
 .hero::before{
 content:"";
@@ -21,27 +24,39 @@ height:100%;
 background:rgba(0,0,0,0.55);
 }
 
+/* contenido */
+
 .hero-content{
 max-width:700px;
 position:relative;
 z-index:2;
 }
 
+/* TITULO */
+
 .hero h1{
 font-size:60px;
 margin-bottom:20px;
 }
 
+/* TEXTO */
+
 .hero p{
 font-size:18px;
 margin-bottom:30px;
+line-height:1.6;
 }
+
+/* BOTONES */
 
 .botones{
 display:flex;
 gap:20px;
 justify-content:center;
+flex-wrap:wrap;
 }
+
+/* BOTON PRINCIPAL */
 
 .btn-comenzar{
 background:#D6A600;
@@ -50,7 +65,15 @@ padding:12px 25px;
 border-radius:8px;
 text-decoration:none;
 font-weight:600;
+transition:0.3s;
 }
+
+.btn-comenzar:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* BOTON SECUNDARIO */
 
 .btn-info{
 border:2px solid white;
@@ -58,4 +81,31 @@ padding:12px 25px;
 border-radius:8px;
 text-decoration:none;
 color:white;
+transition:0.3s;
+}
+
+.btn-info:hover{
+background:white;
+color:#003DA5;
+}
+
+/* ---------------- */
+/* RESPONSIVE MOVIL */
+/* ---------------- */
+
+@media (max-width:768px){
+
+.hero h1{
+font-size:36px;
+}
+
+.hero p{
+font-size:16px;
+}
+
+.botones{
+flex-direction:column;
+align-items:center;
+}
+
 }
