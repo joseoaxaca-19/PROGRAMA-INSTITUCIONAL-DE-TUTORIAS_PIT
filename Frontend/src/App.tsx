@@ -4,6 +4,7 @@ import Inicio from "./pages/Inicio/Inicio"
 import Servicios from "./pages/Servicios/Servicios"
 import Repositorio from "./pages/Repositorio/Repositorio"
 import RepositorioCarrera from "./pages/RepositorioCarrera/RepositorioCarrera"
+import SolicitarTutoria from "./pages/Servicios/SolicitarTutoria/SolicitarTutoria"
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
         <Route path="/repositorio" element={<Repositorio />} />
 
          <Route path="/repositorio/:carrera" element={<RepositorioCarrera />} /> 
+
+         <Route path="/solicitar-tutoria" element={<SolicitarTutoria/>}/>
 
       </Routes>
 

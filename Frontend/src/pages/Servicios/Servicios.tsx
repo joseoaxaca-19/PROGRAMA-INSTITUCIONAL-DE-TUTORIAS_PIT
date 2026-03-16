@@ -2,12 +2,14 @@ import "./Servicios.css"
 import Navbar from "../../components/Navbar/Navbar"
 
 import { Card, CardContent, Typography, Button } from "@mui/material"
+import { Link } from "react-router-dom"
 
 import SchoolIcon from "@mui/icons-material/School"
 import MenuBookIcon from "@mui/icons-material/MenuBook"
 import PsychologyIcon from "@mui/icons-material/Psychology"
 import GroupsIcon from "@mui/icons-material/Groups"
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium"
+
 
 function Servicios(){
 
@@ -87,6 +89,18 @@ El sistema de tutorías de la FES Acatlán ofrece diferentes servicios de apoyo 
 
 <Button
 variant="contained"
+component={Link}
+to="/solicitar-tutoria"
+className="boton-servicio"
+>
+
+Solicitar tutoría
+
+</Button>
+
+
+<Button
+variant="contained"
 className="boton-servicio"
 >
 
@@ -97,6 +111,8 @@ Ver más
 </CardContent>
 
 </Card>
+
+
 
 ))}
 
