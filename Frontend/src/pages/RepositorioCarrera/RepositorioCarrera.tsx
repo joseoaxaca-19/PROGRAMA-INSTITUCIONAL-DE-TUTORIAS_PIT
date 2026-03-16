@@ -6,8 +6,8 @@ const RepositorioCarrera: React.FC = () => {
 
   return (
     <div>
-      <h1>Repositorio para la Carrera: {carrera}</h1>
-      {/* Add your component logic here, e.g., fetch and display repository items for the specific career */}
+      <h1>Repositorio para la carrera: {carrera}</h1>
+      {/* Add your component logic here, e.g., fetch and display repository data filtered by carrera */}
     </div>
   );
 };

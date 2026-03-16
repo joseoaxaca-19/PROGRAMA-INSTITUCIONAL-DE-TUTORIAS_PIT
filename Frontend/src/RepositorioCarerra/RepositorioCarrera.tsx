@@ -1,21 +1,58 @@
 import "./RepositorioCarrera.css"
 import { useParams } from "react-router-dom"
+import { useState } from "react"
 import Navbar from "../components/Navbar/Navbar"
 
 function RepositorioCarrera(){
 
-const { carrera } = useParams()
+const { carrera } = useParams<{ carrera: string }>()
 
 const categorias = [
-
 "Archivos",
 "Guías",
 "Fotos",
 "Videos",
 "Libros",
 "Enlaces"
-
 ]
+
+const [categoriaActiva, setCategoriaActiva] = useState("Archivos")
+
+const recursos:any = {
+
+Archivos:[
+"Apuntes_Clase1.pdf",
+"Guia_Estudio.pdf",
+"Practica1.docx"
+],
+
+Guías:[
+"Guia_Algebra.pdf",
+"Guia_Calculo.pdf"
+],
+
+Fotos:[
+"Clase1.png",
+"EjemploGrafica.jpg"
+],
+
+Videos:[
+"Clase_Introduccion.mp4",
+"Tutoría_Calculo.mp4"
+],
+
+Libros:[
+"Libro_Algebra.pdf",
+"Libro_Estadistica.pdf"
+],
+
+Enlaces:[
+"Biblioteca UNAM",
+"Repositorio Académico",
+"Google Scholar"
+]
+
+}
 
 return(
 
@@ -31,23 +68,41 @@ return(
 Explora los recursos disponibles para tu carrera.
 </p>
 
-<div className="categorias">
+{/* Pestañas */}
+
+<div className="tabs">
 
 {categorias.map((categoria,index)=>(
 
-<div className="categoria-card" key={index}>
+<button
+key={index}
+className={categoriaActiva === categoria ? "tab-activa" : "tab"}
+onClick={()=>setCategoriaActiva(categoria)}
+>
 
-<h2>{categoria}</h2>
+{categoria}
 
-<p>
-Explora los recursos disponibles en esta sección.
-</p>
+</button>
 
-<button>Ver contenido</button>
+))}
 
 </div>
 
+{/* Contenido */}
+
+<div className="contenido">
+
+<h2>{categoriaActiva}</h2>
+
+<ul>
+
+{recursos[categoriaActiva].map((recurso:string,index:number)=>(
+
+<li key={index}>{recurso}</li>
+
 ))}
+
+</ul>
 
 </div>
 
