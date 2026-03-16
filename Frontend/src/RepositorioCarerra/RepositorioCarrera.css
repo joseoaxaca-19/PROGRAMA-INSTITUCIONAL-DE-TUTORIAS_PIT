@@ -1,0 +1,48 @@
+.repo-carrera{
+padding:80px 20px;
+text-align:center;
+background:#f5f5f5;
+min-height:100vh;
+}
+
+.repo-carrera h1{
+font-size:42px;
+color:#003DA5;
+margin-bottom:20px;
+}
+
+.categorias{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+max-width:900px;
+margin:auto;
+margin-top:40px;
+}
+
+.categoria-card{
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 6px 20px rgba(0,0,0,0.1);
+border-top:4px solid #D6A600;
+transition:0.3s;
+}
+
+.categoria-card:hover{
+transform:translateY(-5px);
+}
+
+.categoria-card h2{
+color:#003DA5;
+}
+
+.categoria-card button{
+margin-top:15px;
+background:#D6A600;
+border:none;
+color:white;
+padding:10px 20px;
+border-radius:6px;
+cursor:pointer;
+}

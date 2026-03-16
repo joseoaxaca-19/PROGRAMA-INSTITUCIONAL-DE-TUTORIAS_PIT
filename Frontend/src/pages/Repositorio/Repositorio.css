@@ -1,1 +1,28 @@
-/*Aqui van los estilos del repositorio*/
+.selector{
+margin-top:40px;
+display:flex;
+gap:20px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.selector select{
+padding:12px 20px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+.selector button{
+background:#003DA5;
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:8px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.selector button:hover{
+background:#002b75;
+}
