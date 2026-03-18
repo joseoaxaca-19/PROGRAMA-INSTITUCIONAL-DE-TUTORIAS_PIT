@@ -7,7 +7,13 @@ padding:15px 40px;
 background:white;
 box-shadow:0 2px 5px rgba(0,0,0,0.1);
 border-bottom:3px solid #003DA5;
-position:relative;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+width: 100%;
+z-index: 1000;
+box-sizing: border-box;
 }
 
 /* MENU */
@@ -76,6 +82,8 @@ font-weight:600;
 }
 
 .logo-icon{
+width: 2rem;
+height: 2rem;
 font-size:25px;
 color:#D6A600;
 transition:0.3s;
@@ -84,6 +92,44 @@ transition:0.3s;
 .logo:hover .logo-icon{
 transform:rotate(-10deg) scale(1.5);
 }
+
+/*Estilo botones iniciales*/
+/* Estilo para que el botón se vea exactamente como NavLink */
+
+.nav-button{
+display:flex;
+gap:25px;
+list-style:none;
+margin:0;
+padding:0;
+
+background-color: transparent;
+text-decoration:none;
+color:#333;
+font-family:'Montserrat', sans-serif;
+font-size: large;
+padding:8px 12px;
+border-radius:6px;
+transition:all 0.3s ease;
+/* Agrega todas estas propiedades */
+border: none;
+outline: none;
+box-shadow: none;
+-webkit-tap-highlight-color: transparent; /* Para móviles */
+}
+
+/* hover */
+.nav-button:hover{
+background:#D6A600;
+color:rgb(251,242,242);
+}
+
+/* boton activo */
+.nav-button.active{
+background:#003DA5;
+color:white;
+}
+
 
 /* BOTON HAMBURGUESA */
 
