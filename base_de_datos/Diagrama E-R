@@ -1,0 +1,45 @@
+Pegar el código en el siguiente link: https://mermaid.live/
+Código: 
+erDiagram
+    tr_roles ||--o{ tr_user : "clasifica"
+    tr_user ||--o{ tr_grupo : "imparte (Tutor)"
+    tr_user ||--o{ tr_files : "sube"
+    
+    %% Relación Muchos a Muchos entre Alumnos y Grupos
+    tr_user ||--o{ tr_inscripciones : "se inscribe (Tutorado)"
+    tr_grupo ||--o{ tr_inscripciones : "recibe"
+
+    tr_roles {
+        int id_rol PK "1: Admin, 2: Tutor, 3: Tutorado"
+        string nombre_rol
+    }
+
+    tr_user {
+        int id_user PK "Auto-increment"
+        string n_cuenta UK "Unique"
+        string password "255 CHAR"
+        string correo
+        int id_rol FK
+    }
+
+    tr_grupo {
+        int id_grupo PK
+        string nombre_grupo
+        string horario
+        int id_tutor FK "id_user del Tutor"
+    }
+
+    tr_inscripciones {
+        int id_inscripcion PK
+        int id_user FK "id_user del Alumno"
+        int id_grupo FK
+        datetime fecha_inscripcion
+    }
+
+    tr_files {
+        int id_file PK
+        string nombre_archivo
+        string ruta_fisica "URL path"
+        int id_subido_por FK "id_user"
+        datetime fecha_subida
+    }
