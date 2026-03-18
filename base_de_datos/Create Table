@@ -1,0 +1,52 @@
+-- 1. Tabla de Catálogo de Roles
+CREATE TABLE tr_roles (
+    id_rol INT PRIMARY KEY, -- Ingresados manualmente (1, 2, 3)
+    nombre_rol VARCHAR(50) NOT NULL
+);
+
+-- 2. Tabla de Usuarios (Centralizada)
+CREATE TABLE tr_user (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    n_cuenta VARCHAR(20) NOT NULL UNIQUE, -- Identificador único escolar
+    password CHAR(255) NOT NULL,          -- Espacio para Hash
+    correo VARCHAR(100) NOT NULL,
+    id_rol INT,
+    CONSTRAINT fk_user_rol FOREIGN KEY (id_rol) REFERENCES tr_roles(id_rol)
+);
+
+-- 3. Tabla de Grupos
+CREATE TABLE tr_grupo (
+    id_grupo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_grupo VARCHAR(100) NOT NULL,
+    horario VARCHAR(100),
+    id_tutor INT UNIQUE, -- UNIQUE asegura que un tutor solo tenga UN grupo
+    CONSTRAINT fk_grupo_tutor FOREIGN KEY (id_tutor) REFERENCES tr_user(id_user)
+);
+
+-- 4. Tabla Intermedia (Muchos a Muchos: Alumnos - Grupos)
+CREATE TABLE tr_inscripciones (
+    id_inscripcion INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT,   -- Aquí se guardará el ID del tutorado
+    id_grupo INT,  -- Aquí el ID del grupo
+    fecha_inscripcion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_ins_user FOREIGN KEY (id_user) REFERENCES tr_user(id_user),
+    CONSTRAINT fk_ins_grupo FOREIGN KEY (id_grupo) REFERENCES tr_grupo(id_grupo)
+);
+
+-- 5. Tabla de Archivos/Folletos
+CREATE TABLE tr_files (
+    id_file INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_archivo VARCHAR(255) NOT NULL,
+    ruta_fisica VARCHAR(500) NOT NULL, -- Path del servidor
+    id_subido_por INT,
+    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_file_user FOREIGN KEY (id_subido_por) REFERENCES tr_user(id_user)
+);
+
+-- ==========================================
+-- INSERTAR DATOS INICIALES (Catálogo)
+-- ==========================================
+INSERT INTO tr_roles (id_rol, nombre_rol) VALUES 
+(1, 'Administrador'), 
+(2, 'Tutor'), 
+(3, 'Tutorado');
