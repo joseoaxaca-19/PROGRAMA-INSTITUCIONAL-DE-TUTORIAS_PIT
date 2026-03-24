@@ -1,1 +1,214 @@
-/*Aqui van los estilos de divisiones*/
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Colores */
+:root {
+  --azul-principal: #003DA5;
+  --dorado-principal: #D6A600;
+  --blanco: #FFFFFF;
+  --fondo-claro: #F5F7FA;
+  --texto-oscuro: #333333;
+  --texto-claro: #666666;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.divisiones-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: 'Montserrat', 'Lexend', sans-serif;
+  background-color: var(--blanco);
+}
+
+.titulo-divisiones {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--azul-principal);
+  text-align: center;
+  font-family: 'Lexend', 'Montserrat', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.subtitulo-divisiones {
+  font-size: 1.2rem;
+  color: var(--texto-claro);
+  margin-bottom: 3rem;
+  border-left: 4px;
+  padding-left: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 500;
+  text-align: center;
+}
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.tarjeta {
+  background: var(--blanco);
+  border-radius: 16px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 30px rgba(0, 61, 165, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(0, 61, 165, 0.1);
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--dorado-principal);
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 61, 165, 0.15);
+  border-color: var(--azul-principal);
+}
+
+.tarjeta:hover::before {
+  opacity: 1;
+  background: var(--azul-principal);
+}
+
+.tarjeta h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  color: var(--azul-principal);
+  font-weight: 700;
+  font-family: 'Lexend', 'Montserrat', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.descripcion-tarjeta {
+  font-size: 0.95rem;
+  color: var(--texto-claro);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.lista-carreras {
+  margin-top: auto;
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  background: rgba(0, 61, 165, 0.02);
+  border-radius: 12px;
+  padding: 0 1rem;
+  overflow: hidden;
+}
+
+.tarjeta:hover .lista-carreras {
+  opacity: 1;
+  max-height: 400px;
+  transform: translateY(0);
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid rgba(0, 61, 165, 0.2);
+  background: var(--blanco);
+  box-shadow: 0 4px 12px rgba(0, 61, 165, 0.05);
+}
+
+.lista-carreras h4 {
+  color: var(--dorado-principal);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  font-family: 'Lexend', 'Montserrat', sans-serif;
+}
+
+.lista-carreras ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.lista-carreras li {
+  margin: 0;
+}
+
+.link-carrera {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 61, 165, 0.05);
+  color: var(--azul-principal);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  text-align: center;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-family: 'Montserrat', 'Lexend', sans-serif;
+  cursor: pointer;
+}
+
+.link-carrera:hover {
+  background: var(--dorado-principal);
+  color: var(--blanco);
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(214, 166, 0, 0.3);
+  border-color: var(--dorado-principal);
+}
+
+/* Estilo para links visitados */
+.link-carrera:visited {
+  color: #002c7a; /* Versión más oscura del azul principal */
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .divisiones-container {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+  
+  .titulo-divisiones {
+    font-size: 2rem;
+  }
+  
+  .grid-tarjetas {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .lista-carreras ul {
+    grid-template-columns: 1fr;
+  }
+  
+  .tarjeta {
+    padding: 1.5rem;
+  }
+}
+
+/* Asegura que la barra de navegación no cause errores */
+.navbar + .divisiones-container {
+  margin-top: 1rem;
+}

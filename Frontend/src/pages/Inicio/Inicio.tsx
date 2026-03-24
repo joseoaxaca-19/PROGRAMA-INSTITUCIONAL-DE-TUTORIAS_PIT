@@ -1,29 +1,41 @@
-import { useState } from "react";
 import "./Inicio.css"
+import { useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import { Link } from "react-router-dom"
 
 import Navbar from "../../components/Navbar/Navbar"
 import fondo from "../../assets/images/Inicio.jpg"
+
+import SobreNosotros from "../SobreNosotros/SobreNosotros"
+import Servicios from "../Servicios/Servicios"
+import Divisiones from "../Divisiones/Divisiones"
+import Avisos from "../Avisos/Avisos"
+import Contacto from "../Contacto/Contacto"
 import Footer from "../../components/Footer/Footer"
-import Login from "../../pages/Login/Login" // Asegúrate de que la ruta sea correcta
 
-function Inicio() {
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+const Inicio = () => {
+  const location = useLocation();
 
-  const openLogin = () => {
-    setIsLoginOpen(true);
-  };
+  useEffect(() => {
+    
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        setTimeout(() => {
+          elemento.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location]);
 
-  const closeLogin = () => {
-    setIsLoginOpen(false);
-  };
+  return (
 
-  return(
-    <div className="inicio-container">
-      {/* Pasamos la función openLogin al Navbar */}
-      <Navbar onLoginClick={openLogin} />
+    <div>
 
-      <section
+      <Navbar />
+
+      <section id="inicio"
         className="hero"
         style={{ backgroundImage: `url(${fondo})` }}
       >
@@ -45,12 +57,17 @@ function Inicio() {
         </div>
       </section>
 
-      <Footer />
-      
-      {/* Componente Login que aparece cuando se hace clic */}
-      <Login isOpen={isLoginOpen} onClose={closeLogin} />
+      <SobreNosotros/>
+      <Servicios/>
+      <Divisiones/>
+      <Avisos/>
+      <Contacto/>
+      <Footer/>
+
     </div>
   )
+
 }
+
 
 export default Inicio

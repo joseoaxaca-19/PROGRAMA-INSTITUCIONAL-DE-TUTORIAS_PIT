@@ -109,3 +109,7 @@ align-items:center;
 }
 
 }
+
+.navbar + .hero {
+  margin-top: 4rem;
+}
