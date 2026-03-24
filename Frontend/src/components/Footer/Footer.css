@@ -1,1 +1,52 @@
-/*Aqui van los estilos del footer*/
+.footer {
+  background-color: #003DA5; /* Azul */
+  width: 100%;
+  padding: 40px 20px; /* Aumentado para dar más espacio vertical */
+  margin-top: auto;
+  box-sizing: border-box;
+}
+
+.footer-container {
+  max-width: 1000px; /* Limitamos el ancho máximo para mejor legibilidad */
+  margin: 0 auto;
+  padding: 0 30px; /* Padding horizontal para que no esté pegado a los bordes */
+}
+
+.footer-text {
+  color: white;
+  font-size: 14px;
+  line-height: 1.6; /* Espaciado entre líneas para mejor legibilidad */
+  text-align: center;
+  margin: 0;
+}
+
+/* Estilos responsivos */
+@media screen and (max-width: 768px) {
+  .footer {
+    padding: 30px 15px;
+  }
+  
+  .footer-container {
+    padding: 0 20px;
+  }
+  
+  .footer-text {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .footer {
+    padding: 25px 10px;
+  }
+  
+  .footer-container {
+    padding: 0 15px;
+  }
+  
+  .footer-text {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+}

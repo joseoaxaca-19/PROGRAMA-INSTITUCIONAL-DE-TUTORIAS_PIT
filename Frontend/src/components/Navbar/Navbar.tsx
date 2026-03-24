@@ -2,7 +2,12 @@ import "./Navbar.css"
 import { NavLink } from "react-router-dom"
 import { useState } from "react"
 
-function Navbar() {
+// Agregamos la interfaz para las props
+interface NavbarProps {
+  onLoginClick?: () => void // Función opcional para abrir el login
+}
+
+function Navbar({ onLoginClick }: NavbarProps) { // Recibimos la función como prop
 
 const [menuOpen, setMenuOpen] = useState(false)
 
@@ -69,9 +74,10 @@ Contacto
 
 </ul>
 
-<NavLink to="/login" className="login-btn">
+{/* Cambiamos NavLink por un botón */}
+<button className="login-btn" onClick={onLoginClick}>
 Login
-</NavLink>
+</button>
 
 </nav>
 
