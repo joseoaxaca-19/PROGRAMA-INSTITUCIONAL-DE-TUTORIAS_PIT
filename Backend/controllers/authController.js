@@ -52,7 +52,7 @@ module.exports = {
     login
 };*/
 
-
+const db = require("../db/connection");
 const login = async (req, res) => {
     const { email, password } = req.body;
 
