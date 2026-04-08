@@ -6,9 +6,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const authRoutes = require("./routes/auth");
+// IMPORTANTE: El nombre debe coincidir con el archivo en la carpeta routes
+const auth = require("./routes/auth");
+const userRoutes = require("./routes/userRoutes");
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", auth);
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");

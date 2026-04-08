@@ -52,53 +52,75 @@ module.exports = {
     login
 };*/
 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const db = require("../db/connection");
-const login = async (req, res) => {
-    const { email, password } = req.body;
 
-    // validar campos vacíos
-    if (!email || !password) {
+const login = async (req, res) => {
+
+    const { n_cuenta, password } = req.body;
+
+    if (!n_cuenta || !password) {
         return res.status(400).json({
             success: false,
-            message: "Email y contraseña son obligatorios"
+            message: "Número de cuenta y contraseña son obligatorios"
         });
     }
 
     try {
-        // buscar usuario en la BD
+        // --- Validar credenciales contra la base de datos ---
         const result = await db.query(
-            "SELECT * FROM users WHERE email = $1",
-            [email]
+            "SELECT id_user, n_cuenta, password, correo, id_rol FROM tr_user WHERE n_cuenta = $1",
+            [n_cuenta]
         );
 
-        // validar si existe
+        // Validar si la cuenta existe
         if (result.rows.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Usuario no encontrado"
+                message: "El número de cuenta no está registrado"
             });
         }
 
         const user = result.rows[0];
 
-        // validar contraseña
-        if (user.password !== password) {
+        // --- Validar contraseña ---
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
             return res.status(401).json({
                 success: false,
                 message: "Contraseña incorrecta"
             });
         }
 
+        // --- Implementar control de acceso (JWT) ---
+        const token = jwt.sign(
+            { id: user.id_user, rol: user.id_rol },
+            process.env.JWT_SECRET || 'mi_llave_secreta',
+            { expiresIn: '8h' }
+        );
+
+        // --- Redirigir al usuario según su rol ---
         res.json({
             success: true,
-            message: "Login correcto"
+            message: "Login correcto",
+            token,
+            rol: user.id_rol // ID del rol (Ej. 1 para tutor, 2 para tutorado)
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("Error en login:", error);
         res.status(500).json({
             success: false,
-            message: "Error en el servidor"
+            message: "Error interno en el servidor"
         });
     }
 };
+
+const register = async (req, res) => {
+    // Aquí puedes implementar el código para insertar un usuario en la base de datos más adelante
+    res.status(200).json({ message: "Servicio de registro en construcción" });
+};
+
+module.exports = { login, register };
