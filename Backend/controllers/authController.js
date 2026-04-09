@@ -67,7 +67,7 @@ const login = async (req, res) => {
     try {
         // buscar usuario y la carrera en la BD
         const result = await db.query(
-            "SELECT * FROM users WHERE email = $1" AND career = $2",
+            "SELECT * FROM user WHERE email = $1" AND career = $2",
             [email,carrera]
         );
 
