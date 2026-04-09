@@ -9,7 +9,7 @@ const register = (req, res) => {
     if (userExists) {
         return res.status(400).json({
             success: false,
-            message: "El usuario ya existe :D"
+            message: "El usuario ya existe"
         });
     }
 
