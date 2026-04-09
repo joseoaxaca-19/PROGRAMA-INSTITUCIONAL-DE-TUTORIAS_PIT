@@ -1,0 +1,6 @@
+CREATE TABLE logs_type (
+    id SERIAL PRIMARY KEY,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    mensaje TEXT,
+    origen VARCHAR(100)
+);
