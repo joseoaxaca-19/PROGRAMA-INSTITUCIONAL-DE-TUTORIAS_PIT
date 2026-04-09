@@ -54,7 +54,7 @@ module.exports = {
 
 const db = require("../db/connection");
 const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password , carrera} = req.body;
 
     // validar campos vacíos
     if (!email || !password) {
@@ -65,17 +65,17 @@ const login = async (req, res) => {
     }
 
     try {
-        // buscar usuario en la BD
+        // buscar usuario y la carrera en la BD
         const result = await db.query(
-            "SELECT * FROM users WHERE email = $1",
-            [email]
+            "SELECT * FROM users WHERE email = $1" AND career = $2",
+            [email,carrera]
         );
 
-        // validar si existe
+        // validar si existe y pertenece a la carrera
         if (result.rows.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Usuario no encontrado"
+                message: "Usuario no pertenece a la carrera o no existe"
             });
         }
 
