@@ -43,6 +43,19 @@ CREATE TABLE tr_files (
     CONSTRAINT fk_file_user FOREIGN KEY (id_subido_por) REFERENCES tr_user(id_user)
 );
 
+-- 6. Tabla de Citas
+CREATE TABLE tr_citas (
+    id_cita INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    disponible BOOLEAN DEFAULT TRUE,
+    id_tutor INT,
+    id_tutorado INT,
+    CONSTRAINT fk_cita_tutor FOREIGN KEY (id_tutor) REFERENCES tr_user(id_user),
+    CONSTRAINT fk_cita_tutorado FOREIGN KEY (id_tutorado) REFERENCES tr_user(id_user)
+);
+
+
 -- ==========================================
 -- INSERTAR DATOS INICIALES (Catálogo)
 -- ==========================================
