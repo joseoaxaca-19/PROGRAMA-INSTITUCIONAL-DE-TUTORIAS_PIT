@@ -1,56 +1,127 @@
-/*const users = []; // simulando base de datos
+// Registro de usuarios, login con base al correo y contraseña,
+// encriptación de contraseña con bcrypt
 
-const register = (req, res) => {
-    const { email, password } = req.body;
+const login_test = async (req, res) => {
 
-    // verificar si ya existe
-    const userExists = users.find(user => user.email === email);
+    try {
 
-    if (userExists) {
-        return res.status(400).json({
-            success: false,
-            message: "El usuario ya existe"
+        // Asumiendo que el login se hace con el correo
+
+        const { correo, password } = req.body;
+
+
+
+        // 1. Validar que se envíen los datos
+
+        if (!correo || !password) {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: "El correo y la contraseña son obligatorios."
+
+            });
+
+        }
+
+
+
+        // 2. Buscar al usuario en la base de datos
+
+        const query = 'SELECT * FROM tr_user WHERE correo = $1';
+
+        const result = await pool.query(query, [correo]);
+
+
+
+        // Si no hay resultados, el usuario no existe
+
+        if (result.rows.length === 0) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message: "Usuario no encontrado."
+
+            });
+
+        }
+
+
+
+        const user = result.rows[0];
+
+
+
+        // 3. Verificar la contraseña
+
+        // bcrypt.compare toma la contraseña en texto plano y el hash de la BD
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+
+
+        if (!isMatch) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message: "Contraseña incorrecta."
+
+            });
+
+        }
+
+
+
+        // 4. Preparar la respuesta eliminando datos sensibles
+
+        // Es una buena práctica no enviar el hash de la contraseña de vuelta al cliente
+
+        delete user.password;
+
+
+
+        return res.status(200).json({
+
+            success: true,
+
+            message: "Login correcto.",
+
+            user: user
+
         });
+
+
+
+    } catch (error) {
+
+        console.error('Error interno en login:', error);
+
+        return res.status(500).json({
+
+            success: false,
+
+            message: "Ocurrió un error interno en el servidor."
+
+        });
+
     }
 
-    // guardar usuario
-    users.push({ email, password });
-
-    res.json({
-        success: true,
-        message: "Usuario registrado correctamente"
-    });
 };
 
-const login = (req, res) => {
-    const { email, password } = req.body;
 
-    const user = users.find(user => user.email === email);
-
-    if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: "Usuario no encontrado"
-        });
-    }
-
-    if (user.password !== password) {
-        return res.status(401).json({
-            success: false,
-            message: "Contraseña incorrecta"
-        });
-    }
-
-    res.json({
-        success: true,
-        message: "Login correcto"
-    });
-};
 
 module.exports = {
-    register,
+
+    registerUser, // Tu función de registro (asegúrate de que los nombres coincidan con tu auth.js)
+
     login
-};*/
+
+};
 
 const db = require("../db/connection");
 const login = async (req, res) => {
