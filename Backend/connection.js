@@ -1,14 +1,13 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: '...',
-    host: '...',
-    database: '...',
-    password: '...',
-    port: 1111,
+    user: 'postgres',
+    host: 'localhost',
+    database: 'db_prueba',
+    password: 'aguadejamaica11',
+    port: 5432,
 });
 
-// Función reutilizable
 const query = async (text, params) => {
     try {
         const res = await pool.query(text, params);
