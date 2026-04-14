@@ -1,23 +1,32 @@
 .footer {
   background-color: #003DA5; /* Azul */
-  width: 100%;
-  padding: 40px 20px; /* Aumentado para dar más espacio vertical */
-  margin-top: auto;
+  width: 100%; /* Ancho completo */
+  padding: 40px 20px;
+  margin-top: 40px;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  /* Sin border-radius, sin márgenes laterales */
 }
 
 .footer-container {
-  max-width: 1000px; /* Limitamos el ancho máximo para mejor legibilidad */
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0 30px; /* Padding horizontal para que no esté pegado a los bordes */
+  padding: 0 30px;
 }
 
 .footer-text {
   color: white;
   font-size: 14px;
-  line-height: 1.6; /* Espaciado entre líneas para mejor legibilidad */
+  line-height: 1.6;
   text-align: center;
   margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+
+.footer-text strong,
+.footer-text b {
+  font-weight: 600;
 }
 
 /* Estilos responsivos */

@@ -1,0 +1,6 @@
+CREATE TABLE logs.type (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    mensaje TEXT,
+    origen VARCHAR(100)
+);
