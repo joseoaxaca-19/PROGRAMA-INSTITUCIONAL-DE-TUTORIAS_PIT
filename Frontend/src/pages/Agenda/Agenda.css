@@ -1,1 +1,174 @@
 /*Aqui van los estilos de la agenda*/
+:root {
+    --azul-fes: #003B72;
+    --azul-boton: #004691;
+    --gris-fondo: #F9FAFB;
+    --gris-borde: #E5E7EB;
+    --gris-texto-suave: #6B7280;
+    --verde-abierto: #DEF7EC;
+    --verde-texto: #03543F;
+    --morado-lleno: #F3E8FF;
+    --morado-texto: #5521B5;
+    --ancho-maximo: 1000px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: var(--gris-fondo);
+    color: #111;
+    display: flex;
+    justify-content: center;
+}
+
+a { text-decoration: none; color: inherit; transition: opacity 0.2s; }
+a:hover { opacity: 0.8; }
+
+.wrapper {
+    width: 100%;
+    max-width: var(--ancho-maximo);
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--gris-borde);
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--azul-fes);
+    font-weight: bold;
+}
+
+.logo-placeholder {
+    width: 24px;
+    height: 24px;
+    background-color: var(--azul-fes);
+    border-radius: 4px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: #E2E8F0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--azul-fes);
+    font-size: 0.8rem;
+}
+
+/* CONTENIDO */
+main { padding: 2rem; flex: 1; }
+
+.welcome-section h1 { font-size: 1.8rem; font-weight: 400; color: var(--gris-texto-suave); }
+
+.section-title {
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* TARJETAS */
+.next-session-card {
+    border: 1px solid var(--gris-borde);
+    border-left: 5px solid #FFD700;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.status-badge { color: #B5A100; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+
+.session-subject { font-size: 1.25rem; color: #6B7280; margin: 0.5rem 0 1rem; }
+
+.session-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; color: var(--gris-texto-suave); }
+
+.info-icon-placeholder { width: 16px; height: 16px; background: #EDF2F7; border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 5px; }
+
+.btn-unirse {
+    display: inline-block;
+    margin-top: 1.5rem;
+    background-color: var(--azul-boton);
+    color: white;
+    padding: 0.6rem 2.5rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* CUADRÍCULA DE TUTORÍAS */
+.tutoring-header { display: flex; justify-content: space-between; margin: 3rem 0 1rem; }
+
+.tutoring-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+.tutoring-card {
+    border: 1px solid var(--gris-borde);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.availability-badge { font-size: 0.7rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; }
+.status-open { background-color: var(--verde-abierto); color: var(--verde-texto); }
+.status-full { background-color: var(--morado-lleno); color: var(--morado-texto); }
+
+.card-body h3 { font-size: 1.1rem; margin-top: 1rem; }
+.card-body p { font-size: 0.85rem; color: var(--gris-texto-suave); }
+
+.card-details { font-size: 0.8rem; color: var(--gris-texto-suave); margin: 1rem 0 1.5rem; }
+
+.btn-inscribirse {
+    text-align: center;
+    background-color: #EDF2F7;
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+.btn-lista-espera { opacity: 0.6; cursor: not-allowed; }
+
+/* FOOTER */
+footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--gris-borde);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--gris-texto-suave);
+}
+
+.copy-notice { color: #A0AEC0; }
