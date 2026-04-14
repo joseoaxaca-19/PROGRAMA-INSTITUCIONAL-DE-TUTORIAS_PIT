@@ -6,6 +6,7 @@ import SobreNosotros from "./pages/SobreNosotros/SobreNosotros"
 import Servicios from "./pages/Servicios/Servicios"
 import Repositorio from "./pages/Repositorio/Repositorio"
 import RepositorioCarrera from "./pages/RepositorioCarrera/RepositorioCarrera"
+import Avisos from "./pages/Avisos"
 import SolicitarTutoria from "./pages/Servicios/SolicitarTutoria/SolicitarTutoria"
 
 
