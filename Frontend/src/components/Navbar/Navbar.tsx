@@ -2,7 +2,7 @@ import "./Navbar.css";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Logo from "../../assets/icons/unam_logo.svg";
-import Login from "../../pages/Login/Login"; // Importa el componente Login
+import Login from "../../pages/Login/Login";
 
 interface NavbarProps {
   onLoginClick?: () => void;
@@ -11,11 +11,10 @@ interface NavbarProps {
 function Navbar({ onLoginClick }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // Estado para el modal
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Detectar scroll y actualizar sección activa (solo en homepage)
   useEffect(() => {
     const handleScroll = () => {
       if (location.pathname === "/") {
@@ -37,7 +36,6 @@ function Navbar({ onLoginClick }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [location.pathname]);
 
-  // Resetear sección activa al cambiar de ruta
   useEffect(() => {
     if (location.pathname !== "/") {
       setActiveSection("");
@@ -60,10 +58,11 @@ function Navbar({ onLoginClick }: NavbarProps) {
   };
 
   const handleLoginClick = () => {
+    setMenuOpen(false); // Cierra el menú móvil si está abierto
     if (onLoginClick) {
       onLoginClick();
     } else {
-      setIsLoginModalOpen(true); // Abre el modal en lugar de navegar
+      setIsLoginModalOpen(true);
     }
   };
 
@@ -137,17 +136,17 @@ function Navbar({ onLoginClick }: NavbarProps) {
               Contacto
             </button>
           </li>
+          <li>
+            <button className="login-btn" onClick={handleLoginClick}>
+              Login
+            </button>
+          </li>
         </ul>
-
-        <button className="login-btn" onClick={handleLoginClick}>
-          Login
-        </button>
       </nav>
 
-      {/* Renderiza el modal de login */}
       <Login isOpen={isLoginModalOpen} onClose={handleCloseModal} />
     </>
   );
 }
 
-export default Navbar;  
+export default Navbar;
