@@ -1,10 +1,12 @@
 const express = require("express");
-const router = express.Router();
+const middlewareCarrera = require("./middlewareCarrera");
 
-const { login, register } = require("../controllers/authController");
+const app = express();
 
-// rutas
-router.post("/login", login);
-router.post("/register", register);
+app.get("/contenido/:carreraId", middlewareCarrera, (req, res) => {
+  res.json({ mensaje: "Contenido protegido" });
+});
 
-module.exports = router;
+app.listen(3000, () => {
+  console.log("Servidor corriendo en puerto 3000");
+});
