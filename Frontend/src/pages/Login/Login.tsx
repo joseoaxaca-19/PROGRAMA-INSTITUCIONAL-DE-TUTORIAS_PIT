@@ -17,10 +17,16 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     
     // Aquí puedes agregar tu lógica de autenticación
     if (username === 'admin' && password === 'admin123') {
+
+      localStorage.setItem("usuario", username) //Para guardar la sesión localmente
+
       console.log('Login exitoso');
       setError('');
       onClose(); // Cierra el modal después del login exitoso
       // Aquí puedes redirigir o hacer algo más
+
+       window.location.reload(); //Para refrestar el UI
+      
     } else {
       setError('Usuario o contraseña incorrectos');
     }

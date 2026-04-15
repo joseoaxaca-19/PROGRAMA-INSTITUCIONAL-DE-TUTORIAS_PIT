@@ -1,7 +1,6 @@
 import "./SolicitarTutoria.css"
 import Navbar from "../../../components/Navbar/Navbar"
-import { useState } from "react"
-
+import { useState, useEffect } from "react"
 import { TextField, Button, MenuItem } from "@mui/material"
 
 function SolicitarTutoria(){
@@ -39,6 +38,25 @@ const carreras = [
 
 ]
 
+useEffect(()=>{
+const usuario = localStorage.getItem("usuario")
+
+if(usuario){
+setForm((prev)=>({
+...prev,
+nombre:usuario,
+correo:usuario + "@pcpuma.acatlan.unam.mx" //Se puede cambiar
+}))
+}
+
+if(!usuario){
+alert("Debes iniciar sesión")
+window.location.href = "/"
+}
+
+},[])
+
+
 const handleChange = (e:any)=>{
 
 setForm({
@@ -54,9 +72,26 @@ const enviarSolicitud = (e:any)=>{
 
 e.preventDefault()
 
+if(!form.nombre || !form.correo || !form.carrera || !form.materia || !form.tipo){
+
+    alert("Por favor completa todos los campos obligatorios")
+    return  
+}
+
 console.log("Solicitud enviada:",form)
 
 alert("Solicitud enviada correctamente")
+
+setForm({
+
+nombre:form.nombre,
+correo:form.correo,
+carrera:"",
+materia:"",
+tipo:"",
+descripcion:""
+
+})
 
 }
 

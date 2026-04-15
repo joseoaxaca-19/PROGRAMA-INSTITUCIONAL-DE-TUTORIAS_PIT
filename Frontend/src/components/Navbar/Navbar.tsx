@@ -12,6 +12,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,6 +31,19 @@ function Navbar({ onLoginClick }: NavbarProps) {
           }
         }
       }
+
+        const usuario = localStorage.getItem("usuario")
+        if (usuario) {
+         setIsLoggedIn(true)
+          } else {
+             setIsLoggedIn(false)
+              }
+
+          if(!usuario){
+            alert("Debes iniciar sesión")
+              window.location.href = "/"
+                }
+
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -65,6 +79,11 @@ function Navbar({ onLoginClick }: NavbarProps) {
       setIsLoginModalOpen(true);
     }
   };
+
+  const cerrarSesion = () => {
+  localStorage.removeItem("usuario")
+  window.location.reload()
+}
 
   const handleCloseModal = () => {
     setIsLoginModalOpen(false);
@@ -137,9 +156,15 @@ function Navbar({ onLoginClick }: NavbarProps) {
             </button>
           </li>
           <li>
-            <button className="login-btn" onClick={handleLoginClick}>
-              Login
-            </button>
+            {isLoggedIn ? (
+              <button className="login-btn" onClick={cerrarSesion}>
+                Cerrar Sesión
+              </button>
+            ) : (
+              <button className="login-btn" onClick={handleLoginClick}>
+                Login
+              </button>
+            )}
           </li>
         </ul>
       </nav>
