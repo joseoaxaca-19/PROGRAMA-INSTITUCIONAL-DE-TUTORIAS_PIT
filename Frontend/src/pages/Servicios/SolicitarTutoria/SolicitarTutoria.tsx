@@ -39,7 +39,8 @@ const carreras = [
 ]
 
 useEffect(()=>{
-const usuario = localStorage.getItem("usuario")
+/*
+    const usuario = localStorage.getItem("usuario")
 
 if(usuario){
 setForm((prev)=>({
@@ -49,10 +50,19 @@ correo:usuario + "@pcpuma.acatlan.unam.mx" //Se puede cambiar
 }))
 }
 
-if(!usuario){
+ if(!usuario){
 alert("Debes iniciar sesión")
 window.location.href = "/"
 }
+
+Esta parte del codigo protege la pagina  fuerza a tener que iniciar sesión para acceder
+
+*/
+
+const usuario = localStorage.getItem("usuario")
+
+if(usuario){
+setLogueado(true)
 
 },[])
 
@@ -108,6 +118,8 @@ return(
 <p>
 Completa el siguiente formulario para solicitar una tutoría académica.
 </p>
+
+{logueado ? (
 
 <form className="formulario" onSubmit={enviarSolicitud}>
 
@@ -191,6 +203,19 @@ Enviar solicitud
 </Button>
 
 </form>
+
+
+<div className="no-login">
+
+<h2>Debes iniciar sesión</h2>
+
+<p>
+Para solicitar una tutoría necesitas iniciar sesión en el sistema.
+</p>
+
+</div>
+
+)}
 
 </section>
 
