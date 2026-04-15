@@ -1,139 +1,134 @@
 //Aqui va atrabajar Oscar
+import React from 'react';
+import { 
+  AppBar, Toolbar, Typography, Button, Container, Grid, Card, 
+  CardContent, Box, Avatar, IconButton, Badge, Chip, Select, MenuItem, FormControl 
+} from '@mui/material';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import SearchIcon from '@mui/icons-material/Search';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import './Agenda.css';
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIT FES Acatlán - Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+// Configuración del Tema con tus especificaciones
+const theme = createTheme({
+  palette: {
+    primary: { main: '#003DA5' },   // Azul solicitado
+    secondary: { main: '#D6A600' }, // Dorado solicitado
+  },
+  typography: {
+    fontFamily: '"Montserrat", sans-serif',
+    h4: { fontFamily: '"Lexend", sans-serif', fontWeight: 600 },
+    h6: { fontFamily: '"Lexend", sans-serif', fontWeight: 600 },
+    button: { textTransform: 'none', fontWeight: 600 },
+  },
+});
 
-    <div class="wrapper">
-        <header>
-            <a href="#" class="logo-area">
-                <div class="logo-placeholder"></div>
-                PIT FES ACATLÁN
-            </a>
-            <nav>
-                <ul>
-                    <li><a href="https://google.com/inicio">Inicio</a></li>
-                    <li><a href="https://google.com/tutorias">Tutorías</a></li>
-                    <li><a href="https://google.com/recursos">Recursos</a></li>
-                </ul>
-            </nav>
-            <div class="user-area">
-                <a href="#" class="icon-bell">🔔</a>
-                <div class="user-avatar">JD</div>
-            </div>
-        </header>
+const Agenda: React.FC = () => {
+  const tutorias = [
+    { id: 1, materia: 'Python', prof: 'Profesora Lupe', status: 'ABIERTO', fecha: 'Oct 25, 2026', hora: '12:00 PM - 02:00 PM', icon: '</>' },
+    { id: 2, materia: 'Derecho', prof: 'Profesora Sandra', status: 'ABIERTO', fecha: 'Oct 26, 2026', hora: '09:00 AM - 11:00 AM', icon: '⚡' },
+    { id: 3, materia: 'Álgebra Lineal', prof: 'Profesor Mario', status: 'LLENO', fecha: 'Oct 27, 2026', hora: '04:00 PM - 06:00 PM', icon: 'Σ' },
+  ];
 
-        <main>
-            <section class="welcome-section">
-                <h1>Bienvenido de nuevo</h1>
-                <p>¿Listo para tu próxima sesión?</p>
-            </section>
+  return (
+    <ThemeProvider theme={theme}>
+      <Box className="agenda-container">
+        
+        {/* Navbar idéntica a la imagen */}
+        <AppBar position="static" color="transparent" elevation={0} className="navbar">
+          <Toolbar className="toolbar-content">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Box className="brand-logo" />
+              <Typography variant="h6" color="primary">PIT FES ACATLÁN</Typography>
+            </Box>
+            <Box className="nav-menu">
+              <Button>Inicio</Button>
+              <Button>Tutorías</Button>
+              <Button>Recursos</Button>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <IconButton><Badge badgeContent={1} color="error"><NotificationsNoneIcon /></Badge></IconButton>
+              <Avatar className="profile-avatar">JD</Avatar>
+            </Box>
+          </Toolbar>
+        </AppBar>
 
-            <section class="section-title">
-                📅 Tu próxima cita
-            </section>
-            <div class="next-session-card">
-                <span class="status-badge">Sesión Próxima</span>
-                <h2 class="session-subject">Cálculo II - Técnicas de Integración</h2>
-                <div class="session-info-grid">
-                    <div class="info-item">
-                        <div class="info-icon-placeholder"></div>
-                        PROFESOR/A: Profesor Jose
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon-placeholder"></div>
-                        FECHA Y HORA: Oct 24, 10:00 AM
-                    </div>
-                </div>
-                <a href="https://google.com/unirse" class="btn-unirse">Unirse</a>
-            </div>
+        <Container maxWidth="lg" sx={{ mt: 6 }}>
+          {/* Encabezado */}
+          <Box sx={{ mb: 5 }}>
+            <Typography variant="h4" color="textSecondary">Bienvenido de nuevo</Typography>
+            <Typography variant="body1" color="textSecondary">¿Listo para tu próxima sesión?</Typography>
+          </Box>
 
-            <div class="tutoring-header">
-                <section class="section-title" style="margin-top: 0;">
-                    🔍 Tutorías Disponibles
-                </section>
-                <div class="filter-group">
-                    <select class="filter-select">
-                        <option>Todas las materias</option>
-                    </select>
-                    <input type="date" class="date-picker" value="2026-10-25">
-                </div>
-            </div>
+          {/* Card de Próxima Cita */}
+          <Typography variant="subtitle1" className="section-label">
+            <CalendarTodayIcon fontSize="small" color="primary" /> Tu próxima cita
+          </Typography>
+          <Card className="highlight-card">
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="caption" className="next-badge">SESIÓN PRÓXIMA</Typography>
+              <Typography variant="h5" sx={{ mt: 1, mb: 2 }}>Cálculo II - Técnicas de Integración</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="body2"><strong>PROFESOR/A:</strong> Profesor Jose</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="body2"><strong>FECHA Y HORA:</strong> Oct 24, 10:00 AM</Typography>
+                </Grid>
+              </Grid>
+              <Button variant="contained" color="primary" className="btn-join">Unirse</Button>
+            </CardContent>
+          </Card>
 
-            <div class="tutoring-grid">
-                <div class="tutoring-card">
-                    <div class="card-header">
-                        <div class="icon-subject-placeholder icon-symbol">&lt; &gt;</div>
-                        <span class="availability-badge status-open">ABIERTO</span>
-                    </div>
-                    <div class="card-body">
-                        <h3>Python</h3>
-                        <p>Profesora Lupe</p>
-                    </div>
-                    <div class="card-details">
-                        <span>📅 Oct 25, 2026</span>
-                        <span>⏰ 12:00 PM - 02:00 PM</span>
-                    </div>
-                    <a href="https://google.com/python" class="btn-inscribirse">Inscribirse</a>
-                </div>
+          {/* Filtros */}
+          <Box className="filter-section">
+            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <SearchIcon color="primary" /> Tutorías Disponibles
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 200 }}>
+              <Select displayEmpty defaultValue="">
+                <MenuItem value="">Todas las materias</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
-                <div class="tutoring-card">
-                    <div class="card-header">
-                        <div class="icon-subject-placeholder icon-symbol">⚡</div>
-                        <span class="availability-badge status-open">ABIERTO</span>
-                    </div>
-                    <div class="card-body">
-                        <h3>Derecho</h3>
-                        <p>Profesora Sandra</p>
-                    </div>
-                    <div class="card-details">
-                        <span>📅 Oct 26, 2026</span>
-                        <span>⏰ 09:00 AM - 11:00 AM</span>
-                    </div>
-                    <a href="https://google.com/derecho" class="btn-inscribirse">Inscribirse</a>
-                </div>
+          {/* Grid de Tutorías */}
+          <Grid container spacing={3} sx={{ pb: 8 }}>
+            {tutorias.map((item) => (
+              <Grid item xs={12} sm={6} md={4} key={item.id}>
+                <Card className="tutoria-card">
+                  <CardContent sx={{ p: 3, flexGrow: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                      <Box className="icon-box">{item.icon}</Box>
+                      <Chip 
+                        label={item.status} 
+                        size="small" 
+                        className={`status-label ${item.status.toLowerCase()}`} 
+                      />
+                    </Box>
+                    <Typography variant="h6">{item.materia}</Typography>
+                    <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>{item.prof}</Typography>
+                    <Typography variant="body2" color="textSecondary">📅 {item.fecha}</Typography>
+                    <Typography variant="body2" color="textSecondary">⏰ {item.hora}</Typography>
+                  </CardContent>
+                  <Box sx={{ p: 2 }}>
+                    <Button 
+                      fullWidth 
+                      className={`btn-card-action ${item.status === 'LLENO' ? 'disabled' : ''}`}
+                      disabled={item.status === 'LLENO'}
+                    >
+                      {item.status === 'LLENO' ? 'Unirse a la lista de espera' : 'Inscribirse'}
+                    </Button>
+                  </Box>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+    </ThemeProvider>
+  );
+};
 
-                <div class="tutoring-card">
-                    <div class="card-header">
-                        <div class="icon-subject-placeholder icon-symbol">Σ</div>
-                        <span class="availability-badge status-full">LLENO</span>
-                    </div>
-                    <div class="card-body">
-                        <h3>Álgebra Lineal</h3>
-                        <p>Profesor Mario</p>
-                    </div>
-                    <div class="card-details">
-                        <span>📅 Oct 27, 2026</span>
-                        <span>⏰ 04:00 PM - 06:00 PM</span>
-                    </div>
-                    <a href="#" class="btn-inscribirse btn-lista-espera">Unirse a la lista de espera</a>
-                </div>
-            </div>
-        </main>
-
-        <footer>
-            <div class="footer-logo-area">
-                <div class="logo-placeholder" style="background-color: #A0AEC0;"></div>
-                PIT FES ACATLÁN
-            </div>
-            <nav class="footer-nav">
-                <ul>
-                    <li><a href="/privacidad">Política de Privacidad</a></li>
-                    <li><a href="/terminos">Términos de Servicio</a></li>
-                    <li><a href="/soporte">Soporte Técnico</a></li>
-                </ul>
-            </nav>
-            <div class="copy-notice">
-                © 2026 PIT FES ACATLÁN. Todos los derechos reservados.
-            </div>
-        </footer>
-    </div>
-
-</body>
-</html>
+export default Agenda;
