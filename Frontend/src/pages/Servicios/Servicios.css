@@ -71,12 +71,18 @@ margin-bottom:20px;
 
 }
 
-.boton-servicio{
-
 .botones-servicio{
 display:flex;
-justify-content:center;
-gap:15px;
+flex-direction:column;
+gap:12px;
 margin-top:20px;
 }
+
+.boton-servicio{
+background:#003DA5 !important;
+}
+
+.boton-secundario{
+border:2px solid #003DA5 !important;
+color:#003DA5 !important;
 }

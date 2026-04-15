@@ -97,26 +97,25 @@ function Servicios() {
 
                                 </Typography>
 
-                                <Button
-                                    variant="contained"
-                                    component={Link}
-                                    to="/solicitar-tutoria"
-                                    className="boton-servicio"
-                                >
+    <div className="botones-servicio">
 
-                                    Solicitar tutoría
+            <Button
+            variant="contained"
+            component={Link}
+            to="/solicitar-tutoria"
+            className="boton-servicio"
+            >
+            Solicitar tutoría
+            </Button>
 
-                                </Button>
+    <Button
+        variant="outlined"
+        className="boton-secundario"
+    >
+        Ver más
+    </Button>
 
-
-                                <Button
-                                    variant="contained"
-                                    className="boton-servicio"
-                                >
-
-                                    Ver más
-
-                                </Button>
+</div>
 
                             </CardContent>
 
