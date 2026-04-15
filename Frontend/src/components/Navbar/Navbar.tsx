@@ -39,10 +39,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
              setIsLoggedIn(false)
               }
 
-          if(!usuario){
-            alert("Debes iniciar sesión")
-              window.location.href = "/"
-                }
+
 
     };
 

@@ -14,7 +14,7 @@ tipo:"",
 descripcion:""
 })
 
-const [logueado,setLogueado] = useState(false) // ✅ AGREGADO
+const [logueado,setLogueado] = useState(false) 
 
 const carreras = [
 "Actuaría","Arquitectura","Ciencia de Datos",
@@ -40,7 +40,7 @@ correo:usuario + "@pcpuma.acatlan.unam.mx"
 }))
 }
 
-},[]) // ✅ bien cerrado
+},[]) 
 
 const handleChange = (e:any)=>{
 setForm({
@@ -84,7 +84,7 @@ return(
 Completa el siguiente formulario para solicitar una tutoría académica.
 </p>
 
-{/* ✅ CORRECTO */}
+{}
 
 {logueado ? (
 
