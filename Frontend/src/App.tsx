@@ -8,7 +8,7 @@ import Repositorio from "./pages/Repositorio/Repositorio"
 import RepositorioCarrera from "./pages/RepositorioCarrera/RepositorioCarrera"
 import Avisos from "./pages/Avisos/Avisos"
 import SolicitarTutoria from "./pages/Servicios/SolicitarTutoria/SolicitarTutoria"
-
+import Agenda from "./pages/Agenda/Agenda"
 
 
 function App() {
@@ -30,7 +30,8 @@ function App() {
         <Route path="/repositorio/:carrera" element={<RepositorioCarrera />} /> 
 
         <Route path="/solicitar-tutoria" element={<SolicitarTutoria/>}/> 
-      
+
+        <Route path="/agenda" element={<Agenda />} />
 
       </Routes>
 
