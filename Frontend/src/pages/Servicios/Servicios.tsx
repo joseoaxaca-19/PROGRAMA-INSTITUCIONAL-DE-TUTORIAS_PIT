@@ -1,7 +1,7 @@
 import "./Servicios.css"
 import Navbar from "../../components/Navbar/Navbar"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { Card, CardContent, Typography, Button } from "@mui/material"
 import { Link } from "react-router-dom"
@@ -15,6 +15,7 @@ import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium"
 
 function Servicios() {
 
+    const [logueado, setLogueado] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
@@ -114,6 +115,14 @@ function Servicios() {
     >
         Ver más
     </Button>
+
+    {logueado && (
+
+<Button>
+  Solicitar tutoría
+</Button>
+
+)}
 
 </div>
 

@@ -186,17 +186,6 @@ Para solicitar una tutoría necesitas iniciar sesión en el sistema.
 
 )}
 
-{logueado && (
-
-<Button>
-  Solicitar tutoría
-</Button>
-
-)}
-
-<button onClick={handleLoginClick}>
-Iniciar sesión
-</button>
 
 </section>
 
