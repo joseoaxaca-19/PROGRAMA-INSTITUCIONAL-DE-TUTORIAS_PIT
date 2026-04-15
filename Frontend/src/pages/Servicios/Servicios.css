@@ -73,5 +73,10 @@ margin-bottom:20px;
 
 .boton-servicio{
 
-background:#003DA5 !important;
+.botones-servicio{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-top:20px;
+}
 }
