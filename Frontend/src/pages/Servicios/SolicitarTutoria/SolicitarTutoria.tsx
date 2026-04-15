@@ -49,6 +49,10 @@ setForm({
 })
 }
 
+const handleLoginClick = () => {
+window.location.href = "/login"
+}
+
 const enviarSolicitud = (e:any)=>{
 e.preventDefault()
 
