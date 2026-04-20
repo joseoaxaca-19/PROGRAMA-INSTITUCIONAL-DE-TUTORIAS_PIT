@@ -59,7 +59,6 @@ function Navbar({ onLoginClick }: NavbarProps) {
           }
         }
       }
-<<<<<<< Updated upstream
 
         const usuario = localStorage.getItem("usuario")
         if (usuario) {
@@ -70,12 +69,6 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
 
 
-=======
-      
-      if (currentSection && currentSection !== activeSection) {
-        setActiveSection(currentSection);
-      }
->>>>>>> Stashed changes
     };
 
     window.addEventListener("scroll", handleScroll);
