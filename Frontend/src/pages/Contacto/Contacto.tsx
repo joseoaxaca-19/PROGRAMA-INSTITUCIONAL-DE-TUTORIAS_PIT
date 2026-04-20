@@ -23,8 +23,8 @@ const Contacto = () => {
                 </div>
                 <div className="contacto-info">
                   <h3 className="info-label">CORREO ELECTRÓNICO</h3>
-                  <a href="mailto:tutorias@universidad.edu" className="info-value">
-                    tutorias@universidad.edu
+                  <a href="mailto:tutorias@pitfesacatlan.unam.mx" className="info-value">
+                    tutorias@pitfesacatlan.unam.mx
                   </a>
                 </div>
               </div>

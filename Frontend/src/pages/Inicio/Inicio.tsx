@@ -6,10 +6,10 @@ import { Link } from "react-router-dom"
 import Navbar from "../../components/Navbar/Navbar"
 import fondo from "../../assets/images/Inicio.jpg"
 
+import Avisos from "../Avisos/Avisos"
 import SobreNosotros from "../SobreNosotros/SobreNosotros"
 import Servicios from "../Servicios/Servicios"
 import Divisiones from "../Divisiones/Divisiones"
-import Avisos from "../Avisos/Avisos"
 import Contacto from "../Contacto/Contacto"
 import Footer from "../../components/Footer/Footer"
 
@@ -50,17 +50,17 @@ const Inicio = () => {
             <Link to="/servicios" className="btn-comenzar">
               Comencemos
             </Link>
-            <Link to="/sobrenosotros" className="btn-info">
+            <Link to="/sobre-nosotros" className="btn-info">
               Ver más info
             </Link>
           </div>
         </div>
       </section>
 
+      <Avisos/>
       <SobreNosotros/>
       <Servicios/>
       <Divisiones/>
-      <Avisos/>
       <Contacto/>
       <Footer/>
 

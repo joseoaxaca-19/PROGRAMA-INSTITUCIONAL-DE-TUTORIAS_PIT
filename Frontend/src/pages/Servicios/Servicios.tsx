@@ -31,17 +31,17 @@ function Servicios() {
 
     const servicios = [
         {
-            titulo: "Tutorías académicas",
+            titulo: "Asesorías académicas",
             descripcion: "Sesiones de apoyo con tutores para mejorar el rendimiento académico en distintas asignaturas.",
             icono: <SchoolIcon sx={{ fontSize: 50 }} />
         },
         {
-            titulo: "Asesoría académica",
+            titulo: "Acompañamiento en la trayectoria",
             descripcion: "Orientación para resolver dudas sobre materias, planes de estudio y trayectoria escolar.",
             icono: <MenuBookIcon sx={{ fontSize: 50 }} />
         },
         {
-            titulo: "Orientación vocacional",
+            titulo: "Orientación",
             descripcion: "Apoyo para tomar decisiones sobre el desarrollo profesional y elección de especializaciones.",
             icono: <WorkspacePremiumIcon sx={{ fontSize: 50 }} />
         },

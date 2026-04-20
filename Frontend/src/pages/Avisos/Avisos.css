@@ -1,299 +1,114 @@
-/* Estilos del Carrusel de Avisos */
-.aviso-carrusel-container {
-  position: relative;
+
+.anuncios-container {
+  margin-top: 50px;
+  background-color: #4A4A4A;
+  padding: 1rem;
+  border-radius: 8px;
   width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 18px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
 }
 
-.aviso-carrusel-wrapper {
+.carrusel-container {
   position: relative;
-  width: 100%;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.aviso-carrusel-slide {
-  width: 100%;
-  padding: 60px 90px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  cursor: pointer;
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  min-height: 320px;
+.carrusel-wrapper {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  aspect-ratio: 16 / 6;
+}
+
+.carrusel-slide {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+
+.carrusel-slide.animando {
+  transition: transform 0.5s ease-in-out;
+}
+
+.carrusel-item {
+  min-width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Animaciones de slides */
-.aviso-slide-next {
-  animation: avisoSlideInNext 0.5s ease-in-out;
-}
-
-.aviso-slide-prev {
-  animation: avisoSlideInPrev 0.5s ease-in-out;
-}
-
-@keyframes avisoSlideInNext {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes avisoSlideInPrev {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* Tipos de avisos con diferentes estilos */
-.aviso-oferta {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-}
-
-.aviso-promocion {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.aviso-alerta {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-}
-
-.aviso-info {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-/* Contenido del aviso */
-.aviso-contenido {
-  text-align: center;
-  color: white;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.aviso-titulo {
-  font-family: 'Lexend', 'Lexend-Bold', sans-serif;
-  font-weight: bold;
-  font-size: 42px;
-  margin-bottom: 18px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
-  letter-spacing: -0.5px;
-}
-
-.aviso-texto {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 24px;
-  margin-bottom: 24px;
-  line-height: 1.4;
-  font-weight: 500;
-}
-
-.aviso-enlace-container {
-  margin-top: 12px;
-}
-
-.aviso-enlace {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 18px;
-  display: inline-block;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 40px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(8px);
-  font-weight: 600;
-}
-
-.aviso-enlace:hover {
-  background: rgba(255, 255, 255, 0.35);
-  transform: translateX(5px);
-  backdrop-filter: blur(12px);
-}
-
-/* Botones de navegación - Tamaño 1.5x */
-.aviso-carrusel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.55);
-  color: white;
+.carrusel-btn {
+  background-color: rgba(242, 232, 207, 0.9);
   border: none;
-  padding: 16px 22px;
-  cursor: pointer;
-  font-size: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #003DA6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
   z-index: 10;
-  backdrop-filter: blur(4px);
 }
 
-.aviso-carrusel-btn:hover {
-  background: rgba(0, 0, 0, 0.75);
-  transform: translateY(-50%) scale(1.08);
+.carrusel-btn:hover {
+  background-color: #F2E8CF;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.aviso-carrusel-btn-prev {
-  left: 15px;
+.carrusel-btn:active {
+  transform: scale(0.95);
 }
 
-.aviso-carrusel-btn-next {
-  right: 15px;
-}
-
-/* Indicadores - Tamaño 1.5x */
-.aviso-carrusel-indicadores {
-  position: absolute;
-  bottom: 25px;
-  left: 50%;
-  transform: translateX(-50%);
+.indicadores {
   display: flex;
-  gap: 14px;
-  z-index: 10;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
-.aviso-indicador {
-  width: 50px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.5);
+.indicador {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(242, 232, 207, 0.5);
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  border-radius: 3px;
+  padding: 0;
 }
 
-.aviso-indicador:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: scaleY(1.4);
+.indicador:hover {
+  background-color: rgba(242, 232, 207, 0.8);
+  transform: scale(1.1);
 }
 
-.aviso-indicador-activo {
-  background: white;
-  width: 75px;
+.indicador.activo {
+  background-color: #F2E8CF;
+  width: 24px;
+  border-radius: 4px;
 }
 
-/* Estado vacío */
-.aviso-carrusel-vacio {
-  text-align: center;
-  padding: 60px;
-  background: #f5f5f5;
-  border-radius: 18px;
-  color: #666;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 20px;
-}
-
-/* Responsive - Ajustes para tablets */
-@media (max-width: 1024px) {
-  .aviso-carrusel-slide {
-    padding: 50px 70px;
-    min-height: 280px;
-  }
-  
-  .aviso-titulo {
-    font-size: 36px;
-  }
-  
-  .aviso-texto {
-    font-size: 20px;
-  }
-  
-  .aviso-enlace {
-    font-size: 16px;
-    padding: 10px 20px;
-  }
-  
-  .aviso-carrusel-btn {
-    padding: 14px 20px;
-    font-size: 24px;
-  }
-  
-  .aviso-indicador {
-    width: 40px;
-  }
-  
-  .aviso-indicador-activo {
-    width: 60px;
-  }
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .aviso-carrusel-slide {
-    padding: 40px 40px;
-    min-height: 250px;
+  .anuncios-container {
+    padding: 0.75rem;
   }
-  
-  .aviso-titulo {
-    font-size: 28px;
-    margin-bottom: 14px;
-  }
-  
-  .aviso-texto {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  
-  .aviso-enlace {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
-  
-  .aviso-carrusel-btn {
-    padding: 10px 16px;
-    font-size: 20px;
-  }
-  
-  .aviso-indicador {
-    width: 35px;
-    height: 4px;
-  }
-  
-  .aviso-indicador-activo {
-    width: 50px;
-  }
-}
 
-@media (max-width: 480px) {
-  .aviso-carrusel-slide {
-    padding: 30px 25px;
-    min-height: 220px;
+  .carrusel-wrapper {
+    aspect-ratio: 4 / 3;
   }
-  
-  .aviso-titulo {
-    font-size: 22px;
-  }
-  
-  .aviso-texto {
-    font-size: 15px;
-  }
-  
-  .aviso-enlace {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-  
-  .aviso-carrusel-btn {
-    padding: 8px 12px;
-    font-size: 16px;
-  }
-  
-  .aviso-indicador {
-    width: 25px;
-    height: 3px;
-  }
-  
-  .aviso-indicador-activo {
-    width: 40px;
+
+  .carrusel-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
   }
 }
