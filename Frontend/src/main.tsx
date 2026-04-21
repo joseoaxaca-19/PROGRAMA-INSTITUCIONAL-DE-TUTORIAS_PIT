@@ -13,6 +13,11 @@ import Repositorio from './pages/Repositorio/Repositorio.tsx'
 import Login from './pages/Login/Login.tsx'
 import GestionCitas from './pages/Servicios/Citas/GestionCitas.tsx'
 
+import Bitacora from "./pages/Permisos/Bitacora/Bitacora.tsx"
+import Accesos from "./pages/Permisos/Accesos/Accesos.tsx"
+import Roles from "./pages/Permisos/Roles/Roles.tsx"
+import Usuarios from "./pages/Permisos/Usuarios/Usuarios.tsx"
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -25,8 +30,13 @@ createRoot(document.getElementById('root')!).render(
           <Route path="avisos" element={<Avisos />} />
           <Route path="admin-avisos" element={<AdminAvisos />} />
           <Route path="repositorio" element={<Repositorio />} />
-          <Route path="login" element={<Login />} />
           <Route path="citas" element={<GestionCitas />} /> 
+
+          \\Permisos
+          <Route path="bitacora" element={<Bitacora />} />
+          <Route path="accesos" element={<Accesos />} />
+          <Route path="usuarios" element={<Usuarios />} />
+          <Route path="roles" element={<Roles />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
