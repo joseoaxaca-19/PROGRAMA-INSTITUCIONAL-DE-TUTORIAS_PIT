@@ -12,6 +12,8 @@ import AdminAvisos from "./pages/Avisos/AdminAvisos"
 import SolicitarTutoria from "./pages/Servicios/SolicitarTutoria/SolicitarTutoria"
 import Agenda from "./pages/Agenda/Agenda"
 
+import Bitacora from "./pages/Permisos/Bitacora/Bitacora"
+
 
 function App() {
 
@@ -40,6 +42,8 @@ function App() {
         <Route path="/solicitar-tutoria" element={<SolicitarTutoria/>}/> 
 
         <Route path="/agenda" element={<Agenda />} />
+
+        <Route path="/bitacora" element={<Bitacora />} />
 
       </Routes>
 
