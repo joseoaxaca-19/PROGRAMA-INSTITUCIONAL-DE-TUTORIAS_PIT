@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Inicio from "./pages/Inicio/Inicio"
 import SobreNosotros from "./pages/SobreNosotros/SobreNosotros"
 import Servicios from "./pages/Servicios/Servicios"
+import GestionCitas from "./pages/Servicios/Citas/GestionCitas"
 import Repositorio from "./pages/Repositorio/Repositorio"
 import RepositorioCarrera from "./pages/RepositorioCarrera/RepositorioCarrera"
 import Avisos from "./pages/Avisos/Avisos"
@@ -25,6 +26,8 @@ function App() {
         <Route path="/sobre-nosotros" element={<SobreNosotros />} />
 
         <Route path="/servicios" element={<Servicios />} />
+
+        <Route path="/citas" element={<GestionCitas />} />
 
         <Route path="/repositorio" element={<Repositorio />} />
 

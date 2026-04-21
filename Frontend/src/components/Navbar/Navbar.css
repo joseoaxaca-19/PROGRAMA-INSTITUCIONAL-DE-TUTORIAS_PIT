@@ -182,4 +182,11 @@
     padding: 6px 10px;
     font-size: 14px;
   }
+
+  .navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
 }

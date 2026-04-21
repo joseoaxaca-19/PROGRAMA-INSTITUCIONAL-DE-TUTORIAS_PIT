@@ -43,11 +43,11 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
     const handleScroll = () => {
       if (isScrolling.current) return;
-      
+
       const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
       const navbarHeight = getNavbarHeight();
       let currentSection = "";
-      
+
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -60,12 +60,12 @@ function Navbar({ onLoginClick }: NavbarProps) {
         }
       }
 
-        const usuario = localStorage.getItem("usuario")
-        if (usuario) {
-         setIsLoggedIn(true)
-          } else {
-             setIsLoggedIn(false)
-              }
+      const usuario = localStorage.getItem("usuario")
+      if (usuario) {
+        setIsLoggedIn(true)
+      } else {
+        setIsLoggedIn(false)
+      }
 
 
 
@@ -73,7 +73,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
     window.addEventListener("scroll", handleScroll);
     handleScroll(); // Detectar sección inicial
-    
+
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("scroll", handleScroll);
@@ -84,21 +84,21 @@ function Navbar({ onLoginClick }: NavbarProps) {
     setMenuOpen(false);
     setActiveSection(sectionId);
     isScrolling.current = true;
-    
+
     const element = document.getElementById(sectionId);
     if (element) {
       const navbarHeight = getNavbarHeight();
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
-      
+
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth"
       });
-      
+
       // Actualizar URL sin causar navegación
       window.history.pushState(null, "", `/#${sectionId}`);
-      
+
       // Rehabilitar detección de scroll después de la animación
       setTimeout(() => {
         isScrolling.current = false;
@@ -119,9 +119,9 @@ function Navbar({ onLoginClick }: NavbarProps) {
   };
 
   const cerrarSesion = () => {
-  localStorage.removeItem("usuario")
-  window.location.reload()
-}
+    localStorage.removeItem("usuario")
+    window.location.reload()
+  }
 
   const handleCloseModal = () => {
     setIsLoginModalOpen(false);
@@ -177,6 +177,14 @@ function Navbar({ onLoginClick }: NavbarProps) {
               Servicios
             </button>
           </li>
+          {isLoggedIn && (
+            <li>
+              <NavLink to="/citas" className="nav-button">
+                Citas
+              </NavLink>
+            </li>
+          )}
+        
           <li>
             <button
               className={`nav-button ${isActive("divisiones") ? "active" : ""}`}

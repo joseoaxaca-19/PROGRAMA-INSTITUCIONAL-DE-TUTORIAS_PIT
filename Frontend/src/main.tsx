@@ -11,6 +11,7 @@ import Avisos from './pages/Avisos/Avisos.tsx'
 import AdminAvisos from "./pages/Avisos/AdminAvisos.tsx"
 import Repositorio from './pages/Repositorio/Repositorio.tsx'
 import Login from './pages/Login/Login.tsx'
+import GestionCitas from './pages/Servicios/Citas/GestionCitas.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="admin-avisos" element={<AdminAvisos />} />
           <Route path="repositorio" element={<Repositorio />} />
           <Route path="login" element={<Login />} />
+          <Route path="citas" element={<GestionCitas />} /> 
       </Routes>
     </BrowserRouter>
   </StrictMode>,
