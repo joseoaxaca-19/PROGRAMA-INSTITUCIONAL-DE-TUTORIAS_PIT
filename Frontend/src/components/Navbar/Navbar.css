@@ -1,4 +1,15 @@
 /* ==================== NAVBAR PRINCIPAL ==================== */
+section, 
+[id="inicio"], 
+[id="sobre-nosotros"], 
+[id="servicios"], 
+[id="divisiones"], 
+[id="avisos"], 
+[id="contacto"] {
+  scroll-margin-top: 80px;
+  min-height: 100vh;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -14,6 +25,11 @@
   width: 100%;
   z-index: 1000;
   box-sizing: border-box;
+
+}
+
+body {
+  padding-top: 80px; /* Mismo valor que scroll-margin-top */
 }
 
 
