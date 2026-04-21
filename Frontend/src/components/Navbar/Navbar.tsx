@@ -12,7 +12,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isScrolling = useRef(false);
@@ -23,9 +23,19 @@ function Navbar({ onLoginClick }: NavbarProps) {
     return navbar ? navbar.getBoundingClientRect().height : 80;
   };
 
+  // Verificar estado de login
+  useEffect(() => {
+    const usuario = localStorage.getItem("usuario");
+    setIsLoggedIn(!!usuario);
+  }, [location.pathname]);
+
+  // Efecto para el scroll y detección de secciones
   useEffect(() => {
     // Solo ejecutar en la página principal
-    if (location.pathname !== "/") return;
+    if (location.pathname !== "/") {
+      setActiveSection("");
+      return;
+    }
 
     // Verificar si las secciones existen
     const checkSections = () => {
@@ -34,6 +44,8 @@ function Navbar({ onLoginClick }: NavbarProps) {
         const element = document.getElementById(section);
         if (!element) {
           console.warn(`Sección no encontrada: ${section}`);
+        } else {
+          console.log(`✅ Sección encontrada: ${section}`);
         }
       });
     };
@@ -53,22 +65,17 @@ function Navbar({ onLoginClick }: NavbarProps) {
         if (element) {
           const rect = element.getBoundingClientRect();
           // Usar un umbral más flexible
-          if (rect.top <= navbarHeight + 50 && rect.bottom >= navbarHeight) {
+          if (rect.top <= navbarHeight + 100 && rect.bottom >= navbarHeight + 50) {
             currentSection = section;
             break;
           }
         }
       }
 
-      const usuario = localStorage.getItem("usuario")
-      if (usuario) {
-        setIsLoggedIn(true)
-      } else {
-        setIsLoggedIn(false)
+      // Actualizar sección activa solo si cambió
+      if (currentSection && currentSection !== activeSection) {
+        setActiveSection(currentSection);
       }
-
-
-
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -82,9 +89,8 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
   const handleClick = (sectionId: string) => {
     setMenuOpen(false);
-    setActiveSection(sectionId);
     isScrolling.current = true;
-
+    
     const element = document.getElementById(sectionId);
     if (element) {
       const navbarHeight = getNavbarHeight();
@@ -98,6 +104,11 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
       // Actualizar URL sin causar navegación
       window.history.pushState(null, "", `/#${sectionId}`);
+      
+      // Actualizar sección activa después del scroll
+      setTimeout(() => {
+        setActiveSection(sectionId);
+      }, 100);
 
       // Rehabilitar detección de scroll después de la animación
       setTimeout(() => {
@@ -119,12 +130,16 @@ function Navbar({ onLoginClick }: NavbarProps) {
   };
 
   const cerrarSesion = () => {
-    localStorage.removeItem("usuario")
-    window.location.reload()
-  }
+    localStorage.removeItem("usuario");
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
 
   const handleCloseModal = () => {
     setIsLoginModalOpen(false);
+    // Actualizar estado de login después de cerrar el modal
+    const usuario = localStorage.getItem("usuario");
+    setIsLoggedIn(!!usuario);
   };
 
   const isActive = (sectionId: string) => {
@@ -134,7 +149,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
   return (
     <>
       <nav className="navbar">
-        <NavLink to="/" className="logo">
+        <NavLink to="/" className="logo" onClick={() => setMenuOpen(false)}>
           <img src={Logo} className="logo-icon" alt="Logo UNAM" />
           <span className="logo-pit">PIT</span>
           <span className="logo-fes">FES ACATLÁN</span>
@@ -177,14 +192,6 @@ function Navbar({ onLoginClick }: NavbarProps) {
               Servicios
             </button>
           </li>
-          {isLoggedIn && (
-            <li>
-              <NavLink to="/citas" className="nav-button">
-                Citas
-              </NavLink>
-            </li>
-          )}
-        
           <li>
             <button
               className={`nav-button ${isActive("divisiones") ? "active" : ""}`}
@@ -201,6 +208,19 @@ function Navbar({ onLoginClick }: NavbarProps) {
               Contacto
             </button>
           </li>
+          {isLoggedIn && (
+            <li>
+              <button
+                className="nav-button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/citas");
+                }}
+              >
+                Citas
+              </button>
+            </li>
+          )}
           <li>
             {isLoggedIn ? (
               <button className="login-btn" onClick={cerrarSesion}>
