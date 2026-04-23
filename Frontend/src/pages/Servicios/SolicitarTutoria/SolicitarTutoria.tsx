@@ -1,167 +1,190 @@
 import "./SolicitarTutoria.css"
 import Navbar from "../../../components/Navbar/Navbar"
-import { useState } from "react"
-
+import { useState, useEffect } from "react"
 import { TextField, Button, MenuItem } from "@mui/material"
 
-function SolicitarTutoria(){
+function SolicitarTutoria() {
 
-const [form,setForm] = useState({
+    const [form, setForm] = useState({
+        nombre: "",
+        correo: "",
+        carrera: "",
+        materia: "",
+        tipo: "",
+        descripcion: ""
+    })
 
-nombre:"",
-correo:"",
-carrera:"",
-materia:"",
-tipo:"",
-descripcion:""
+    const [logueado, setLogueado] = useState(false)
 
-})
+    const carreras = [
+        "Actuaría", "Arquitectura", "Ciencia de Datos",
+        "Ciencias Políticas y Administración Pública", "Comunicación",
+        "Derecho", "Diseño Gráfico", "Economía", "Enseñanza de Inglés",
+        "Filosofía", "Historia", "Ingeniería Civil",
+        "Lengua y Literatura Hispánicas",
+        "Matemáticas Aplicadas y Computación", "Pedagogía",
+        "Relaciones Internacionales", "Sociología"
+    ]
 
-const carreras = [
+    useEffect(() => {
+        const usuario = localStorage.getItem("usuario")
 
-"Actuaría",
-"Arquitectura",
-"Ciencia de Datos",
-"Ciencias Políticas y Administración Pública",
-"Comunicación",
-"Derecho",
-"Diseño Gráfico",
-"Economía",
-"Enseñanza de Inglés",
-"Filosofía",
-"Historia",
-"Ingeniería Civil",
-"Lengua y Literatura Hispánicas",
-"Matemáticas Aplicadas y Computación",
-"Pedagogía",
-"Relaciones Internacionales",
-"Sociología"
+        if (usuario) {
+            setLogueado(true)
 
-]
+            setForm((prev) => ({
+                ...prev,
+                nombre: usuario,
+                correo: usuario + "@pcpuma.acatlan.unam.mx"
+            }))
+        } else {
+            setLogueado(false)
+        }
 
-const handleChange = (e:any)=>{
+    }, [])
 
-setForm({
+    const handleChange = (e: any) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        })
+    }
 
-...form,
-[e.target.name]:e.target.value
+    const enviarSolicitud = (e: any) => {
+        e.preventDefault()
 
-})
+        if (!form.nombre || !form.correo || !form.carrera || !form.materia || !form.tipo) {
+            alert("Por favor completa todos los campos obligatorios")
+            return
+        }
 
-}
+        console.log("Solicitud enviada:", form)
+        alert("Solicitud enviada correctamente")
 
-const enviarSolicitud = (e:any)=>{
+        setForm({
+            nombre: form.nombre,
+            correo: form.correo,
+            carrera: "",
+            materia: "",
+            tipo: "",
+            descripcion: ""
+        })
+    }
 
-e.preventDefault()
+    return (
 
-console.log("Solicitud enviada:",form)
+        <div>
 
-alert("Solicitud enviada correctamente")
+            <Navbar />
 
-}
+            <section className="solicitar">
 
-return(
+                <h1>Solicitar Tutoría</h1>
 
-<div>
+                <p>
+                    Completa el siguiente formulario para solicitar una tutoría académica.
+                </p>
 
-<Navbar/>
+                {logueado ? (
 
-<section className="solicitar">
+                    <form className="formulario" onSubmit={enviarSolicitud}>
 
-<h1>Solicitar Tutoría</h1>
+                        <TextField
+                            label="Nombre completo"
+                            name="nombre"
+                            value={form.nombre}
+                            fullWidth
+                            required
+                            onChange={handleChange}
+                        />
 
-<p>
-Completa el siguiente formulario para solicitar una tutoría académica.
-</p>
+                        <TextField
+                            label="Correo institucional"
+                            name="correo"
+                            value={form.correo}
+                            fullWidth
+                            required
+                            onChange={handleChange}
+                        />
 
-<form className="formulario" onSubmit={enviarSolicitud}>
+                        <TextField
+                            select
+                            label="Carrera"
+                            name="carrera"
+                            value={form.carrera}
+                            fullWidth
+                            required
+                            onChange={handleChange}
+                        >
+                            {carreras.map((carrera, index) => (
+                                <MenuItem key={index} value={carrera}>
+                                    {carrera}
+                                </MenuItem>
+                            ))}
+                        </TextField>
 
-<TextField
-label="Nombre completo"
-name="nombre"
-fullWidth
-required
-onChange={handleChange}
-/>
+                        <TextField
+                            label="Materia"
+                            name="materia"
+                            value={form.materia}
+                            fullWidth
+                            required
+                            onChange={handleChange}
+                        />
 
-<TextField
-label="Correo institucional"
-name="correo"
-fullWidth
-required
-onChange={handleChange}
-/>
+                        <TextField
+                            select
+                            label="Tipo de tutoría"
+                            name="tipo"
+                            value={form.tipo}
+                            fullWidth
+                            required
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="Academica">Académica</MenuItem>
+                            <MenuItem value="Orientacion">Orientación académica</MenuItem>
+                            <MenuItem value="Apoyo">Apoyo personal</MenuItem>
+                        </TextField>
 
-<TextField
-select
-label="Carrera"
-name="carrera"
-fullWidth
-required
-onChange={handleChange}
->
+                        <TextField
+                            label="Describe tu duda o problema"
+                            name="descripcion"
+                            value={form.descripcion}
+                            multiline
+                            rows={4}
+                            fullWidth
+                            onChange={handleChange}
+                        />
 
-{carreras.map((carrera,index)=>(
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            className="boton-enviar"
+                        >
+                            Enviar solicitud
+                        </Button>
 
-<MenuItem key={index} value={carrera}>
+                    </form>
 
-{carrera}
+                ) : (
 
-</MenuItem>
+                    <div className="no-login">
 
-))}
+                        <h2>Debes iniciar sesión</h2>
 
-</TextField>
+                        <p>
+                            Para solicitar una tutoría necesitas iniciar sesión en el sistema.
+                        </p>
 
-<TextField
-label="Materia"
-name="materia"
-fullWidth
-required
-onChange={handleChange}
-/>
+                    </div>
 
-<TextField
-select
-label="Tipo de tutoría"
-name="tipo"
-fullWidth
-required
-onChange={handleChange}
->
+                )}
 
-<MenuItem value="Academica">Académica</MenuItem>
-<MenuItem value="Orientacion">Orientación académica</MenuItem>
-<MenuItem value="Apoyo">Apoyo personal</MenuItem>
+            </section>
 
-</TextField>
+        </div>
 
-<TextField
-label="Describe tu duda o problema"
-name="descripcion"
-multiline
-rows={4}
-fullWidth
-onChange={handleChange}
-/>
-
-<Button
-type="submit"
-variant="contained"
-className="boton-enviar"
->
-
-Enviar solicitud
-
-</Button>
-
-</form>
-
-</section>
-
-</div>
-
-)
+    )
 
 }
 

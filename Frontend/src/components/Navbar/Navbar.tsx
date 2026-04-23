@@ -1,6 +1,6 @@
 import "./Navbar.css";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/icons/unam_logo.svg";
 import Login from "../../pages/Login/Login";
 
@@ -12,53 +12,116 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const isScrolling = useRef(false);
 
+  // Obtener altura del navbar dinámicamente
+  const getNavbarHeight = () => {
+    const navbar = document.querySelector('.navbar');
+    return navbar ? navbar.getBoundingClientRect().height : 80;
+  };
+
+  // Verificar estado de login
   useEffect(() => {
+    const usuario = localStorage.getItem("usuario");
+    setIsLoggedIn(!!usuario);
+  }, [location.pathname]);
+
+  // Efecto para el scroll y detección de secciones
+  useEffect(() => {
+    // Solo ejecutar en la página principal
+    if (location.pathname !== "/") {
+      setActiveSection("");
+      return;
+    }
+
+    // Verificar si las secciones existen
+    const checkSections = () => {
+      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
+      sections.forEach(section => {
+        const element = document.getElementById(section);
+        if (!element) {
+          console.warn(`Sección no encontrada: ${section}`);
+        } else {
+          console.log(`✅ Sección encontrada: ${section}`);
+        }
+      });
+    };
+
+    // Esperar a que el DOM esté listo
+    const timeoutId = setTimeout(checkSections, 100);
+
     const handleScroll = () => {
-      if (location.pathname === "/") {
-        const sections = ["inicio", "sobre_nosotros", "servicios", "divisiones", "avisos", "contacto"];
-        for (const section of sections) {
-          const element = document.getElementById(section);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            if (rect.top <= 150 && rect.bottom >= 150) {
-              setActiveSection(section);
-              break;
-            }
+      if (isScrolling.current) return;
+
+      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
+      const navbarHeight = getNavbarHeight();
+      let currentSection = "";
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Usar un umbral más flexible
+          if (rect.top <= navbarHeight + 100 && rect.bottom >= navbarHeight + 50) {
+            currentSection = section;
+            break;
           }
         }
+      }
+
+      // Actualizar sección activa solo si cambió
+      if (currentSection && currentSection !== activeSection) {
+        setActiveSection(currentSection);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname]);
+    handleScroll(); // Detectar sección inicial
 
-  useEffect(() => {
-    if (location.pathname !== "/") {
-      setActiveSection("");
-    } else if (location.hash) {
-      const section = location.hash.replace("#", "");
-      setActiveSection(section);
-    }
-  }, [location]);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [location.pathname, activeSection]);
 
   const handleClick = (sectionId: string) => {
     setMenuOpen(false);
-    setActiveSection(sectionId);
-    navigate(`/#${sectionId}`);
-    setTimeout(() => {
-      const elemento = document.getElementById(sectionId);
-      if (elemento) {
-        elemento.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 100);
+    isScrolling.current = true;
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navbarHeight = getNavbarHeight();
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+
+      // Actualizar URL sin causar navegación
+      window.history.pushState(null, "", `/#${sectionId}`);
+      
+      // Actualizar sección activa después del scroll
+      setTimeout(() => {
+        setActiveSection(sectionId);
+      }, 100);
+
+      // Rehabilitar detección de scroll después de la animación
+      setTimeout(() => {
+        isScrolling.current = false;
+      }, 1000);
+    } else {
+      console.error(`Elemento con id "${sectionId}" no encontrado`);
+      isScrolling.current = false;
+    }
   };
 
   const handleLoginClick = () => {
-    setMenuOpen(false); // Cierra el menú móvil si está abierto
+    setMenuOpen(false);
     if (onLoginClick) {
       onLoginClick();
     } else {
@@ -66,8 +129,17 @@ function Navbar({ onLoginClick }: NavbarProps) {
     }
   };
 
+  const cerrarSesion = () => {
+    localStorage.removeItem("usuario");
+    setIsLoggedIn(false);
+    window.location.reload();
+  };
+
   const handleCloseModal = () => {
     setIsLoginModalOpen(false);
+    // Actualizar estado de login después de cerrar el modal
+    const usuario = localStorage.getItem("usuario");
+    setIsLoggedIn(!!usuario);
   };
 
   const isActive = (sectionId: string) => {
@@ -77,7 +149,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
   return (
     <>
       <nav className="navbar">
-        <NavLink to="/" className="logo">
+        <NavLink to="/" className="logo" onClick={() => setMenuOpen(false)}>
           <img src={Logo} className="logo-icon" alt="Logo UNAM" />
           <span className="logo-pit">PIT</span>
           <span className="logo-fes">FES ACATLÁN</span>
@@ -98,8 +170,16 @@ function Navbar({ onLoginClick }: NavbarProps) {
           </li>
           <li>
             <button
-              className={`nav-button ${isActive("sobre_nosotros") ? "active" : ""}`}
-              onClick={() => handleClick("sobre_nosotros")}
+              className={`nav-button ${isActive("avisos") ? "active" : ""}`}
+              onClick={() => handleClick("avisos")}
+            >
+              Avisos
+            </button>
+          </li>
+          <li>
+            <button
+              className={`nav-button ${isActive("sobre-nosotros") ? "active" : ""}`}
+              onClick={() => handleClick("sobre-nosotros")}
             >
               Sobre Nosotros
             </button>
@@ -122,24 +202,35 @@ function Navbar({ onLoginClick }: NavbarProps) {
           </li>
           <li>
             <button
-              className={`nav-button ${isActive("avisos") ? "active" : ""}`}
-              onClick={() => handleClick("avisos")}
-            >
-              Avisos
-            </button>
-          </li>
-          <li>
-            <button
               className={`nav-button ${isActive("contacto") ? "active" : ""}`}
               onClick={() => handleClick("contacto")}
             >
               Contacto
             </button>
           </li>
+          {isLoggedIn && (
+            <li>
+              <button
+                className="nav-button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate("/citas");
+                }}
+              >
+                Citas
+              </button>
+            </li>
+          )}
           <li>
-            <button className="login-btn" onClick={handleLoginClick}>
-              Login
-            </button>
+            {isLoggedIn ? (
+              <button className="login-btn" onClick={cerrarSesion}>
+                Cerrar Sesión
+              </button>
+            ) : (
+              <button className="login-btn" onClick={handleLoginClick}>
+                Login
+              </button>
+            )}
           </li>
         </ul>
       </nav>

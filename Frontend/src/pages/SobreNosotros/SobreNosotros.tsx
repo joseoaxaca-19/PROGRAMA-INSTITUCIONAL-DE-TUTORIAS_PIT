@@ -72,7 +72,7 @@ const SobreNosotros = () => {
   }, [stats]);
 
   return (
-    <section id="SobreNosotros" className="sobre-nosotros" id="sobre-nosotros">
+    <section id="sobre-nosotros" className="sobre-nosotros">
       <div className="container">
         <div className="grid">
           

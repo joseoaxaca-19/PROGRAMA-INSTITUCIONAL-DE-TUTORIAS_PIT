@@ -1,0 +1,98 @@
+
+--Tabla Roles --
+CREATE TABLE roles (
+id SERIAL PRIMARY KEY,
+nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+INSERT INTO roles (nombre) VALUES
+('Administrador'),
+('Tutor'),
+('Tutorado');
+
+
+--Tabla Divisiones--
+CREATE TABLE divisiones (
+id SERIAL PRIMARY KEY,
+nombre VARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO divisiones (nombre) VALUES
+('Matemáticas e Ingeniería'),
+('Ciencias Jurídicas'),
+('Diseño y Edificación'),
+('Humanidades'),
+('Socioeconómicas'),
+('SUAYED');
+
+
+--Tabla Carreras--
+CREATE TABLE carreras (
+id SERIAL PRIMARY KEY,
+nombre VARCHAR(150) NOT NULL,
+id_division INTEGER NOT NULL,
+CONSTRAINT fk_division
+FOREIGN KEY (id_division)
+REFERENCES divisiones(id)
+);
+
+
+--Tabla Usuarios--
+CREATE TABLE usuarios (
+id SERIAL PRIMARY KEY,
+nombre VARCHAR(100) NOT NULL,
+apellidos VARCHAR(150) NOT NULL,
+id_carrera INTEGER NOT NULL,
+id_rol INTEGER NOT NULL,
+contrasena VARCHAR(255) NOT NULL,
+CONSTRAINT fk_carrera
+FOREIGN KEY (id_carrera)
+REFERENCES carreras(id),
+CONSTRAINT fk_rol
+FOREIGN KEY (id_rol)
+REFERENCES roles(id)
+);
+
+------ Login ------
+
+-- 1. División: Matemáticas e Ingeniería
+CREATE TABLE login_matematicas_ingenieria (
+id SERIAL PRIMARY KEY,
+nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+contrasena VARCHAR(255) NOT NULL
+);
+
+-- 2. División: Ciencias Jurídicas
+CREATE TABLE login_ciencias_juridicas (
+id SERIAL PRIMARY KEY,
+nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+contrasena VARCHAR(255) NOT NULL
+);
+
+-- 3. División: Diseño y Edificación
+CREATE TABLE login_diseno_edificacion (
+id SERIAL PRIMARY KEY,
+nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+contrasena VARCHAR(255) NOT NULL
+);
+
+-- 4. División: Humanidades
+CREATE TABLE login_humanidades (
+id SERIAL PRIMARY KEY,
+nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+contrasena VARCHAR(255) NOT NULL
+);
+
+-- 5. División: Socioeconómicas
+CREATE TABLE login_socioeconomicas (
+id SERIAL PRIMARY KEY,
+nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+contrasena VARCHAR(255) NOT NULL
+);
+
+-- 6. División: SUAYED
+CREATE TABLE login_suayed (
+id SERIAL PRIMARY KEY,
+nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+contrasena VARCHAR(255) NOT NULL
+);

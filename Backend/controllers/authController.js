@@ -7,34 +7,35 @@ const jwt = require("jsonwebtoken");
  * Realiza la validación de credenciales y emite un JWT con el rol del usuario.
  */
 const login = async (req, res) => {
-    // 1. Recepción de datos: Email y Password son requeridos (se ignora número de cuenta)
-    const { email, password } = req.body;
+    // 1. Recepción de datos: nombre_completo y Password son requeridos
+    const { nombre_completo, password } = req.body;
 
     // Validación de campos vacíos
-    if (!email || !password) {
+    if (!nombre_completo || !password) {
         return res.status(400).json({
             success: false,
-            message: "El correo electrónico y la contraseña son obligatorios."
+            message: "El nombre completo y la contraseña son obligatorios."
         });
     }
 
     try {
-        // 2. Consulta a PostgreSQL: Buscar el usuario por email e incluir su rol mediante INNER JOIN
-        // Se utilizan las tablas reales dictadas por la BD: tr_user y tr_roles
+        // 2. Consulta a PostgreSQL: Buscar el usuario por nombre completo
+        // Asume que la tabla original es 'tr_user' con columnas 'nombre' y 'apellidos'
+        // adaptando al nuevo requerimiento de validación.
         const query = `
-            SELECT u.id_user, u.correo, u.password, r.nombre_rol AS role_name
+            SELECT u.id_user, u.nombre, u.apellidos, u.password, r.nombre_rol AS role_name
             FROM tr_user u
             INNER JOIN tr_roles r ON u.id_rol = r.id_rol
-            WHERE u.correo = $1
+            WHERE TRIM(u.nombre || ' ' || u.apellidos) ILIKE $1
         `;
 
-        const result = await db.query(query, [email]);
+        const result = await db.query(query, [nombre_completo.trim()]);
 
         // 3. Verificar si la cuenta existe en la base de datos
         if (result.rows.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Usuario no encontrado. Verifique su correo electrónico."
+                message: "Usuario no encontrado. Verifique su nombre completo."
             });
         }
 
@@ -53,8 +54,8 @@ const login = async (req, res) => {
         // 5. Generación del JSON Web Token (JWT)
         const tokenPayload = {
             id: user.id_user,
-            email: user.correo,
-            rol: user.role_name // Se cambia 'role' a 'rol' para compatibilidad con el middleware roleAuth.js
+            nombre_completo: `${user.nombre} ${user.apellidos}`,
+            rol: user.role_name
         };
 
         // Se utiliza la clave secreta desde variables de entorno
