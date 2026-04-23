@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 interface LoginProps {
@@ -10,29 +11,28 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate(); // Hook para navegación
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Aquí puedes agregar tu lógica de autenticación
     if (username === 'admin' && password === 'admin123') {
-
-      localStorage.setItem("usuario", username) //Para guardar la sesión localmente
-
+      localStorage.setItem("usuario", username);
+      
       console.log('Login exitoso');
       setError('');
-      onClose(); // Cierra el modal después del login exitoso
-      // Aquí puedes redirigir o hacer algo más
-
-       window.location.reload(); //Para refrestar el UI
+      onClose(); // Cierra el modal
+      
+      // Redirecciona a la agenda
+      navigate('/agenda'); 
       
     } else {
       setError('Usuario o contraseña incorrectos');
     }
   };
 
-  // Función para alternar la visibilidad de la contraseña
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };

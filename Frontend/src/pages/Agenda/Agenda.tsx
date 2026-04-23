@@ -1,7 +1,6 @@
-//Aqui va atrabajar Oscar
 import React from 'react';
 import { 
-  AppBar, Toolbar, Typography, Button, Container, Grid, Card, 
+  AppBar, Toolbar, Typography, Button, Container, Card, 
   CardContent, Box, Avatar, IconButton, Badge, Chip, Select, MenuItem, FormControl 
 } from '@mui/material';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
@@ -10,11 +9,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './Agenda.css';
 
-// Configuración del Tema con tus especificaciones
+
 const theme = createTheme({
   palette: {
-    primary: { main: '#003DA5' },   // Azul solicitado
-    secondary: { main: '#D6A600' }, // Dorado solicitado
+    primary: { main: '#003DA5' },
+    secondary: { main: '#D6A600' },
   },
   typography: {
     fontFamily: '"Montserrat", sans-serif',
@@ -34,15 +33,14 @@ const Agenda: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box className="agenda-container">
-        
-        {/* Navbar idéntica a la imagen */}
+        {/* Navbar */}
         <AppBar position="static" color="transparent" elevation={0} className="navbar">
-          <Toolbar className="toolbar-content">
+          <Toolbar className="toolbar-content" sx={{ justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Box className="brand-logo" />
               <Typography variant="h6" color="primary">PIT FES ACATLÁN</Typography>
             </Box>
-            <Box className="nav-menu">
+            <Box className="nav-menu" sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
               <Button>Inicio</Button>
               <Button>Tutorías</Button>
               <Button>Recursos</Button>
@@ -55,34 +53,36 @@ const Agenda: React.FC = () => {
         </AppBar>
 
         <Container maxWidth="lg" sx={{ mt: 6 }}>
-          {/* Encabezado */}
           <Box sx={{ mb: 5 }}>
             <Typography variant="h4" color="textSecondary">Bienvenido de nuevo</Typography>
             <Typography variant="body1" color="textSecondary">¿Listo para tu próxima sesión?</Typography>
           </Box>
 
-          {/* Card de Próxima Cita */}
-          <Typography variant="subtitle1" className="section-label">
+          <Typography variant="subtitle1" className="section-label" sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
             <CalendarTodayIcon fontSize="small" color="primary" /> Tu próxima cita
           </Typography>
-          <Card className="highlight-card">
+          
+          {/* REEMPLAZO: Box con Flexbox para la cita próxima */}
+          <Card className="highlight-card" sx={{ mb: 6 }}>
             <CardContent sx={{ p: 4 }}>
               <Typography variant="caption" className="next-badge">SESIÓN PRÓXIMA</Typography>
               <Typography variant="h5" sx={{ mt: 1, mb: 2 }}>Cálculo II - Técnicas de Integración</Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2"><strong>PROFESOR/A:</strong> Profesor Jose</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2"><strong>FECHA Y HORA:</strong> Oct 24, 10:00 AM</Typography>
-                </Grid>
-              </Grid>
+              
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: { xs: 'column', sm: 'row' }, 
+                gap: 2, 
+                mb: 3 
+              }}>
+                <Typography variant="body2"><strong>PROFESOR/A:</strong> Profesor Jose</Typography>
+                <Typography variant="body2"><strong>FECHA Y HORA:</strong> Oct 24, 10:00 AM</Typography>
+              </Box>
+              
               <Button variant="contained" color="primary" className="btn-join">Unirse</Button>
             </CardContent>
           </Card>
 
-          {/* Filtros */}
-          <Box className="filter-section">
+          <Box className="filter-section" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <SearchIcon color="primary" /> Tutorías Disponibles
             </Typography>
@@ -93,42 +93,55 @@ const Agenda: React.FC = () => {
             </FormControl>
           </Box>
 
-          {/* Grid de Tutorías */}
-          <Grid container spacing={3} sx={{ pb: 8 }}>
+          {/* REEMPLAZO: CSS Grid nativo mediante Box */}
+          <Box sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: {
+              xs: '1fr',           // 1 columna en móvil
+              sm: '1fr 1fr',       // 2 columnas en tablet
+              md: '1fr 1fr 1fr'    // 3 columnas en desktop
+            },
+            gap: 3, 
+            pb: 8 
+          }}>
             {tutorias.map((item) => (
-              <Grid item xs={12} sm={6} md={4} key={item.id}>
-                <Card className="tutoria-card">
-                  <CardContent sx={{ p: 3, flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                      <Box className="icon-box">{item.icon}</Box>
-                      <Chip 
-                        label={item.status} 
-                        size="small" 
-                        className={`status-label ${item.status.toLowerCase()}`} 
-                      />
-                    </Box>
-                    <Typography variant="h6">{item.materia}</Typography>
-                    <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>{item.prof}</Typography>
-                    <Typography variant="body2" color="textSecondary">📅 {item.fecha}</Typography>
-                    <Typography variant="body2" color="textSecondary">⏰ {item.hora}</Typography>
-                  </CardContent>
-                  <Box sx={{ p: 2 }}>
-                    <Button 
-                      fullWidth 
-                      className={`btn-card-action ${item.status === 'LLENO' ? 'disabled' : ''}`}
-                      disabled={item.status === 'LLENO'}
-                    >
-                      {item.status === 'LLENO' ? 'Unirse a la lista de espera' : 'Inscribirse'}
-                    </Button>
+              <Card key={item.id} className="tutoria-card" sx={{ display: 'flex', flexDirection: 'column' }}>
+                <CardContent sx={{ p: 3, flexGrow: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                    <Box className="icon-box">{item.icon}</Box>
+                    <Chip 
+                      label={item.status} 
+                      size="small" 
+                      sx={{ 
+                        fontWeight: 'bold',
+                        backgroundColor: item.status === 'LLENO' ? '#ffebee' : '#e8f5e9',
+                        color: item.status === 'LLENO' ? '#c62828' : '#2e7d32'
+                      }} 
+                    />
                   </Box>
-                </Card>
-              </Grid>
+                  <Typography variant="h6">{item.materia}</Typography>
+                  <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>{item.prof}</Typography>
+                  <Typography variant="body2" color="textSecondary">📅 {item.fecha}</Typography>
+                  <Typography variant="body2" color="textSecondary">⏰ {item.hora}</Typography>
+                </CardContent>
+                <Box sx={{ p: 2 }}>
+                  <Button 
+                    fullWidth 
+                    variant="outlined"
+                    disabled={item.status === 'LLENO'}
+                    sx={{ borderRadius: '8px' }}
+                  >
+                    {item.status === 'LLENO' ? 'Lista de espera' : 'Inscribirse'}
+                  </Button>
+                </Box>
+              </Card>
             ))}
-          </Grid>
+          </Box>
         </Container>
       </Box>
     </ThemeProvider>
   );
 };
+
 
 export default Agenda;
