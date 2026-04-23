@@ -10,10 +10,12 @@ app.use(express.json());
 const auth = require("./routes/auth");
 const userRoutes = require("./routes/userRoutes");
 const citasRoutes = require("./routes/citas");
+const appointmentRoutes = require("./routes/appointment.routes");
 
 app.use("/api/auth", auth);
 app.use("/api/users", userRoutes);
 app.use("/api/citas", citasRoutes);
+app.use("/api/appointments", appointmentRoutes);
 
 app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");
