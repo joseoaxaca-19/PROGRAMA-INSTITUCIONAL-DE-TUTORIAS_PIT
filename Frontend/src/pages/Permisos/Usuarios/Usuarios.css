@@ -1,45 +1,98 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
 
-.gestion-container {
-  font-family: 'Inter', sans-serif;
+html, body {
+  margin: 0;
+  padding: 0;
   background-color: #F8F9FC;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Layout con sidebar */
+.usuarios-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #F8F9FC;
+}
+
+.usuarios-main {
+  margin-left: 200px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-/* HEADER */
-.header-usuarios {
+/* Topbar */
+.usuarios-topbar {
   background: white;
-  height: 70px;
+  padding: 14px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 50px;
-  border-bottom: 1px solid #EEF2F6;
+  border-bottom: 1px solid #e8eaf0;
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 
-.logo-section {
-  color: #003DA6;
-  font-weight: 900;
-  font-size: 18px;
+.usuarios-breadcrumb {
+  font-size: 13px;
+  color: #888;
 }
 
-.search-wrapper {
-  background: #F1F4F9;
-  border-radius: 12px;
+.usuarios-topbar-right {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  width: 300px;
+  gap: 16px;
 }
-.search-wrapper input { background: transparent; border: none; outline: none; margin-left: 10px; width: 100%; font-size: 14px; }
 
-/* LAYOUT */
+.usuarios-topbar-bell {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.usuarios-topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.usuarios-topbar-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-align: right;
+}
+
+.usuarios-topbar-role {
+  font-size: 10px;
+  color: #888;
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+
+.usuarios-topbar-avatar {
+  width: 36px;
+  height: 36px;
+  background: #003DA5;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Contenido principal */
 .usuarios-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 30px 40px 100px 40px;
+  width: 100%;
 }
 
+/* TOP ACTIONS */
 .top-actions {
   display: flex;
   justify-content: space-between;
@@ -47,7 +100,10 @@
   margin-bottom: 30px;
 }
 
-.left-group { display: flex; gap: 12px; }
+.left-group { 
+  display: flex; 
+  gap: 12px; 
+}
 
 .white-btn {
   background: white;
@@ -60,6 +116,13 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.2s;
+}
+
+.white-btn:hover {
+  background: #F8F9FC;
+  border-color: #003DA6;
 }
 
 .gold-btn-user {
@@ -74,17 +137,27 @@
   gap: 10px;
   box-shadow: 0 10px 20px rgba(214, 166, 0, 0.2);
   cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.2s;
+}
+
+.gold-btn-user:hover {
+  background: #c09500;
 }
 
 /* TABLA */
 .table-card-users {
   background: white;
   border-radius: 20px;
-  padding: 20px 0; /* Padding lateral se maneja en las celdas */
+  padding: 20px 0;
   box-shadow: 0 4px 25px rgba(0,0,0,0.03);
 }
 
-.user-table { width: 100%; border-collapse: collapse; }
+.user-table { 
+  width: 100%; 
+  border-collapse: collapse; 
+}
+
 .user-table th { 
   text-align: left; 
   padding: 20px 30px; 
@@ -92,18 +165,62 @@
   color: #A0AEC0; 
   letter-spacing: 1px; 
   border-bottom: 1px solid #F7FAFC;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 700;
 }
-.user-table td { padding: 20px 30px; border-bottom: 1px solid #F7FAFC; }
 
-.user-cell { display: flex; align-items: center; gap: 15px; }
-.u-avatar-img { width: 45px; height: 45px; border-radius: 12px; object-fit: cover; }
-.u-name { display: block; font-weight: 800; color: #001F54; font-size: 14px; }
-.u-mail { font-size: 12px; color: #718096; }
+.user-table td { 
+  padding: 20px 30px; 
+  border-bottom: 1px solid #F7FAFC; 
+  font-family: 'Segoe UI', sans-serif;
+}
 
-.role-cell { display: flex; align-items: center; gap: 10px; color: #4A5568; font-weight: 600; font-size: 14px; }
-.dot-role { width: 8px; height: 8px; border-radius: 50%; }
+.user-cell { 
+  display: flex; 
+  align-items: center; 
+  gap: 15px; 
+}
 
-.div-text { color: #718096; font-size: 14px; }
+.u-avatar-img { 
+  width: 45px; 
+  height: 45px; 
+  border-radius: 12px; 
+  object-fit: cover; 
+}
+
+.u-name { 
+  display: block; 
+  font-weight: 800; 
+  color: #001F54; 
+  font-size: 14px; 
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.u-mail { 
+  font-size: 12px; 
+  color: #718096; 
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.role-cell { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  color: #4A5568; 
+  font-weight: 600; 
+  font-size: 14px; 
+}
+
+.dot-role { 
+  width: 8px; 
+  height: 8px; 
+  border-radius: 50%; 
+}
+
+.div-text { 
+  color: #718096; 
+  font-size: 14px; 
+}
 
 /* PILLS DE ESTADO */
 .status-pill {
@@ -111,18 +228,184 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
+  font-family: 'Segoe UI', sans-serif;
 }
-.status-pill.activo { background: #E6FFFA; color: #00897B; }
-.status-pill.inactivo { background: #F4F7FE; color: #A0AEC0; }
 
-.action-btns { display: flex; gap: 10px; }
-.icon-action { background: none; border: none; color: #A0AEC0; cursor: pointer; transition: color 0.2s; }
-.icon-action:hover { color: #003DA6; }
+.status-pill.activo { 
+  background: #E6FFFA; 
+  color: #00897B; 
+}
+
+.status-pill.inactivo { 
+  background: #F4F7FE; 
+  color: #A0AEC0; 
+}
+
+.action-btns { 
+  display: flex; 
+  gap: 10px; 
+}
+
+.icon-action { 
+  background: none; 
+  border: none; 
+  color: #A0AEC0; 
+  cursor: pointer; 
+  transition: color 0.2s; 
+}
+
+.icon-action:hover { 
+  color: #003DA6; 
+}
 
 /* PAGINACIÓN */
-.table-footer { padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; }
-.total-count { color: #A0AEC0; font-size: 13px; font-weight: 600; }
-.pagination-ctrl { display: flex; gap: 8px; }
-.pg-btn { border: none; background: #F1F4F9; width: 35px; height: 35px; border-radius: 8px; font-weight: 700; cursor: pointer; color: #4A5568; }
-.pg-btn.active { background: #003DA6; color: white; }
-.pg-arrow { border: 1px solid #E2E8F0; background: white; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; color: #A0AEC0; }
+.table-footer { 
+  padding: 25px 30px; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.total-count { 
+  color: #A0AEC0; 
+  font-size: 13px; 
+  font-weight: 600; 
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.pagination-ctrl { 
+  display: flex; 
+  gap: 8px; 
+}
+
+.pg-btn { 
+  border: none; 
+  background: #F1F4F9; 
+  width: 35px; 
+  height: 35px; 
+  border-radius: 8px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  color: #4A5568; 
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.2s;
+}
+
+.pg-btn:hover:not(.active) {
+  background: #E2E8F0;
+}
+
+.pg-btn.active { 
+  background: #003DA6; 
+  color: white; 
+}
+
+.pg-arrow { 
+  border: 1px solid #E2E8F0; 
+  background: white; 
+  width: 35px; 
+  height: 35px; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  color: #A0AEC0; 
+  transition: all 0.2s;
+}
+
+.pg-arrow:hover {
+  border-color: #003DA6;
+  color: #003DA6;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .user-table th,
+  .user-table td {
+    padding: 15px;
+  }
+  
+  .u-name {
+    font-size: 12px;
+  }
+  
+  .u-mail {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .usuarios-main {
+    margin-left: 0;
+  }
+  
+  .usuarios-content {
+    padding: 20px;
+  }
+  
+  .top-actions {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .left-group {
+    justify-content: center;
+  }
+  
+  .gold-btn-user {
+    justify-content: center;
+  }
+  
+  .table-footer {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .user-table th,
+  .user-table td {
+    padding: 12px;
+  }
+  
+  .user-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 650px) {
+  .user-table thead {
+    display: none;
+  }
+  
+  .user-table tbody tr {
+    display: block;
+    margin-bottom: 20px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 15px;
+  }
+  
+  .user-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #F7FAFC;
+  }
+  
+  .user-table td:last-child {
+    border-bottom: none;
+  }
+  
+  .user-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #A0AEC0;
+    font-size: 11px;
+  }
+  
+  .user-cell {
+    flex-direction: row;
+    align-items: center;
+  }
+}
