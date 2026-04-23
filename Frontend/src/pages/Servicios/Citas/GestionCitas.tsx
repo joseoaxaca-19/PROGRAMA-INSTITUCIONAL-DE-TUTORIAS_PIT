@@ -1,6 +1,7 @@
 import "./GestionCitas.css"
 import { useState, useEffect } from "react"
 import NuevaCitaModal from "./NuevaCitaModal"
+import Sidebar from "../../../components/Sidebar/Sidebar"
 
 const materiaIconos: Record<string, string> = {
   "Cálculo II": "Σ",
@@ -50,46 +51,10 @@ function GestionCitas() {
 
   return (
     <div className="gc-layout">
-
-      {/* Sidebar */}
-      <aside className="gc-sidebar">
-        <div className="gc-sidebar-logo">
-          <div className="gc-sidebar-logo-icon">🎓</div>
-        </div>
-
-        <div className="gc-sidebar-user">
-          <p className="gc-sidebar-role">Administración</p>
-          <p className="gc-sidebar-school">PIT FES Acatlán</p>
-        </div>
-
-        <nav className="gc-sidebar-nav">
-          <a href="#" className="gc-nav-item">
-            <span>⊞</span> Escritorio
-          </a>
-          <a href="#" className="gc-nav-item active">
-            <span>📅</span> Citas de Tutoría
-          </a>
-          <a href="#" className="gc-nav-item">
-            <span>📊</span> Reportes PIT
-          </a>
-          <a href="#" className="gc-nav-item">
-            <span>⚙</span> Configuración
-          </a>
-        </nav>
-
-        <div className="gc-sidebar-footer">
-          <a href="#" className="gc-nav-item">
-            <span>❓</span> Ayuda Técnica
-          </a>
-          <a href="/" className="gc-nav-item gc-nav-logout">
-            <span>↪</span> Cerrar Sesión
-          </a>
-        </div>
-      </aside>
+      <Sidebar />
 
       {/* Contenido principal */}
       <main className="gc-main">
-
         {/* Topbar */}
         <header className="gc-topbar">
           <span className="gc-breadcrumb">Panel › Citas</span>
@@ -197,7 +162,6 @@ function GestionCitas() {
         </div>
 
         <p className="gc-total">Mostrando {citasFiltradas.length} de {citas.length} citas programadas</p>
-
       </main>
 
       <NuevaCitaModal isOpen={openModal} onClose={handleCloseModal} />
