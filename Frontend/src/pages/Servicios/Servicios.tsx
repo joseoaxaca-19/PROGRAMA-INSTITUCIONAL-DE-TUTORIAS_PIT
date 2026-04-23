@@ -1,7 +1,7 @@
 import "./Servicios.css"
 import Navbar from "../../components/Navbar/Navbar"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { Card, CardContent, Typography, Button } from "@mui/material"
 import { Link } from "react-router-dom"
@@ -12,49 +12,49 @@ import PsychologyIcon from "@mui/icons-material/Psychology"
 import GroupsIcon from "@mui/icons-material/Groups"
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium"
 
-
 function Servicios() {
 
+    const [logueado, setLogueado] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
-        // Cuando se carga la página de servicios, hacer scroll al inicio
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        const usuario = localStorage.getItem("usuario")
+        if (usuario) {
+            setLogueado(true)
+        } else {
+            setLogueado(false)
+        }
+
     }, [location]);
 
-
     const servicios = [
-
         {
-            titulo: "Tutorías académicas",
+            titulo: "Asesorías académicas",
             descripcion: "Sesiones de apoyo con tutores para mejorar el rendimiento académico en distintas asignaturas.",
             icono: <SchoolIcon sx={{ fontSize: 50 }} />
         },
-
         {
-            titulo: "Asesoría académica",
+            titulo: "Acompañamiento en la trayectoria",
             descripcion: "Orientación para resolver dudas sobre materias, planes de estudio y trayectoria escolar.",
             icono: <MenuBookIcon sx={{ fontSize: 50 }} />
         },
-
         {
-            titulo: "Orientación vocacional",
+            titulo: "Orientación",
             descripcion: "Apoyo para tomar decisiones sobre el desarrollo profesional y elección de especializaciones.",
             icono: <WorkspacePremiumIcon sx={{ fontSize: 50 }} />
         },
-
         {
             titulo: "Apoyo psicológico",
             descripcion: "Acompañamiento emocional para promover el bienestar físico y mental de los estudiantes.",
             icono: <PsychologyIcon sx={{ fontSize: 50 }} />
         },
-
         {
             titulo: "Talleres y cursos",
             descripcion: "Actividades formativas para fortalecer habilidades académicas y personales.",
             icono: <GroupsIcon sx={{ fontSize: 50 }} />
         }
-
     ]
 
     return (
@@ -80,49 +80,42 @@ function Servicios() {
                             <CardContent>
 
                                 <div className="icono">
-
                                     {servicio.icono}
-
                                 </div>
 
                                 <Typography variant="h6" className="titulo">
-
                                     {servicio.titulo}
-
                                 </Typography>
 
                                 <Typography variant="body2" className="descripcion">
-
                                     {servicio.descripcion}
-
                                 </Typography>
 
-                                <Button
-                                    variant="contained"
-                                    component={Link}
-                                    to="/solicitar-tutoria"
-                                    className="boton-servicio"
-                                >
+                                <div className="botones-servicio">
 
-                                    Solicitar tutoría
+                                    {logueado && (
+                                        <Button
+                                            variant="contained"
+                                            component={Link}
+                                            to="/solicitar-tutoria"
+                                            className="boton-servicio"
+                                        >
+                                            Solicitar tutoría
+                                        </Button>
+                                    )}
 
-                                </Button>
+                                    <Button
+                                        variant="outlined"
+                                        className="boton-secundario"
+                                    >
+                                        Ver más
+                                    </Button>
 
-
-                                <Button
-                                    variant="contained"
-                                    className="boton-servicio"
-                                >
-
-                                    Ver más
-
-                                </Button>
+                                </div>
 
                             </CardContent>
 
                         </Card>
-
-
 
                     ))}
 

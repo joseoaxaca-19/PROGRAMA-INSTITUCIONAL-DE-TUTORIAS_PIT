@@ -40,3 +40,24 @@ box-shadow:0 5px 15px rgba(0,0,0,0.1);
 
 background:#003DA5 !important;
 }
+
+.mensaje{
+margin-top:15px;
+color:green;
+font-weight:500;
+}
+
+.no-login{
+background:white;
+padding:40px;
+border-radius:10px;
+max-width:500px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.no-login h2{
+color:#003DA5;
+margin-bottom:10px;
+}

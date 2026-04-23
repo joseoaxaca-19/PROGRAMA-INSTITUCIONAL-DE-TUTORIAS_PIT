@@ -1,2 +1,5 @@
 node_modules/
 .env
+Backend/.postman/resources.yaml
+Backend/db/connection.js
+/Backend/postman

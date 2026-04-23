@@ -1,1 +1,114 @@
-/*Aqui van los estilos de avisos*/
+
+.anuncios-container {
+  margin-top: 50px;
+  background-color: #4A4A4A;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.carrusel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.carrusel-wrapper {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  aspect-ratio: 16 / 6;
+}
+
+.carrusel-slide {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+
+.carrusel-slide.animando {
+  transition: transform 0.5s ease-in-out;
+}
+
+.carrusel-item {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carrusel-btn {
+  background-color: rgba(242, 232, 207, 0.9);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #003DA6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.carrusel-btn:hover {
+  background-color: #F2E8CF;
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.carrusel-btn:active {
+  transform: scale(0.95);
+}
+
+.indicadores {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.indicador {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(242, 232, 207, 0.5);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.indicador:hover {
+  background-color: rgba(242, 232, 207, 0.8);
+  transform: scale(1.1);
+}
+
+.indicador.activo {
+  background-color: #F2E8CF;
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .anuncios-container {
+    padding: 0.75rem;
+  }
+
+  .carrusel-wrapper {
+    aspect-ratio: 4 / 3;
+  }
+
+  .carrusel-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+}
