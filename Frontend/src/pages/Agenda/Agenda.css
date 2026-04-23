@@ -1,42 +1,81 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&family=Montserrat:wght@400;600&display=swap');
 
-.agenda-container {
-  background-color: #FFFFFF;
+.agenda-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f6fb;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Main content area */
+.agenda-main {
+  margin-left: 200px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-.navbar {
-  border-bottom: 1px solid #E5E7EB !important;
-}
-
-.toolbar-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.brand-logo {
-  width: 30px;
-  height: 30px;
-  background-color: #003DA5;
-  border-radius: 8px;
-}
-
-.nav-menu {
+/* Topbar */
+.agenda-topbar {
+  background: white;
+  padding: 14px 32px;
   display: flex;
-  gap: 20px;
-  margin-left: auto;
-  margin-right: 40px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e8eaf0;
 }
 
-.profile-avatar {
-  background-color: #F3F4F6 !important;
-  color: #003DA5 !important;
-  font-weight: 600 !important;
-  font-size: 14px !important;
-  border: 1px solid #D1D5DB;
+.agenda-breadcrumb {
+  font-size: 13px;
+  color: #888;
 }
 
+.agenda-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.agenda-topbar-bell {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.agenda-topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.agenda-topbar-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-align: right;
+}
+
+.agenda-topbar-role {
+  font-size: 10px;
+  color: #888;
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+
+.agenda-topbar-avatar {
+  width: 36px;
+  height: 36px;
+  background: #003DA5;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Section label */
 .section-label {
   display: flex;
   align-items: center;
@@ -45,6 +84,7 @@
   margin-bottom: 12px;
 }
 
+/* Highlight card */
 .highlight-card {
   border-left: 6px solid #D6A600 !important;
   border-radius: 12px !important;
@@ -58,13 +98,23 @@
   letter-spacing: 0.5px;
 }
 
-.btn-join {
-  margin-top: 20px !important;
-  padding: 8px 32px !important;
-  border-radius: 8px !important;
-  font-weight: 600 !important;
+.agenda-btn-join {
+  background: #003DA5;
+  color: white;
+  border: none;
+  padding: 8px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 20px;
 }
 
+.agenda-btn-join:hover {
+  background: #002d7a;
+}
+
+/* Filter section */
 .filter-section {
   display: flex;
   justify-content: space-between;
@@ -72,7 +122,8 @@
   margin: 48px 0 24px;
 }
 
-.tutoria-card {
+/* Tutor cards */
+.agenda-tutoria-card {
   border-radius: 16px !important;
   border: 1px solid #E5E7EB !important;
   box-shadow: none !important;
@@ -81,7 +132,7 @@
   flex-direction: column;
 }
 
-.icon-box {
+.agenda-icon-box {
   width: 44px;
   height: 44px;
   background-color: #F9FAFB;
@@ -92,30 +143,46 @@
   font-size: 18px;
 }
 
-.status-label {
-  font-weight: 700 !important;
-  font-size: 11px !important;
+.agenda-btn-inscribir {
+  width: 100%;
+  background-color: #F3F4F6;
+  color: #374151;
+  border: 1px solid #E5E7EB;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.status-label.abierto {
-  background-color: #D1FAE5 !important;
-  color: #065F46 !important;
+.agenda-btn-inscribir:hover:not(.disabled) {
+  background-color: #003DA5;
+  color: white;
+  border-color: #003DA5;
 }
 
-.status-label.lleno {
-  background-color: #F3E8FF !important;
-  color: #5B21B6 !important;
+.agenda-btn-inscribir.disabled {
+  background-color: #F9FAFB;
+  color: #9CA3AF;
+  cursor: not-allowed;
 }
 
-.btn-card-action {
-  background-color: #F3F4F6 !important;
-  color: #374151 !important;
-  padding: 10px !important;
-  border-radius: 10px !important;
-  font-size: 14px !important;
-}
-
-.btn-card-action.disabled {
-  background-color: #F9FAFB !important;
-  color: #9CA3AF !important;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .agenda-main {
+    margin-left: 0;
+  }
+  
+  .agenda-topbar {
+    padding: 14px 16px;
+  }
+  
+  .agenda-topbar-name {
+    display: none;
+  }
+  
+  .agenda-topbar-role {
+    display: none;
+  }
 }
