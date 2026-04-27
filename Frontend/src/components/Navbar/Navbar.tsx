@@ -90,7 +90,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const handleClick = (sectionId: string) => {
     setMenuOpen(false);
     isScrolling.current = true;
-    
+
     const element = document.getElementById(sectionId);
     if (element) {
       const navbarHeight = getNavbarHeight();
@@ -104,7 +104,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
       // Actualizar URL sin causar navegación
       window.history.pushState(null, "", `/#${sectionId}`);
-      
+
       // Actualizar sección activa después del scroll
       setTimeout(() => {
         setActiveSection(sectionId);
@@ -219,6 +219,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
               >
                 Citas
               </button>
+
             </li>
           )}
           <li>

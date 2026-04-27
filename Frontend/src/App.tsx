@@ -15,6 +15,7 @@ import Divisiones from "./pages/Divisiones/Divisiones"
 import Accesos from "./pages/Permisos/Accesos/Accesos"
 import Roles from "./pages/Permisos/Roles/Roles"
 import Usuarios from "./pages/Permisos/Usuarios/Usuarios"
+import ReportesPIT from "./pages/Reportes/ReportesPIT"
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
         <Route path="/accesos" element={<Accesos />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/roles" element={<Roles />} />
+        <Route path="/reportes" element={<ReportesPIT />} />
+      
       </Routes>
     </BrowserRouter>
   )

@@ -1,4 +1,5 @@
 import "./GestionCitas.css"
+import "../../../components/Sidebar/Sidebar.css"
 import { useState, useEffect } from "react"
 import NuevaCitaModal from "./NuevaCitaModal"
 import Sidebar from "../../../components/Sidebar/Sidebar"
