@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-
+const middlewareCarrera = require("./middlewares/middlewareCarrera");
 const app = express(); // 👈 primero creas la app
 
 app.use(cors());
