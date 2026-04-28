@@ -1,13 +1,14 @@
 const express = require("express");
 const cors = require("cors");
-app.use('/citas', require('./routes/citas'));
-const app = express();
+
+const app = express(); // 👈 primero creas la app
 
 app.use(cors());
 app.use(express.json());
 
-const authRoutes = require("./routes/auth");
+app.use('/citas', require('./routes/citas'));
 
+const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
