@@ -1,6 +1,6 @@
 const express = require("express");
-const middlewareCarrera = require("./middlewareCarrera");
 
+const middlewareCarrera = require("./middlewares/middlewareCarrera");
 const app = express();
 
 app.get("/contenido/:carreraId", middlewareCarrera, (req, res) => {
