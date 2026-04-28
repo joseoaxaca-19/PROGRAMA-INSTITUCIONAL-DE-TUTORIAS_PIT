@@ -1,12 +1,4 @@
-const { Pool } = require("pg");
-
-const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "mi_db",
-  password: "password",
-  port: 5432,
-});
+const pool = require("./db");
 
 async function validarAcceso(usuarioId, carreraId) {
   const query = `
@@ -19,5 +11,7 @@ async function validarAcceso(usuarioId, carreraId) {
 
   const { rows } = await pool.query(query, [usuarioId, carreraId]);
 
-  return rows[0].permitido;
+  return rows[0]?.permitido || false;
 }
+
+module.exports = validarAcceso;
