@@ -23,8 +23,10 @@ const createAppointment = async (req, res) => {
 
     const { tutor_id, tutorado_id, fecha_hora } = validationResult.data;
 
+    const admin_id = req.user.id;
+
     try {
-        const nuevaCita = await appointmentService.createAppointment(tutor_id, tutorado_id, fecha_hora);
+        const nuevaCita = await appointmentService.createAppointment(admin_id, tutor_id, tutorado_id, fecha_hora);
         
         return res.status(201).json({
             success: true,
@@ -55,6 +57,52 @@ const createAppointment = async (req, res) => {
     }
 };
 
+const updateStatus = async (req, res) => {
+    // Verificar rol de Tutor
+    if (!req.user || !req.user.rol || req.user.rol.toLowerCase() !== 'tutor') {
+        return res.status(403).json({
+            success: false,
+            message: "Acceso denegado: solo el Tutor puede actualizar el estado de la cita."
+        });
+    }
+
+    const { id } = req.params;
+    const { estado } = req.body;
+    const tutor_id = req.user.id;
+
+    if (!estado) {
+        return res.status(400).json({ success: false, message: "El campo 'estado' es requerido." });
+    }
+
+    try {
+        const citaActualizada = await appointmentService.updateAppointmentStatus(id, tutor_id, estado);
+        
+        return res.status(200).json({
+            success: true,
+            message: "Estado de cita actualizado exitosamente",
+            data: citaActualizada
+        });
+    } catch (error) {
+        console.error("Error al actualizar estado de cita:", error);
+
+        if (error.message === 'INVALID_STATUS') {
+            return res.status(400).json({ success: false, message: "Estado inválido. Solo se permite 'aceptada' o 'rechazada'." });
+        }
+        if (error.message === 'APPOINTMENT_NOT_FOUND') {
+            return res.status(404).json({ success: false, message: "La cita especificada no existe." });
+        }
+        if (error.message === 'UNAUTHORIZED_TUTOR') {
+            return res.status(403).json({ success: false, message: "No tienes permiso para modificar esta cita. Solo el tutor asignado puede hacerlo." });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Error interno del servidor al actualizar la cita."
+        });
+    }
+};
+
 module.exports = {
-    createAppointment
+    createAppointment,
+    updateStatus
 };

@@ -30,6 +30,7 @@ const HorarioTutor = sequelize.define('HorarioTutor', {
 // Modelo Cita
 const Cita = sequelize.define('Cita', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    admin_id: { type: DataTypes.INTEGER, allowNull: false },
     tutor_id: { type: DataTypes.INTEGER, allowNull: false },
     tutorado_id: { type: DataTypes.INTEGER, allowNull: false },
     fecha_hora: { type: DataTypes.DATE, allowNull: false },
@@ -49,6 +50,7 @@ Usuario.hasMany(HorarioTutor, { foreignKey: 'tutor_id', as: 'horarios' });
 
 Cita.belongsTo(Usuario, { foreignKey: 'tutor_id', as: 'tutor' });
 Cita.belongsTo(Usuario, { foreignKey: 'tutorado_id', as: 'tutorado' });
+Cita.belongsTo(Usuario, { foreignKey: 'admin_id', as: 'admin' });
 
 module.exports = {
     Carrera,
