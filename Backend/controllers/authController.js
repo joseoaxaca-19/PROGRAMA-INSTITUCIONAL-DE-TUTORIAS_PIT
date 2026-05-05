@@ -1,4 +1,4 @@
-const pool = require("./db");
+const pool = require("../config/db"); // ← Cambiado de "./db" a "../config/db"
 
 async function validarAcceso(usuarioId, carreraId) {
   const query = `
