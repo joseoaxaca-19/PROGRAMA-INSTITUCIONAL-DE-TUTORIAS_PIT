@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const config = require("./config");
+const { pool } = require("./connection"); // Importamos el pool para probar la conexión
 
 const app = express();
 
@@ -22,6 +23,18 @@ app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");
 });
 
-app.listen(config.port, () => {
-    console.log(`Servidor corriendo en http://localhost:${config.port}`);
-});
+// Probar conexión a la base de datos antes de arrancar el servidor
+pool.connect()
+    .then(client => {
+        console.log("✅ Conectado a la base de datos PostgreSQL exitosamente.");
+        client.release();
+        
+        // Iniciar el servidor solo si hay conexión a la BD
+        app.listen(config.port, () => {
+            console.log(`🚀 Servidor corriendo en http://localhost:${config.port}`);
+        });
+    })
+    .catch(err => {
+        console.error("❌ Error al conectar a la base de datos. Verifica tus credenciales en el archivo .env:", err.message);
+        process.exit(1); // Detener la aplicación si no hay base de datos
+    });
