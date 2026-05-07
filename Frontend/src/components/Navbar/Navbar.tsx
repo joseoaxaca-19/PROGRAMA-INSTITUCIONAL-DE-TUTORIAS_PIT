@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/icons/unam_logo.svg";
 import Login from "../../pages/Login/Login";
 import { isAuthenticated, logout } from "../../services/api";
+import Register from "../../pages/Register/Register";
 
 interface NavbarProps {
   onLoginClick?: () => void;
@@ -201,34 +202,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
       </nav>
 
       <Login isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
-      
-      {/* Modal de Registro - lo crearemos después */}
-      {isRegisterModalOpen && (
-        <div className="modal-overlay" onClick={handleCloseRegisterModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={handleCloseRegisterModal}>×</button>
-            <h2>Registrarse</h2>
-            <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
-              Formulario de registro en desarrollo...
-            </p>
-            <button 
-              onClick={handleCloseRegisterModal}
-              style={{ 
-                marginTop: '20px', 
-                width: '100%', 
-                padding: '10px',
-                background: '#003DA5',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
+      <Register isOpen={isRegisterModalOpen} onClose={handleCloseRegisterModal} />
     </>
   );
 }

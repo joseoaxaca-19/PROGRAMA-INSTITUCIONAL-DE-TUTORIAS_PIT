@@ -5,57 +5,53 @@ const { loginSchema, registerSchema } = require("../schemas/auth.schema");
 
 /**
  * Controlador para el registro de nuevos usuarios.
- * Recibe: nombre, apellidos, id_carrera, id_rol, password.
+ * Recibe: n_cuenta, correo, password, nombre, carrera, id rol
  */
 const register = async (req, res) => {
+    const { n_cuenta, email, password, nombre_completo, carrera, id_rol = 3 } = req.body;
+
+    if (!n_cuenta || !email || !password || !nombre_completo) {
+        return res.status(400).json({
+            success: false,
+            message: "Número de cuenta, correo, nombre completo y contraseña son obligatorios."
+        });
+    }
+
     try {
-        // Validación de datos estructurados con Zod
-        const validatedData = registerSchema.parse(req.body);
-        const { nombre, apellidos, id_carrera, id_rol, password } = validatedData;
+        // Verificar si el usuario ya existe
+        const checkQuery = `SELECT id_user FROM tr_user WHERE correo = $1 OR n_cuenta = $2`;
+        const checkResult = await db.query(checkQuery, [email, n_cuenta]);
+        
+        if (checkResult.rows.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "El correo o número de cuenta ya está registrado."
+            });
+        }
 
         // Encriptar la contraseña
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Insertar en la tabla 'usuarios'
+        // Guardar el usuario en PostgreSQL
         const query = `
-            INSERT INTO usuarios (nombre, apellidos, id_carrera, id_rol, contrasena)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, nombre, apellidos;
+            INSERT INTO tr_user (n_cuenta, correo, password, id_rol)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id_user, correo, n_cuenta;
         `;
-        const values = [nombre, apellidos, id_carrera, id_rol, hashedPassword];
-        const result = await db.query(query, values);
+        const result = await db.query(query, [n_cuenta, email, hashedPassword, id_rol]);
 
         return res.status(201).json({
             success: true,
-            message: "Usuario registrado exitosamente.",
-            data: {
-                usuario: result.rows[0]
-            }
+            message: "Usuario registrado exitosamente",
+            usuario: result.rows[0]
         });
 
     } catch (error) {
-        if (error.name === "ZodError") {
-            return res.status(400).json({
-                success: false,
-                message: "Error de validación",
-                errors: error.errors.map(e => ({ campo: e.path.join('.'), mensaje: e.message }))
-            });
-        }
-
         console.error("Error en el registro:", error);
-
-        // Manejo básico de errores de BD (ej. violación de FK)
-        if (error.code === '23503') {
-            return res.status(400).json({
-                success: false,
-                message: "La carrera o el rol especificado no existen."
-            });
-        }
-
         return res.status(500).json({
             success: false,
-            message: "Ocurrió un error interno en el servidor."
+            message: "Error interno del servidor."
         });
     }
 };
