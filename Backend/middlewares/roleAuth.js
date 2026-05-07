@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 // Middleware para verificar el token JWT
 const verifyToken = (req, res, next) => {
@@ -12,7 +13,7 @@ const verifyToken = (req, res, next) => {
 
     try {
         // Verificar y decodificar el token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'llave_secreta_por_defecto');
+        const decoded = jwt.verify(token, config.jwtSecret);
 
         // Adjuntar el payload decodificado (que incluye el rol) al objeto request
         req.user = decoded;

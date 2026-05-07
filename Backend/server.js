@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const config = require("./config");
 
 const app = express();
 
@@ -21,6 +22,6 @@ app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");
 });
 
-app.listen(3000, () => {
-    console.log("Servidor corriendo en http://localhost:3000");
+app.listen(config.port, () => {
+    console.log(`Servidor corriendo en http://localhost:${config.port}`);
 });
