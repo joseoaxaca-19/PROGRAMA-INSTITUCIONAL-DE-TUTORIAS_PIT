@@ -1,12 +1,16 @@
 const { Pool } = require('pg');
-const config = require('./config');
 
-const pool = new Pool(config.db);
+require('dotenv').config();
 
-// Escuchar errores inesperados en clientes inactivos del pool
-pool.on('error', (err, client) => {
-    console.error('Error inesperado en el cliente de la base de datos:', err);
-    process.exit(-1);
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT || 5432,
+    ssl: {
+        rejectUnauthorized: false // Necesario para Supabase
+    }
 });
 
 const query = async (text, params) => {
@@ -19,7 +23,4 @@ const query = async (text, params) => {
     }
 };
 
-module.exports = {
-    query,
-    pool // Exportamos el pool para poder usar transacciones (client = await pool.connect()) en el futuro
-};
+module.exports = { query };

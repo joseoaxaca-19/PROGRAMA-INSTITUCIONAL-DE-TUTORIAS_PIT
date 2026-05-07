@@ -3,6 +3,7 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/icons/unam_logo.svg";
 import Login from "../../pages/Login/Login";
+import { isAuthenticated, logout } from "../../services/api";
 
 interface NavbarProps {
   onLoginClick?: () => void;
@@ -17,45 +18,33 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const location = useLocation();
   const isScrolling = useRef(false);
 
-  // Obtener altura del navbar dinámicamente
   const getNavbarHeight = () => {
     const navbar = document.querySelector('.navbar');
     return navbar ? navbar.getBoundingClientRect().height : 80;
   };
 
-  // Verificar estado de login
   useEffect(() => {
-    const usuario = localStorage.getItem("usuario");
-    setIsLoggedIn(!!usuario);
+    setIsLoggedIn(isAuthenticated());
   }, [location.pathname]);
 
-  // Efecto para el scroll y detección de secciones
   useEffect(() => {
-    // Solo ejecutar en la página principal
     if (location.pathname !== "/") {
       setActiveSection("");
       return;
     }
 
-    // Verificar si las secciones existen
     const checkSections = () => {
       const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
       sections.forEach(section => {
         const element = document.getElementById(section);
-        if (!element) {
-          console.warn(`Sección no encontrada: ${section}`);
-        } else {
-          console.log(`✅ Sección encontrada: ${section}`);
-        }
+        if (!element) console.warn(`Sección no encontrada: ${section}`);
       });
     };
 
-    // Esperar a que el DOM esté listo
     const timeoutId = setTimeout(checkSections, 100);
 
     const handleScroll = () => {
       if (isScrolling.current) return;
-
       const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
       const navbarHeight = getNavbarHeight();
       let currentSection = "";
@@ -64,7 +53,6 @@ function Navbar({ onLoginClick }: NavbarProps) {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          // Usar un umbral más flexible
           if (rect.top <= navbarHeight + 100 && rect.bottom >= navbarHeight + 50) {
             currentSection = section;
             break;
@@ -72,14 +60,13 @@ function Navbar({ onLoginClick }: NavbarProps) {
         }
       }
 
-      // Actualizar sección activa solo si cambió
       if (currentSection && currentSection !== activeSection) {
         setActiveSection(currentSection);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Detectar sección inicial
+    handleScroll();
 
     return () => {
       clearTimeout(timeoutId);
@@ -90,7 +77,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const handleClick = (sectionId: string) => {
     setMenuOpen(false);
     isScrolling.current = true;
-
+    
     const element = document.getElementById(sectionId);
     if (element) {
       const navbarHeight = getNavbarHeight();
@@ -102,15 +89,12 @@ function Navbar({ onLoginClick }: NavbarProps) {
         behavior: "smooth"
       });
 
-      // Actualizar URL sin causar navegación
       window.history.pushState(null, "", `/#${sectionId}`);
-
-      // Actualizar sección activa después del scroll
+      
       setTimeout(() => {
         setActiveSection(sectionId);
       }, 100);
 
-      // Rehabilitar detección de scroll después de la animación
       setTimeout(() => {
         isScrolling.current = false;
       }, 1000);
@@ -129,17 +113,13 @@ function Navbar({ onLoginClick }: NavbarProps) {
     }
   };
 
-  const cerrarSesion = () => {
-    localStorage.removeItem("usuario");
-    setIsLoggedIn(false);
-    window.location.reload();
+  const handleLogout = () => {
+    logout();
   };
 
   const handleCloseModal = () => {
     setIsLoginModalOpen(false);
-    // Actualizar estado de login después de cerrar el modal
-    const usuario = localStorage.getItem("usuario");
-    setIsLoggedIn(!!usuario);
+    setIsLoggedIn(isAuthenticated());
   };
 
   const isActive = (sectionId: string) => {
@@ -161,70 +141,45 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
         <ul className={`menu ${menuOpen ? "open" : ""}`}>
           <li>
-            <button
-              className={`nav-button ${isActive("inicio") ? "active" : ""}`}
-              onClick={() => handleClick("inicio")}
-            >
+            <button className={`nav-button ${isActive("inicio") ? "active" : ""}`} onClick={() => handleClick("inicio")}>
               Inicio
             </button>
           </li>
           <li>
-            <button
-              className={`nav-button ${isActive("avisos") ? "active" : ""}`}
-              onClick={() => handleClick("avisos")}
-            >
+            <button className={`nav-button ${isActive("avisos") ? "active" : ""}`} onClick={() => handleClick("avisos")}>
               Avisos
             </button>
           </li>
           <li>
-            <button
-              className={`nav-button ${isActive("sobre-nosotros") ? "active" : ""}`}
-              onClick={() => handleClick("sobre-nosotros")}
-            >
+            <button className={`nav-button ${isActive("sobre-nosotros") ? "active" : ""}`} onClick={() => handleClick("sobre-nosotros")}>
               Sobre Nosotros
             </button>
           </li>
           <li>
-            <button
-              className={`nav-button ${isActive("servicios") ? "active" : ""}`}
-              onClick={() => handleClick("servicios")}
-            >
+            <button className={`nav-button ${isActive("servicios") ? "active" : ""}`} onClick={() => handleClick("servicios")}>
               Servicios
             </button>
           </li>
           <li>
-            <button
-              className={`nav-button ${isActive("divisiones") ? "active" : ""}`}
-              onClick={() => handleClick("divisiones")}
-            >
+            <button className={`nav-button ${isActive("divisiones") ? "active" : ""}`} onClick={() => handleClick("divisiones")}>
               Divisiones
             </button>
           </li>
           <li>
-            <button
-              className={`nav-button ${isActive("contacto") ? "active" : ""}`}
-              onClick={() => handleClick("contacto")}
-            >
+            <button className={`nav-button ${isActive("contacto") ? "active" : ""}`} onClick={() => handleClick("contacto")}>
               Contacto
             </button>
           </li>
           {isLoggedIn && (
             <li>
-              <button
-                className="nav-button"
-                onClick={() => {
-                  setMenuOpen(false);
-                  navigate("/citas");
-                }}
-              >
+              <button className="nav-button" onClick={() => { setMenuOpen(false); navigate("/citas"); }}>
                 Citas
               </button>
-
             </li>
           )}
           <li>
             {isLoggedIn ? (
-              <button className="login-btn" onClick={cerrarSesion}>
+              <button className="login-btn" onClick={handleLogout}>
                 Cerrar Sesión
               </button>
             ) : (
