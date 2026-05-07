@@ -10,11 +10,12 @@ interface RegistroProps {
 const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess }) => {
   const [formData, setFormData] = useState({
     nombre: '',
-    usuario: '', // Cambiado de email a usuario
+    usuario: '',
     carrera: '',
     numeroCuenta: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    rol: '4'  // Agrega el campo rol al state
   });
   
   const [error, setError] = useState('');
@@ -45,7 +46,6 @@ const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     let value = e.target.value;
     
-    // Si es el campo usuario, eliminar cualquier @
     if (e.target.name === 'usuario') {
       value = value.replace(/@.*$/, '');
     }
@@ -62,7 +62,6 @@ const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess 
     setLoading(true);
     setError('');
 
-    // Validaciones
     if (!formData.nombre || !formData.usuario || !formData.carrera || !formData.numeroCuenta || !formData.password) {
       setError('Por favor completa todos los campos obligatorios');
       setLoading(false);
@@ -81,7 +80,6 @@ const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess 
       return;
     }
 
-    // Validar que el usuario solo contenga letras, números, puntos y guiones
     const usuarioRegex = /^[a-zA-Z0-9._-]+$/;
     if (!usuarioRegex.test(formData.usuario)) {
       setError('El usuario solo puede contener letras, números, puntos y guiones');
@@ -89,7 +87,6 @@ const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess 
       return;
     }
 
-    // Completar el correo automáticamente
     const emailCompleto = `${formData.usuario}@pcpuma.acatlan.unam.mx`;
 
     try {
@@ -106,7 +103,7 @@ const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess 
           password: formData.password,
           nombre_completo: formData.nombre,
           carrera: formData.carrera,
-          id_rol: 3
+          id_rol: parseInt(formData.rol)  // Enviar el rol seleccionado
         }),
       });
 
@@ -185,6 +182,25 @@ const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess 
           </div>
 
           <div className="registro-form-group">
+            <label htmlFor="rol">Tipo de usuario *</label>
+            <select
+              id="rol"
+              name="rol"
+              value={formData.rol}
+              onChange={handleChange}
+              required
+            >
+              <option value="4">Alumno (Solicitar tutorías)</option>
+              <option value="3">Tutorado (Alumno que puede dar tutorías)</option>
+              <option value="2">Tutor (Dar tutorías)</option>
+            </select>
+            <small>Selecciona el tipo de usuario que serás</small>
+            <small style={{ display: 'block', color: '#D6A600', fontSize: '11px' }}>
+              * El rol de Tutorado permite dar tutorías al igual que Tutor, con un reconocimiento especial
+            </small>
+          </div>
+
+          <div className="registro-form-group">
             <label htmlFor="numeroCuenta">Número de cuenta *</label>
             <input
               type="text"
@@ -198,22 +214,29 @@ const Registro: React.FC<RegistroProps> = ({ isOpen, onClose, onRegistroSuccess 
           </div>
 
           <div className="registro-form-group">
-            <label htmlFor="rol">Tipo de usuario *</label>
-            <select
-                id="rol"
-                name="rol"
-                value={formData.rol}
+            <label htmlFor="password">Contraseña *</label>
+            <div className="registro-password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
+                placeholder="Mínimo 6 caracteres"
                 required
-            >
-                <option value="4">Alumno (Solicitar tutorías)</option>
-                <option value="3">Tutorado (Alumno que puede dar tutorías)</option>
-                <option value="2">Tutor (Dar tutorías)</option>
-            </select>
-            <small>Selecciona el tipo de usuario que serás</small>
-            <small style={{ display: 'block', color: '#D6A600', fontSize: '11px' }}>
-                * El rol de Tutorado permite dar tutorías al igual que Tutor, con un reconocimiento especial
-            </small>
+              />
+              <button 
+                type="button"
+                className="registro-toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <span className="material-symbols-outlined">visibility_off</span>
+                ) : (
+                  <span className="material-symbols-outlined">visibility</span>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="registro-form-group">
