@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/icons/unam_logo.svg";
 import Login from "../../pages/Login/Login";
-import Registro from "../../pages/Registro/Registro"; // Cambiado a Registro
+import Registro from "../../pages/Registro/Registro";
 import { isAuthenticated, logout } from "../../services/api";
 
 interface NavbarProps {
@@ -36,7 +36,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
     }
 
     const checkSections = () => {
-      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
+      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "contacto"]; // Eliminado "avisos"
       sections.forEach(section => {
         const element = document.getElementById(section);
         if (!element) console.warn(`Sección no encontrada: ${section}`);
@@ -47,7 +47,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
     const handleScroll = () => {
       if (isScrolling.current) return;
-      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
+      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "contacto"]; // Eliminado "avisos"
       const navbarHeight = getNavbarHeight();
       let currentSection = "";
 
@@ -156,11 +156,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
               Inicio
             </button>
           </li>
-          <li>
-            <button className={`nav-button ${isActive("avisos") ? "active" : ""}`} onClick={() => handleClick("avisos")}>
-              Avisos
-            </button>
-          </li>
+          {/* Eliminado el botón de Avisos */}
           <li>
             <button className={`nav-button ${isActive("sobre-nosotros") ? "active" : ""}`} onClick={() => handleClick("sobre-nosotros")}>
               Sobre Nosotros
