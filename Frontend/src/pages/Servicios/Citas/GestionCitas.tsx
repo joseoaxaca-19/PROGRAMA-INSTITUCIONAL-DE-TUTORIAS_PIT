@@ -1,41 +1,41 @@
 import "./GestionCitas.css"
-import "../../../components/Sidebar/Sidebar.css"
 import { useState, useEffect } from "react"
 import NuevaCitaModal from "./NuevaCitaModal"
 import Sidebar from "../../../components/Sidebar/Sidebar"
-
-const materiaIconos: Record<string, string> = {
-  "Cálculo II": "Σ",
-  "Intro to Python": "⌨",
-  "Literatura Mexicana": "📖",
-}
-
-const materiaColores: Record<string, string> = {
-  "Cálculo II": "#e8f0fe",
-  "Intro to Python": "#e6f4ea",
-  "Literatura Mexicana": "#fce8e6",
-}
+import { getCitasDisponibles, seleccionarCita, isAuthenticated } from "../../../services/api"
 
 function GestionCitas() {
   const [openModal, setOpenModal] = useState(false)
   const [citas, setCitas] = useState<any[]>([])
   const [busqueda, setBusqueda] = useState("")
   const [fechaFiltro, setFechaFiltro] = useState("")
+  const [loading, setLoading] = useState(true)
 
-  const cargarCitas = () => {
-    const data = JSON.parse(localStorage.getItem("citas") || "[]")
-    setCitas(data)
+  const cargarCitas = async () => {
+    setLoading(true)
+    try {
+      const data = await getCitasDisponibles()
+      setCitas(data)
+    } catch (error) {
+      console.error("Error al cargar citas:", error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleCloseModal = () => {
-    setOpenModal(false)
-    cargarCitas()
-  }
-
-  const eliminarCita = (index: number) => {
-    const nuevas = citas.filter((_, i) => i !== index)
-    localStorage.setItem("citas", JSON.stringify(nuevas))
-    setCitas(nuevas)
+  const handleSeleccionarCita = async (id_cita: number) => {
+    if (!isAuthenticated()) {
+      alert("Debes iniciar sesión para seleccionar una cita")
+      return
+    }
+    
+    try {
+      const result = await seleccionarCita(id_cita)
+      alert(result.mensaje || "Cita registrada correctamente")
+      cargarCitas() // Recargar lista
+    } catch (error) {
+      alert("Error al seleccionar la cita")
+    }
   }
 
   useEffect(() => {
@@ -43,9 +43,7 @@ function GestionCitas() {
   }, [])
 
   const citasFiltradas = citas.filter(c => {
-    const matchBusqueda =
-      c.materia?.toLowerCase().includes(busqueda.toLowerCase()) ||
-      c.tutor?.toLowerCase().includes(busqueda.toLowerCase())
+    const matchBusqueda = c.tutor?.toLowerCase().includes(busqueda.toLowerCase()) || false
     const matchFecha = fechaFiltro ? c.fecha === fechaFiltro : true
     return matchBusqueda && matchFecha
   })
@@ -54,9 +52,7 @@ function GestionCitas() {
     <div className="gc-layout">
       <Sidebar />
 
-      {/* Contenido principal */}
       <main className="gc-main">
-        {/* Topbar */}
         <header className="gc-topbar">
           <span className="gc-breadcrumb">Panel › Citas</span>
           <div className="gc-topbar-right">
@@ -71,7 +67,6 @@ function GestionCitas() {
           </div>
         </header>
 
-        {/* Encabezado */}
         <div className="gc-header">
           <div>
             <h1>Gestión de Citas de Tutoría</h1>
@@ -82,13 +77,12 @@ function GestionCitas() {
           </button>
         </div>
 
-        {/* Filtros */}
         <div className="gc-filtros">
           <div className="gc-search">
             <span>🔍</span>
             <input
               type="text"
-              placeholder="Buscar materias, tutores o estudiantes..."
+              placeholder="Buscar tutores..."
               value={busqueda}
               onChange={e => setBusqueda(e.target.value)}
             />
@@ -102,58 +96,33 @@ function GestionCitas() {
           <button className="gc-btn-filtros">☰ Filtros</button>
         </div>
 
-        {/* Tabla */}
         <div className="gc-tabla-wrapper">
           <table className="gc-tabla">
             <thead>
               <tr>
-                <th>MATERIA</th>
                 <th>TUTOR</th>
-                <th>ESTUDIANTE</th>
                 <th>FECHA</th>
                 <th>HORA</th>
-                <th>LUGAR (SALÓN)</th>
+                <th>ESTADO</th>
                 <th>ACCIONES</th>
               </tr>
             </thead>
             <tbody>
-              {citasFiltradas.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="gc-empty">No hay citas registradas</td>
-                </tr>
+              {loading ? (
+                <tr><td colSpan={5} className="gc-empty">Cargando citas...</td></tr>
+              ) : citasFiltradas.length === 0 ? (
+                <tr><td colSpan={5} className="gc-empty">No hay citas disponibles</td></tr>
               ) : (
                 citasFiltradas.map((cita, i) => (
                   <tr key={i}>
-                    <td>
-                      <div className="gc-materia-cell">
-                        <span
-                          className="gc-materia-icon"
-                          style={{ background: materiaColores[cita.materia] || "#f0f0f0" }}
-                        >
-                          {materiaIconos[cita.materia] || "📚"}
-                        </span>
-                        <strong>{cita.materia}</strong>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="gc-tutor-cell">
-                        <div className="gc-avatar-small">{cita.tutor?.[0]}</div>
-                        {cita.tutor}
-                      </div>
-                    </td>
-                    <td className="gc-muted">—</td>
+                    <td><strong>{cita.tutor}</strong></td>
                     <td className="gc-fecha">{cita.fecha}</td>
+                    <td><span className="gc-hora-badge">{cita.hora}</span></td>
+                    <td><span className="status-pill activo">Disponible</span></td>
                     <td>
-                      <span className="gc-hora-badge">{cita.hora}</span>
-                    </td>
-                    <td>
-                      <span className="gc-lugar-badge">{cita.lugar || "—"}</span>
-                    </td>
-                    <td>
-                      <div className="gc-acciones">
-                        <button className="gc-btn-icono" title="Editar">✏️</button>
-                        <button className="gc-btn-icono" title="Eliminar" onClick={() => eliminarCita(i)}>🗑️</button>
-                      </div>
+                      <button className="gc-btn-icono" onClick={() => handleSeleccionarCita(cita.id_cita)}>
+                        📅 Seleccionar
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -162,10 +131,10 @@ function GestionCitas() {
           </table>
         </div>
 
-        <p className="gc-total">Mostrando {citasFiltradas.length} de {citas.length} citas programadas</p>
+        <p className="gc-total">Mostrando {citasFiltradas.length} de {citas.length} citas disponibles</p>
       </main>
 
-      <NuevaCitaModal isOpen={openModal} onClose={handleCloseModal} />
+      <NuevaCitaModal isOpen={openModal} onClose={cargarCitas} />
     </div>
   )
 }

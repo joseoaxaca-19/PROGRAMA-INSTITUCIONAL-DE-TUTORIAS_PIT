@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/api';
 import './Login.css';
 
 interface LoginProps {
@@ -8,28 +9,36 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate(); // Hook para navegación
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Aquí puedes agregar tu lógica de autenticación
-    if (username === 'admin' && password === 'admin123') {
-      localStorage.setItem("usuario", username);
+    setLoading(true);
+    setError('');
+
+    try {
+      const data = await login(email, password);
       
-      console.log('Login exitoso');
-      setError('');
-      onClose(); // Cierra el modal
-      
-      // Redirecciona a la agenda
-      navigate('/agenda'); 
-      
-    } else {
-      setError('Usuario o contraseña incorrectos');
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify({ email, role: data.role }));
+        
+        console.log('Login exitoso');
+        onClose();
+        navigate('/agenda');
+        window.location.reload(); // Recargar para actualizar navbar
+      } else {
+        setError(data.message || 'Usuario o contraseña incorrectos');
+      }
+    } catch (err) {
+      setError('Error al conectar con el servidor');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,21 +51,18 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
-          ×
-        </button>
-        
+        <button className="modal-close" onClick={onClose}>×</button>
         <h2>Iniciar Sesión</h2>
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Usuario:</label>
+            <label htmlFor="email">Correo electrónico:</label>
             <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Ingresa tu usuario"
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="correo@ejemplo.com"
               required
             />
           </div>
@@ -72,11 +78,7 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
                 placeholder="Ingresa tu contraseña"
                 required
               />
-              <button 
-                type="button"
-                className="toggle-password"
-                onClick={togglePasswordVisibility}
-              >
+              <button type="button" className="toggle-password" onClick={togglePasswordVisibility}>
                 {showPassword ? (
                   <span className="material-symbols-outlined">visibility_off</span>
                 ) : (
@@ -88,8 +90,8 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
           
           {error && <div className="error-message">{error}</div>}
           
-          <button type="submit" className="btn-login">
-            Iniciar Sesión
+          <button type="submit" className="btn-login" disabled={loading}>
+            {loading ? 'Iniciando...' : 'Iniciar Sesión'}
           </button>
         </form>
       </div>
