@@ -1,26 +1,33 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 
-app.use(cors());
+// Configuración CORS para Vercel
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://tu-frontend.vercel.app'],
+    credentials: true
+}));
 app.use(express.json());
 
-// IMPORTANTE: El nombre debe coincidir con el archivo en la carpeta routes
-const auth = require("./routes/auth");
+// Importar rutas
+const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/userRoutes");
 const citasRoutes = require("./routes/citas");
-const appointmentRoutes = require("./routes/appointment.routes");
 
-app.use("/api/auth", auth);
+// Endpoints principales
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/citas", citasRoutes);
-app.use("/api/appointments", appointmentRoutes);
 
-app.get("/", (req, res) => {
-    res.send("Servidor funcionando 🚀");
+// Endpoint de prueba
+app.get("/api/health", (req, res) => {
+    res.json({ status: "OK", message: "Servidor PIT funcionando 🚀" });
 });
 
-app.listen(3000, () => {
-    console.log("Servidor corriendo en http://localhost:3000");
+// Puerto
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en puerto ${PORT}`);
 });

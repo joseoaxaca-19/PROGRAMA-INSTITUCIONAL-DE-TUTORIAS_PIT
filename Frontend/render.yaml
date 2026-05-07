@@ -1,0 +1,9 @@
+services:
+  - type: static
+    name: pit-frontend
+    rootDir: Frontend
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://tu-backend.onrender.com/api

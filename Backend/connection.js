@@ -1,11 +1,15 @@
 const { Pool } = require('pg');
+require('dotenv').config();
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'db_tutorias',
-    password: 'aguadejamaica11',
-    port: 5432,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT || 5432,
+    ssl: {
+        rejectUnauthorized: false // Necesario para Supabase
+    }
 });
 
 const query = async (text, params) => {
@@ -18,6 +22,4 @@ const query = async (text, params) => {
     }
 };
 
-module.exports = {
-    query
-};
+module.exports = { query };
