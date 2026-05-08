@@ -2,6 +2,10 @@ const db = require("../connection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const bcrypt = require("bcrypt");
+const salt = await bcrypt.genSalt(10);
+const hashedPassword = await bcrypt.hash(password, salt);
+
 /**
  * Controlador para el endpoint de inicio de sesión (Login)
  */
