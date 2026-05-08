@@ -1,47 +1,42 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-console.log('Conectando a Supabase...');
-console.log('Host:', process.env.DB_HOST);
-console.log('User:', process.env.DB_USER);
+// Usar DATABASE_URL para Neon
+const connectionString = process.env.DATABASE_URL;
+
+console.log('Conectando a Neon.tech...');
+
+if (!connectionString) {
+    console.error('ERROR: DATABASE_URL no está definida en .env');
+    process.exit(1);
+}
 
 const pool = new Pool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 5432,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    connectionString: connectionString,
     ssl: {
-        rejectUnauthorized: false,
-        require: true
+        require: true,
+        rejectUnauthorized: false  // Importante para Neon
     },
-    connectionTimeoutMillis: 30000,  // 30 segundos de timeout
+    connectionTimeoutMillis: 30000,
     idleTimeoutMillis: 30000,
-    max: 10  // Máximo de conexiones
+    max: 10
 });
 
-// Manejo de errores del pool
+// Eventos de conexión
+pool.on('connect', () => {
+    console.log('Conectado a Neon.tech PostgreSQL exitosamente');
+});
+
 pool.on('error', (err) => {
-    console.error('Error inesperado en el pool de conexiones:', err.message);
-});
-
-// Probar conexión al iniciar
-pool.connect((err, client, release) => {
-    if (err) {
-        console.error('Error al conectar a Supabase:', err.message);
-        console.error('Verifica que las variables de entorno sean correctas');
-    } else {
-        console.log('Conectado a Supabase PostgreSQL exitosamente');
-        release();
-    }
+    console.error('Error en el pool de conexiones:', err.message);
 });
 
 const query = async (text, params) => {
-    const start = Date.now();
     try {
+        const start = Date.now();
         const res = await pool.query(text, params);
         const duration = Date.now() - start;
-        console.log(`📊 Consulta ejecutada (${duration}ms): ${text.substring(0, 50)}...`);
+        console.log(`Consulta (${duration}ms): ${text.substring(0, 60)}...`);
         return res;
     } catch (error) {
         console.error('Error en consulta:', error.message);
@@ -49,4 +44,4 @@ const query = async (text, params) => {
     }
 };
 
-module.exports = { query };
+module.exports = { query, pool };
