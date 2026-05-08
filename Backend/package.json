@@ -20,7 +20,8 @@
     "pg": "^8.20.0",
     "sequelize": "^6.37.8",
     "sqlite3": "^5.1.7",
-    "zod": "^4.3.6"
+    "zod": "^4.3.6",
+    "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

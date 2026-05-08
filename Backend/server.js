@@ -4,36 +4,31 @@ require('dotenv').config();
 
 const app = express();
 
-// Configuración CORS actualizada
+// Configuración CORS - Versión corregida
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    
     'https://programa-institucional-de-tutorias-pit.onrender.com',
     'https://programa-institucional-de-tutorias-pit-1.onrender.com',
-    'https://programa-institucional-de-tutorias-pit.vercel.app',
-    'https://*.onrender.com'  // Permitir cualquier subdominio de render
+    'https://programa-institucional-de-tutorias-pit.vercel.app'
 ];
 
 app.use(cors({
     origin: function(origin, callback) {
-        // Permitir peticiones sin origen (como Postman)
         if (!origin) return callback(null, true);
-        
         if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('.onrender.com')) {
             callback(null, true);
         } else {
-            console.log('❌ CORS bloqueado para:', origin);
-            callback(new Error('No permitido por CORS'));
+            console.log('CORS bloqueado para:', origin);
+            callback(null, false);
         }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Manejar preflight requests
-app.options('*', cors());
+// NO USAR app.options('*', cors()) - esa línea causa el error
 
 app.use(express.json());
 
@@ -51,7 +46,7 @@ app.use("/api/citas", citasRoutes);
 app.get("/api/health", (req, res) => {
     res.json({ 
         status: "OK", 
-        message: "Servidor PIT funcionando 🚀",
+        message: "Servidor PIT funcionando ",
         timestamp: new Date().toISOString()
     });
 });
