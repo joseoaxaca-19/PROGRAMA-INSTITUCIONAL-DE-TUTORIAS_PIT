@@ -2,13 +2,6 @@ const db = require("../connection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const bcrypt = require("bcrypt");
-const salt = await bcrypt.genSalt(10);
-const hashedPassword = await bcrypt.hash(password, salt);
-
-/**
- * Controlador para el endpoint de inicio de sesión (Login)
- */
 const login = async (req, res) => {
     const { email, password } = req.body;
 
@@ -21,7 +14,8 @@ const login = async (req, res) => {
 
     try {
         const query = `
-            SELECT u.id_user, u.correo, u.password, u.n_cuenta, r.nombre_rol AS role_name
+            SELECT u.id_user, u.correo, u.password, u.n_cuenta, u.nombre_completo, 
+                   r.id_rol, r.nombre_rol AS role_name
             FROM tr_user u
             INNER JOIN tr_roles r ON u.id_rol = r.id_rol
             WHERE u.correo = $1
@@ -32,7 +26,7 @@ const login = async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "Usuario no encontrado. Verifique su correo electrónico."
+                message: "Usuario no encontrado."
             });
         }
 
@@ -46,41 +40,29 @@ const login = async (req, res) => {
             });
         }
 
-        const tokenPayload = {
-            id: user.id_user,
-            email: user.correo,
-            role: user.role_name,
-            n_cuenta: user.n_cuenta
-        };
-
         const secretKey = process.env.JWT_SECRET || 'llave_secreta_desarrollo_pit';
-        const token = jwt.sign(tokenPayload, secretKey, { expiresIn: '8h' });
+        const token = jwt.sign(
+            { id: user.id_user, email: user.correo, role: user.role_name, id_rol: user.id_rol },
+            secretKey,
+            { expiresIn: '8h' }
+        );
 
         return res.status(200).json({
             success: true,
             message: "Inicio de sesión exitoso.",
             token: token,
-            role: user.role_name,
-            email: user.correo,
-            n_cuenta: user.n_cuenta
+            user: { id: user.id_user, email: user.correo, role: user.role_name, n_cuenta: user.n_cuenta }
         });
 
     } catch (error) {
-        console.error("Error en el proceso de login:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Error interno del servidor."
-        });
+        console.error("Error en login:", error);
+        return res.status(500).json({ success: false, message: "Error interno del servidor." });
     }
 };
 
-/**
- * Endpoint de Registro - Actualizado para guardar en Supabase/PostgreSQL
- */
 const register = async (req, res) => {
-    const { n_cuenta, email, password, nombre_completo, carrera, id_rol = 3 } = req.body;
+    const { n_cuenta, email, password, nombre_completo, carrera, id_rol = 4 } = req.body;
 
-    // Validaciones
     if (!n_cuenta || !email || !password || !nombre_completo) {
         return res.status(400).json({
             success: false,
@@ -88,91 +70,71 @@ const register = async (req, res) => {
         });
     }
 
-    // Validar formato del correo institucional
-    const emailRegex = /^[0-9._-]+@pcpuma\.acatlan\.unam\.mx$/;
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({
-            success: false,
-            message: "Debes usar un correo institucional válido (@pcpuma.acatlan.unam.mx)"
-        });
-    }
-
-    // Validar número de cuenta (debe ser numérico)
-    const cuentaRegex = /^\d+$/;
-    if (!cuentaRegex.test(n_cuenta)) {
-        return res.status(400).json({
-            success: false,
-            message: "El número de cuenta debe contener solo dígitos"
-        });
-    }
-
-    if (password.length < 6) {
-        return res.status(400).json({
-            success: false,
-            message: "La contraseña debe tener al menos 6 caracteres"
-        });
-    }
-
     try {
-        // Verificar si el usuario ya existe por correo o número de cuenta
-        const checkQuery = `
-            SELECT id_user, correo, n_cuenta 
-            FROM tr_user 
-            WHERE correo = $1 OR n_cuenta = $2
-        `;
-        const checkResult = await db.query(checkQuery, [email, n_cuenta]);
-        
-        if (checkResult.rows.length > 0) {
-            const existingUser = checkResult.rows[0];
-            if (existingUser.correo === email) {
-                return res.status(400).json({
-                    success: false,
-                    message: "El correo ya está registrado."
-                });
-            }
-            if (existingUser.n_cuenta === n_cuenta) {
-                return res.status(400).json({
-                    success: false,
-                    message: "El número de cuenta ya está registrado."
-                });
-            }
-        }
-
-        // Encriptar la contraseña
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Insertar el nuevo usuario
         const insertQuery = `
-            INSERT INTO tr_user (n_cuenta, correo, password, id_rol, created_at)
-            VALUES ($1, $2, $3, $4, NOW())
+            INSERT INTO tr_user (n_cuenta, correo, password, id_rol, nombre_completo, carrera, created_at)
+            VALUES ($1, $2, $3, $4, $5, $6, NOW())
             RETURNING id_user, correo, n_cuenta
         `;
-        const result = await db.query(insertQuery, [n_cuenta, email, hashedPassword, id_rol]);
-
-        // Si quieres guardar también la carrera y nombre completo, necesitas tablas adicionales
-        // Por ahora guardamos los datos básicos
+        const result = await db.query(insertQuery, [n_cuenta, email, hashedPassword, id_rol, nombre_completo, carrera]);
 
         return res.status(201).json({
             success: true,
             message: "Usuario registrado exitosamente",
-            usuario: {
-                id: result.rows[0].id_user,
-                email: result.rows[0].correo,
-                n_cuenta: result.rows[0].n_cuenta
-            }
+            usuario: result.rows[0]
         });
 
     } catch (error) {
-        console.error("Error en el registro:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Error interno del servidor. Verifica que las tablas existan en Supabase."
-        });
+        console.error("Error en registro:", error);
+        return res.status(500).json({ success: false, message: "Error interno del servidor." });
     }
 };
 
-module.exports = {
-    login,
-    register
+const getAllUsers = async (req, res) => {
+    try {
+        const query = `
+            SELECT u.id_user, u.n_cuenta, u.correo, u.nombre_completo, u.carrera,
+                   r.id_rol, r.nombre_rol AS rol
+            FROM tr_user u
+            JOIN tr_roles r ON u.id_rol = r.id_rol
+            ORDER BY u.id_user
+        `;
+        const result = await db.query(query);
+        return res.status(200).json({ success: true, users: result.rows });
+    } catch (error) {
+        console.error("Error al obtener usuarios:", error);
+        return res.status(500).json({ success: false, message: "Error al obtener usuarios" });
+    }
 };
+
+const getAvailableRoles = async (req, res) => {
+    try {
+        const query = "SELECT id_rol, nombre_rol, descripcion FROM tr_roles ORDER BY id_rol";
+        const result = await db.query(query);
+        return res.status(200).json({ success: true, roles: result.rows });
+    } catch (error) {
+        console.error("Error al obtener roles:", error);
+        return res.status(500).json({ success: false, message: "Error al obtener roles" });
+    }
+};
+
+const updateUserRole = async (req, res) => {
+    const { id_user, id_rol_nuevo, motivo } = req.body;
+
+    if (!id_user || !id_rol_nuevo) {
+        return res.status(400).json({ success: false, message: "ID de usuario y nuevo rol son obligatorios" });
+    }
+
+    try {
+        await db.query("UPDATE tr_user SET id_rol = $1, updated_at = NOW() WHERE id_user = $2", [id_rol_nuevo, id_user]);
+        return res.status(200).json({ success: true, message: "Rol actualizado correctamente" });
+    } catch (error) {
+        console.error("Error al actualizar rol:", error);
+        return res.status(500).json({ success: false, message: "Error al actualizar el rol" });
+    }
+};
+
+module.exports = { login, register, getAllUsers, getAvailableRoles, updateUserRole };
