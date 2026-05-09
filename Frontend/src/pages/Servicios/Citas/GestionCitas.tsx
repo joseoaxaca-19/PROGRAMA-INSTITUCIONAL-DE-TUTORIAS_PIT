@@ -3,7 +3,6 @@ import "./GestionCitas.css"
 import { useState, useEffect } from "react"
 import NuevaCitaModal from "./NuevaCitaModal"
 import Sidebar from "../../../components/Sidebar/Sidebar"
-import { getCitasDisponibles, seleccionarCita, isAuthenticated } from "../../../services/api"
 
 function GestionCitas() {
   const [openModal, setOpenModal] = useState(false)
