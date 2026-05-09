@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react';
 import './Avisos.css';
 
+interface Aviso {
+  id: number;
+  titulo: string;
+  contenido: string;
+  imagen: string;
+  color: string;
+}
+
 const Avisos = () => {
-  const [avisos, setAvisos] = useState<any[]>([]);
+  const [avisos, setAvisos] = useState<Aviso[]>([]);
   const [avisoActual, setAvisoActual] = useState(0);
   const [mostrarCarrusel, setMostrarCarrusel] = useState(false);
 
@@ -19,6 +27,14 @@ const Avisos = () => {
     return () => clearTimeout(timer);
   }, [avisos]);
 
+  // Función para cambiar de aviso
+  const cambiarAviso = (nuevoIndice: number) => {
+    if (nuevoIndice >= 0 && nuevoIndice < avisos.length) {
+      setAvisoActual(nuevoIndice);
+    }
+  };
+
+  // Si no hay avisos, mostrar solo el hero
   if (avisos.length === 0) {
     return (
       <div className="hero-contenido visible">
@@ -44,9 +60,15 @@ const Avisos = () => {
       </div>
 
       <div className={`carrusel-container ${mostrarCarrusel ? 'visible' : 'oculto'}`}>
+        {avisos.length > 1 && (
+          <button className="carrusel-btn carrusel-btn-prev" onClick={() => cambiarAviso(avisoActual - 1)}>
+            ❮
+          </button>
+        )}
+
         <div className="carrusel-wrapper">
           <div className="carrusel-slides" style={{ transform: `translateX(-${avisoActual * 100}%)` }}>
-            {avisos.map((aviso, idx) => (
+            {avisos.map((aviso) => (
               <div key={aviso.id} className="carrusel-slide" style={{ backgroundColor: aviso.color }}>
                 <div className="carrusel-contenido">
                   <div className="carrusel-texto">
@@ -58,6 +80,24 @@ const Avisos = () => {
             ))}
           </div>
         </div>
+
+        {avisos.length > 1 && (
+          <button className="carrusel-btn carrusel-btn-next" onClick={() => cambiarAviso(avisoActual + 1)}>
+            ❯
+          </button>
+        )}
+
+        {avisos.length > 1 && (
+          <div className="carrusel-indicadores">
+            {avisos.map((_, index) => (
+              <button
+                key={index}
+                className={`indicador ${index === avisoActual ? 'activo' : ''}`}
+                onClick={() => cambiarAviso(index)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
