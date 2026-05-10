@@ -1,6 +1,7 @@
 import "./Inicio.css"
 import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 import Navbar from "../../components/Navbar/Navbar"
 import fondo from "../../assets/images/Inicio.jpg"
