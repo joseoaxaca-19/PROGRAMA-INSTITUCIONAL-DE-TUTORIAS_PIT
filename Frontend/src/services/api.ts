@@ -60,14 +60,24 @@ export const getUserRole = () => {
 
 //Perfil
 export const obtenerPerfil = async () => {
-    const res = await fetch(`${API_URL}/users/perfil`, { headers: getHeaders() });
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/users/perfil`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
     return res.json();
 };
 
 export const actualizarPerfil = async (userData: any) => {
-    const res = await fetch(`${API_URL}/users/perfil`, {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/auth/perfil`, {
         method: 'PUT',
-        headers: getHeaders(),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
         body: JSON.stringify(userData)
     });
     return res.json();

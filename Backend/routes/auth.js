@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const { verifyToken } = require('../middlewares/roleAuth');
-const { getPerfil, updatePerfil } = require('../controllers/authController');
 
 const { 
     login, 
@@ -9,33 +7,25 @@ const {
     updateUserRole, 
     getAllUsers, 
     getAvailableRoles,
-    getEstadisticas   // ← Asegurar que está importado
+    getEstadisticas,
+    getPerfil,
+    updatePerfil
 } = require("../controllers/authController");
 
 const { verifyToken, requireRole } = require("../middlewares/roleAuth");
 
-// Verificar que las funciones existen
-console.log('Funciones importadas:', { login, register, getEstadisticas });
-
 // Rutas públicas
 router.post("/login", login);
 router.post("/register", register);
-router.use(verifyToken);
-router.get('/perfil', getPerfil);
-router.put('/perfil', updatePerfil);
+router.get("/estadisticas", getEstadisticas);
 
-// Ruta para estadísticas (pública)
-if (getEstadisticas) {
-    router.get("/estadisticas", getEstadisticas);
-} else {
-    console.error('getEstadisticas no está definida');
-}
+// Rutas de perfil (protegidas)
+router.get("/perfil", verifyToken, getPerfil);
+router.put("/perfil", verifyToken, updatePerfil);
 
 // Rutas protegidas (solo admin)
 router.get("/users", verifyToken, requireRole(['admin']), getAllUsers);
 router.get("/roles", verifyToken, requireRole(['admin']), getAvailableRoles);
 router.put("/user-role", verifyToken, requireRole(['admin']), updateUserRole);
-
-
 
 module.exports = router;

@@ -4,35 +4,16 @@ require('dotenv').config();
 
 const app = express();
 
-// Configuración CORS - Versión corregida
-const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://programa-institucional-de-tutorias-pit.onrender.com',
-    'https://programa-institucional-de-tutorias-pit-1.onrender.com',
-    'https://programa-institucional-de-tutorias-pit.vercel.app'
-];
-
+// Configuración CORS
 app.use(cors({
-    origin: function(origin, callback) {
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('.onrender.com')) {
-            callback(null, true);
-        } else {
-            console.log('CORS bloqueado para:', origin);
-            callback(null, false);
-        }
-    },
+    origin: ['http://localhost:5173', 'https://*.onrender.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
-// NO USAR app.options('*', cors()) - esa línea causa el error
-
 app.use(express.json());
 
-// Importar rutas
+// Importar rutas (NO importar middlewares aquí)
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/userRoutes");
 const citasRoutes = require("./routes/citas");
@@ -46,7 +27,7 @@ app.use("/api/citas", citasRoutes);
 app.get("/api/health", (req, res) => {
     res.json({ 
         status: "OK", 
-        message: "Servidor PIT funcionando ",
+        message: "Servidor PIT funcionando",
         timestamp: new Date().toISOString()
     });
 });
@@ -62,9 +43,7 @@ app.get("/api/test-db", async (req, res) => {
     }
 });
 
-// Puerto
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
-    console.log(`Health check: http://localhost:${PORT}/api/health`);
 });

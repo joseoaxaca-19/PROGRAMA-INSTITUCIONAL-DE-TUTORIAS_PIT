@@ -4,7 +4,7 @@ import {
   TextField, Button, Box, Avatar, Typography, Alert,
   CircularProgress
 } from '@mui/material';
-import { obtenerPerfil, actualizarPerfil } from '../../services/api';
+import { obtenerPerfil, actualizarPerfil } from '../services/api';
 
 interface PerfilUsuarioProps {
   open: boolean;

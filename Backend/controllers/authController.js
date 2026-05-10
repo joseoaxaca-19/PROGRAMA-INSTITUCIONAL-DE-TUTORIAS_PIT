@@ -182,10 +182,12 @@ const getEstadisticas = async (req, res) => {
     }
 };
 
-// Obtener perfil del usuario autenticado
+
 const getPerfil = async (req, res) => {
     try {
         const userId = req.user.id;
+        console.log('Obteniendo perfil para usuario:', userId);
+        
         const query = `
             SELECT u.id_user, u.n_cuenta, u.correo, u.nombre_completo, u.carrera, r.nombre_rol as role
             FROM tr_user u
@@ -205,11 +207,13 @@ const getPerfil = async (req, res) => {
     }
 };
 
-// Actualizar perfil del usuario
 const updatePerfil = async (req, res) => {
     try {
         const userId = req.user.id;
         const { nombre_completo, carrera } = req.body;
+        
+        console.log('Actualizando perfil para usuario:', userId);
+        console.log('Datos:', { nombre_completo, carrera });
         
         const query = `
             UPDATE tr_user 
@@ -219,13 +223,18 @@ const updatePerfil = async (req, res) => {
         `;
         const result = await db.query(query, [nombre_completo, carrera, userId]);
         
-        res.json({ success: true, user: result.rows[0], message: "Perfil actualizado correctamente" });
+        res.json({ 
+            success: true, 
+            user: result.rows[0], 
+            message: "Perfil actualizado correctamente" 
+        });
     } catch (error) {
         console.error("Error al actualizar perfil:", error);
         res.status(500).json({ success: false, message: "Error al actualizar perfil" });
     }
 };
 
+// Actualizar module.exports
 module.exports = {
     login,
     register,
