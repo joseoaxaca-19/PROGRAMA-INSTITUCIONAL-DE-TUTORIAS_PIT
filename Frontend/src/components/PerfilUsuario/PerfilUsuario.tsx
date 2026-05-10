@@ -3,7 +3,6 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Button, Box, Avatar, Alert, CircularProgress
 } from '@mui/material';
-import { obtenerPerfil, actualizarPerfil } from '../services/api';
 
 interface PerfilUsuarioProps {
   open: boolean;
@@ -12,7 +11,7 @@ interface PerfilUsuarioProps {
 }
 
 const PerfilUsuario: React.FC<PerfilUsuarioProps> = ({ open, onClose, onUpdate }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -26,24 +25,9 @@ const PerfilUsuario: React.FC<PerfilUsuarioProps> = ({ open, onClose, onUpdate }
 
   useEffect(() => {
     if (open) {
-      cargarPerfil();
-    }
-  }, [open]);
-
-  const cargarPerfil = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const result = await obtenerPerfil();
-      if (result.success) {
-        setUserData({
-          nombre_completo: result.user.nombre_completo || '',
-          email: result.user.correo || '',
-          n_cuenta: result.user.n_cuenta || '',
-          carrera: result.user.carrera || '',
-          role: result.user.role || ''
-        });
-      } else {
+      setLoading(true);
+      // Simular carga de datos
+      setTimeout(() => {
         const userStr = localStorage.getItem('user');
         if (userStr) {
           const user = JSON.parse(userStr);
@@ -55,13 +39,10 @@ const PerfilUsuario: React.FC<PerfilUsuarioProps> = ({ open, onClose, onUpdate }
             role: user.role || ''
           });
         }
-      }
-    } catch (error) {
-      console.error('Error al cargar perfil:', error);
-    } finally {
-      setLoading(false);
+        setLoading(false);
+      }, 500);
     }
-  };
+  }, [open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData({
@@ -70,37 +51,23 @@ const PerfilUsuario: React.FC<PerfilUsuarioProps> = ({ open, onClose, onUpdate }
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setSaving(true);
-    setError('');
-    setSuccess('');
-    try {
-      const result = await actualizarPerfil({
-        nombre_completo: userData.nombre_completo,
-        carrera: userData.carrera
-      });
-      
-      if (result.success) {
-        setSuccess('Perfil actualizado correctamente');
-        const userStr = localStorage.getItem('user');
-        if (userStr) {
-          const user = JSON.parse(userStr);
-          user.nombre = userData.nombre_completo;
-          user.carrera = userData.carrera;
-          localStorage.setItem('user', JSON.stringify(user));
-        }
-        onUpdate();
-        setTimeout(() => {
-          onClose();
-        }, 1500);
-      } else {
-        setError(result.message || 'Error al actualizar perfil');
+    setTimeout(() => {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        user.nombre = userData.nombre_completo;
+        user.carrera = userData.carrera;
+        localStorage.setItem('user', JSON.stringify(user));
       }
-    } catch (error) {
-      setError('Error al conectar con el servidor');
-    } finally {
+      setSuccess('Perfil actualizado correctamente');
+      onUpdate();
+      setTimeout(() => {
+        onClose();
+      }, 1500);
       setSaving(false);
-    }
+    }, 500);
   };
 
   const getInitials = () => {
