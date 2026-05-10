@@ -1,4 +1,4 @@
-/* Avisos.css - Carrusel completo */
+/* Avisos.css - Carrusel con imagen a pantalla completa */
 
 /* Hero contenido (texto original) */
 .hero-contenido {
@@ -111,66 +111,26 @@
 .carrusel-slide {
   min-width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Contenido a pantalla completa */
+.carrusel-contenido-full,
+.carrusel-link-full {
+  display: block;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
-}
-
-.carrusel-contenido {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  text-align: center;
-  color: white;
-  max-width: 80%;
-  padding: 2rem;
-  border-radius: 20px;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-}
-
-.carrusel-imagen {
-  max-width: 200px;
-  max-height: 150px;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  margin-right: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.carrusel-texto h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  font-family: 'Lexend', sans-serif;
-}
-
-.carrusel-texto p {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-}
-
-.carrusel-enlace {
-  display: inline-block;
-  background: white;
-  color: #003DA5;
-  padding: 10px 25px;
-  border-radius: 30px;
+  background-repeat: no-repeat;
   text-decoration: none;
-  font-weight: 600;
-  margin-top: 1rem;
-  transition: all 0.3s;
+  cursor: pointer;
 }
 
-.carrusel-enlace:hover {
-  transform: scale(1.05);
-  background: #D6A600;
-  color: white;
+/* Información oculta (solo para referencia en el código, no visible al usuario) */
+.carrusel-info-oculta {
+  display: none;
 }
 
 /* Botones de navegación */
@@ -239,24 +199,6 @@
   
   .hero-contenido p {
     font-size: 1rem;
-  }
-  
-  .carrusel-contenido {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .carrusel-imagen {
-    margin-right: 0;
-    margin-bottom: 1rem;
-  }
-  
-  .carrusel-texto h2 {
-    font-size: 1.5rem;
-  }
-  
-  .carrusel-texto p {
-    font-size: 0.9rem;
   }
   
   .carrusel-btn {

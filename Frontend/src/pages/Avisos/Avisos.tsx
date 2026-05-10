@@ -48,6 +48,8 @@ const Avisos = () => {
     );
   }
 
+  const avisoActualData = avisos[avisoActual];
+
   return (
     <>
       <div className={`hero-contenido ${!mostrarCarrusel ? 'visible' : 'oculto'}`}>
@@ -69,26 +71,33 @@ const Avisos = () => {
         <div className="carrusel-wrapper">
           <div className="carrusel-slides" style={{ transform: `translateX(-${avisoActual * 100}%)` }}>
             {avisos.map((aviso) => (
-              <div key={aviso.id} className="carrusel-slide" style={{ backgroundColor: aviso.color }}>
-                <div className="carrusel-contenido">
-                  {aviso.imagen && (
-                    <img src={aviso.imagen} alt={aviso.titulo} className="carrusel-imagen" />
-                  )}
-                  <div className="carrusel-texto">
-                    <h2>{aviso.titulo}</h2>
-                    <p>{aviso.contenido}</p>
-                    {aviso.enlace && (
-                      <a 
-                        href={aviso.enlace} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="carrusel-enlace"
-                      >
-                        Ver más →
-                      </a>
-                    )}
+              <div key={aviso.id} className="carrusel-slide">
+                {/* Si tiene enlace, el contenedor es un link */}
+                {aviso.enlace ? (
+                  <a 
+                    href={aviso.enlace} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="carrusel-link-full"
+                    style={{ backgroundImage: aviso.imagen ? `url(${aviso.imagen})` : aviso.color }}
+                  >
+                    {/* Contenido oculto solo para referencia (no visible) */}
+                    <div className="carrusel-info-oculta">
+                      <h2>{aviso.titulo}</h2>
+                      <p>{aviso.contenido}</p>
+                    </div>
+                  </a>
+                ) : (
+                  <div 
+                    className="carrusel-contenido-full"
+                    style={{ backgroundImage: aviso.imagen ? `url(${aviso.imagen})` : aviso.color }}
+                  >
+                    <div className="carrusel-info-oculta">
+                      <h2>{aviso.titulo}</h2>
+                      <p>{aviso.contenido}</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             ))}
           </div>
