@@ -1,48 +1,13 @@
-.carrusel-imagen {
-  max-width: 200px;
-  max-height: 150px;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  margin-right: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+/* Estilos mínimos para que no falle */
+.hero-contenido {
+  text-align: center;
+  padding: 50px;
 }
 
-.carrusel-enlace {
-  display: inline-block;
-  background: white;
-  color: #003DA5;
-  padding: 10px 25px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  margin-top: 1rem;
-  transition: all 0.3s;
+.carrusel-container {
+  text-align: center;
 }
 
-.carrusel-enlace:hover {
-  transform: scale(1.05);
-  background: #D6A600;
-  color: white;
-}
-
-.item-enlace-text {
-  display: inline-block;
-  margin-left: 0.5rem;
-  font-size: 0.75rem;
-  color: #D6A600;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .carrusel-contenido {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .carrusel-imagen {
-    margin-right: 0;
-    margin-bottom: 1rem;
-  }
+.carrusel-btn {
+  margin: 10px;
 }
