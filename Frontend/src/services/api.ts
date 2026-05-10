@@ -1,4 +1,4 @@
-const API_URL = 'https://tu-backend.onrender.com/api';
+const API_URL = 'https://programa-institucional-de-tutorias-pit.onrender.com/api'
 
 const getHeaders = () => {
     const token = localStorage.getItem('token');
