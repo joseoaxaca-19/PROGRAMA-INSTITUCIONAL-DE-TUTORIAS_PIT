@@ -28,7 +28,7 @@ const AdminAvisos = () => {
     if (avisosGuardados) {
       setAvisos(JSON.parse(avisosGuardados));
     } else {
-      const avisosIniciales = [
+      const avisosIniciales: Aviso[] = [
         { id: 1, titulo: "Bienvenidos al PIT", contenido: "El Programa Institucional de Tutorías está aquí para apoyarte", imagen: "", enlace: "", color: "#003DA5" },
         { id: 2, titulo: "Nuevos Horarios", contenido: "Consulta los horarios disponibles para tutorías", imagen: "", enlace: "", color: "#D6A600" },
       ];
@@ -47,6 +47,11 @@ const AdminAvisos = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
+    if (!formData.titulo || !formData.contenido) {
+      alert('Título y contenido son obligatorios');
+      return;
+    }
+
     if (editandoId) {
       const nuevosAvisos = avisos.map((aviso) => 
         aviso.id === editandoId ? { ...formData, id: editandoId } : aviso
@@ -55,7 +60,7 @@ const AdminAvisos = () => {
       localStorage.setItem('avisos', JSON.stringify(nuevosAvisos));
       setEditandoId(null);
     } else {
-      const nuevoAviso = { ...formData, id: Date.now() };
+      const nuevoAviso: Aviso = { ...formData, id: Date.now() };
       const nuevosAvisos = [...avisos, nuevoAviso];
       setAvisos(nuevosAvisos);
       localStorage.setItem('avisos', JSON.stringify(nuevosAvisos));
@@ -180,10 +185,10 @@ const AdminAvisos = () => {
                   <span className="preview-numero">{posicion + 1}</span>
                 </div>
                 <div className="aviso-detalles">
-                  <h3 className="item-titulo">{aviso.titulo || "Sin título"}</h3>
-                  <p className="item-contenido">{aviso.contenido || "Sin contenido"}</p>
-                  {aviso.imagen && <span className="item-imagen-text">🖼️ Con imagen</span>}
-                  {aviso.enlace && <span className="item-enlace-text">🔗 Con enlace</span>}
+                  <h3 className="item-titulo">{aviso.titulo}</h3>
+                  <p className="item-contenido">{aviso.contenido}</p>
+                  {aviso.imagen && <span className="item-imagen-text">Con imagen</span>}
+                  {aviso.enlace && <span className="item-enlace-text">Con enlace</span>}
                 </div>
               </div>
               <div className="aviso-acciones">

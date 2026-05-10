@@ -34,6 +34,7 @@ const Avisos = () => {
     }
   };
 
+  // Si no hay avisos, mostrar solo el hero
   if (avisos.length === 0) {
     return (
       <div className="hero-contenido visible">
