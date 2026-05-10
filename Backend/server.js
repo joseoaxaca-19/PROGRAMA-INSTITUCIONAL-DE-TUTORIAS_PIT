@@ -4,16 +4,37 @@ require('dotenv').config();
 
 const app = express();
 
-// Configuración CORS
+// Configuración CORS - Permitir ambos dominios de Render
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://programa-institucional-de-tutorias-pit.onrender.com',
+    'https://programa-institucional-de-tutorias-pit-1.onrender.com'
+];
+
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://*.onrender.com'],
+    origin: function(origin, callback) {
+        // Permitir peticiones sin origen (como Postman)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log('CORS bloqueado para:', origin);
+            callback(new Error('No permitido por CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Manejar preflight requests
+app.options('*', cors());
+
 app.use(express.json());
 
-// Importar rutas (NO importar middlewares aquí)
+// Importar rutas
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/userRoutes");
 const citasRoutes = require("./routes/citas");
@@ -27,20 +48,9 @@ app.use("/api/citas", citasRoutes);
 app.get("/api/health", (req, res) => {
     res.json({ 
         status: "OK", 
-        message: "Servidor PIT funcionando",
+        message: "Servidor PIT funcionando 🚀",
         timestamp: new Date().toISOString()
     });
-});
-
-// Endpoint test DB
-app.get("/api/test-db", async (req, res) => {
-    const { query } = require('./connection');
-    try {
-        const result = await query('SELECT NOW() as time');
-        res.json({ success: true, time: result.rows[0].time });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
 });
 
 const PORT = process.env.PORT || 10000;
