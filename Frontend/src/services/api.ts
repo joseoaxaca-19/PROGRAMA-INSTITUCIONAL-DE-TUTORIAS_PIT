@@ -139,3 +139,86 @@ export const updateUserRole = async (id_user: number, id_rol_nuevo: number, moti
     });
     return response.json();
 };
+
+
+//Citas
+const getHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+};
+
+export const obtenerCitas = async () => {
+    const response = await fetch(`${API_URL}/citas`, {
+        headers: getHeaders()
+    });
+    return response.json();
+};
+
+export const crearCita = async (citaData: any) => {
+    const response = await fetch(`${API_URL}/citas`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(citaData)
+    });
+    return response.json();
+};
+
+export const editarCita = async (id: number, citaData: any) => {
+    const response = await fetch(`${API_URL}/citas/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(citaData)
+    });
+    return response.json();
+};
+
+export const eliminarCita = async (id: number) => {
+    const response = await fetch(`${API_URL}/citas/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders()
+    });
+    return response.json();
+};
+
+export const inscribirseCita = async (id: number) => {
+    const response = await fetch(`${API_URL}/citas/${id}/inscribirse`, {
+        method: 'POST',
+        headers: getHeaders()
+    });
+    return response.json();
+};
+
+export const misCitas = async () => {
+    const response = await fetch(`${API_URL}/citas/mis-citas`, {
+        headers: getHeaders()
+    });
+    return response.json();
+};
+
+export const asignarLugar = async (id: number, lugar: string) => {
+    const response = await fetch(`${API_URL}/citas/${id}/lugar`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify({ lugar })
+    });
+    return response.json();
+};
+
+export const obtenerPerfil = async () => {
+    const response = await fetch(`${API_URL}/users/perfil`, {
+        headers: getHeaders()
+    });
+    return response.json();
+};
+
+export const actualizarPerfil = async (userData: any) => {
+    const response = await fetch(`${API_URL}/users/perfil`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(userData)
+    });
+    return response.json();
+};
