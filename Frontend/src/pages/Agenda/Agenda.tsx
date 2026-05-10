@@ -10,7 +10,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EventIcon from '@mui/icons-material/Event';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Sidebar from "../../components/Sidebar/Sidebar";
-//import PerfilUsuario from '../../components/PerfilUsuario/PerfilUsuario';
 import { 
   obtenerCitas, crearCita, editarCita, eliminarCita, 
   inscribirseCita, misCitas
@@ -42,11 +41,8 @@ interface Cita {
   id_creador: number;
 }
 
-
-
 const Agenda: React.FC = () => {
   const [citas, setCitas] = useState<Cita[]>([]);
-  const [openPerfilModal, setOpenPerfilModal] = useState(false);
   const [misCitasList, setMisCitasList] = useState<Cita[]>([]);
   const [tabValue, setTabValue] = useState(0);
   const [openModal, setOpenModal] = useState(false);
@@ -88,21 +84,25 @@ const Agenda: React.FC = () => {
     cargarDatos();
   }, []);
 
-  const handleOpenPerfil = () => {
-    setOpenPerfilModal(true);
-  };
-
   const cargarCitas = async () => {
-    const result = await obtenerCitas();
-    if (result.success) {
-      setCitas(result.citas || []);
+    try {
+      const result = await obtenerCitas();
+      if (result.success) {
+        setCitas(result.citas || []);
+      }
+    } catch (error) {
+      console.error('Error al cargar citas:', error);
     }
   };
 
   const cargarMisCitas = async () => {
-    const result = await misCitas();
-    if (result.success) {
-      setMisCitasList(result.citas || []);
+    try {
+      const result = await misCitas();
+      if (result.success) {
+        setMisCitasList(result.citas || []);
+      }
+    } catch (error) {
+      console.error('Error al cargar mis citas:', error);
     }
   };
 
@@ -218,14 +218,10 @@ const Agenda: React.FC = () => {
                      userRole === 'tutorado' ? 'TUTORADO' : 'ALUMNO'}
                   </p>
                 </div>
-                <Avatar 
-                  className="agenda-topbar-avatar" 
-                  sx={{ bgcolor: '#003DA5', cursor: 'pointer' }}
-                  onClick={handleOpenPerfil}
-                >
+                <Avatar className="agenda-topbar-avatar" sx={{ bgcolor: '#003DA5' }}>
                   {userName.charAt(0).toUpperCase()}
                 </Avatar>
-                              </div>
+              </div>
             </div>
           </header>
 
@@ -288,9 +284,9 @@ const Agenda: React.FC = () => {
                         <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
                           📅 {new Date(cita.fecha).toLocaleDateString('es-MX')}
                         </Typography>
-                        <Typography variant="body2" color="textSecondary">{cita.hora}</Typography>
-                        <Typography variant="body2" color="textSecondary">{cita.lugar || 'Por asignar'}</Typography>
-                        <Typography variant="body2" color="textSecondary">{cita.carrera}</Typography>
+                        <Typography variant="body2" color="textSecondary">⏰ {cita.hora}</Typography>
+                        <Typography variant="body2" color="textSecondary">📍 {cita.lugar || 'Por asignar'}</Typography>
+                        <Typography variant="body2" color="textSecondary">🎓 {cita.carrera}</Typography>
                       </CardContent>
                       <Box sx={{ p: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                         {puedeEditar(cita) && (
@@ -334,8 +330,8 @@ const Agenda: React.FC = () => {
                       <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
                         📅 {new Date(cita.fecha).toLocaleDateString('es-MX')}
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">{cita.hora}</Typography>
-                      <Typography variant="body2" color="textSecondary">{cita.lugar || 'Por asignar'}</Typography>
+                      <Typography variant="body2" color="textSecondary">⏰ {cita.hora}</Typography>
+                      <Typography variant="body2" color="textSecondary">📍 {cita.lugar || 'Por asignar'}</Typography>
                       <Chip 
                         label={cita.estado === 'disponible' ? 'Activa' : 'Completada'}
                         size="small" 
@@ -429,20 +425,6 @@ const Agenda: React.FC = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-
-      //<PerfilUsuario 
-        //open={openPerfilModal} 
-        //onClose={() => setOpenPerfilModal(false)}
-        //onUpdate={() => {
-          // Recargar datos del usuario después de actualizar perfil
-          //const userStr = localStorage.getItem('user');
-          //if (userStr) {
-            //const user = JSON.parse(userStr);
-            //setUserName(user.nombre || user.email?.split('@')[0] || 'Usuario');
-          //}
-        //}}
-      ///>
-
     </ThemeProvider>
   );
 };
