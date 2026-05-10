@@ -21,7 +21,7 @@ app.use(cors({
             callback(null, true);
         } else {
             console.log('CORS bloqueado para:', origin);
-            callback(new Error('No permitido por CORS'));
+            callback(null, false);
         }
     },
     credentials: true,
@@ -29,8 +29,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Manejar preflight requests
-app.options('*', cors());
 
 app.use(express.json());
 
@@ -48,7 +46,7 @@ app.use("/api/citas", citasRoutes);
 app.get("/api/health", (req, res) => {
     res.json({ 
         status: "OK", 
-        message: "Servidor PIT funcionando 🚀",
+        message: "Servidor PIT funcionando ",
         timestamp: new Date().toISOString()
     });
 });
