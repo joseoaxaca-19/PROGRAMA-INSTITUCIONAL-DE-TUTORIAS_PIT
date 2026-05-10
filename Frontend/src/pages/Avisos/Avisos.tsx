@@ -48,8 +48,6 @@ const Avisos = () => {
     );
   }
 
-  const avisoActualData = avisos[avisoActual];
-
   return (
     <>
       <div className={`hero-contenido ${!mostrarCarrusel ? 'visible' : 'oculto'}`}>
@@ -72,7 +70,6 @@ const Avisos = () => {
           <div className="carrusel-slides" style={{ transform: `translateX(-${avisoActual * 100}%)` }}>
             {avisos.map((aviso) => (
               <div key={aviso.id} className="carrusel-slide">
-                {/* Si tiene enlace, el contenedor es un link */}
                 {aviso.enlace ? (
                   <a 
                     href={aviso.enlace} 
@@ -81,7 +78,6 @@ const Avisos = () => {
                     className="carrusel-link-full"
                     style={{ backgroundImage: aviso.imagen ? `url(${aviso.imagen})` : aviso.color }}
                   >
-                    {/* Contenido oculto solo para referencia (no visible) */}
                     <div className="carrusel-info-oculta">
                       <h2>{aviso.titulo}</h2>
                       <p>{aviso.contenido}</p>
