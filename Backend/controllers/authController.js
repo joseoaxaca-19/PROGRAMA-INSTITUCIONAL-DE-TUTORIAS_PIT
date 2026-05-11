@@ -5,7 +5,8 @@ async function validarAcceso(usuarioId, carreraId) {
     SELECT EXISTS (
       SELECT 1
       FROM usuario
-      WHERE usuario_id = $1 AND id_carrera = $2
+      WHERE id = $1 
+      AND id_carrera = $2
     ) AS permitido;
   `;
 
