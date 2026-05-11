@@ -168,17 +168,14 @@ export const obtenerAvisosAdmin = async () => {
     return response.json();
 };
 
-export const crearAviso = async (avisoData: {
-    titulo: string;
-    contenido: string;
-    imagen: string;
-    enlace: string;
-    color: string;
-    orden: number;
-}) => {
+export const crearAviso = async (avisoData: any) => {
+    const token = localStorage.getItem('token');
     const response = await fetch(`${API_URL}/avisos`, {
         method: 'POST',
-        headers: getHeaders(),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
         body: JSON.stringify(avisoData)
     });
     return response.json();
