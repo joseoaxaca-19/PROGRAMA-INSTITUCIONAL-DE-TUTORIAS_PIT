@@ -150,10 +150,6 @@ export const asignarLugar = async (id: number, lugar: string) => {
 
 
 //Admin citas
-// ============================================
-// ADMIN - CITAS
-// ============================================
-
 export const adminObtenerCitas = async () => {
     const token = localStorage.getItem('token');
     const response = await fetch(`${API_URL}/admin/citas`, {

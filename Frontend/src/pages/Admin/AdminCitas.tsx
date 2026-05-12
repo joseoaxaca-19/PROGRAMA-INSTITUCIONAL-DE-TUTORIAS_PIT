@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Container, Typography, Box, Button, Card, CardContent,
+    Container, Typography, Box, Button,
     Dialog, DialogTitle, DialogContent, DialogActions,
     TextField, MenuItem, FormControl, InputLabel, Select,
     IconButton, Table, TableHead, TableRow, TableCell, TableBody,
@@ -186,6 +186,19 @@ const AdminCitas: React.FC = () => {
         }
     };
 
+    if (loading) {
+        return (
+            <Box className="admin-citas-container">
+                <Sidebar userRole="admin" />
+                <Box className="admin-citas-main">
+                    <Container className="admin-citas-content">
+                        <Typography className="admin-citas-loading">Cargando citas...</Typography>
+                    </Container>
+                </Box>
+            </Box>
+        );
+    }
+
     return (
         <Box className="admin-citas-container">
             <Sidebar userRole="admin" />
@@ -223,13 +236,7 @@ const AdminCitas: React.FC = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {loading ? (
-                                        <TableRow>
-                                            <TableCell colSpan={9} className="admin-citas-loading">
-                                                Cargando citas...
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : citas.length === 0 ? (
+                                    {citas.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={9} className="admin-citas-loading">
                                                 No hay citas registradas
