@@ -4,12 +4,12 @@ const jwt = require("jsonwebtoken");
 
 
 const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { n_cuenta, password } = req.body;
 
-    if (!email || !password) {
+    if (!n_cuenta || !password) {
         return res.status(400).json({
             success: false,
-            message: "El correo electrónico y la contraseña son obligatorios."
+            message: "El número de cuenta y la contraseña son obligatorios."
         });
     }
 
@@ -19,10 +19,10 @@ const login = async (req, res) => {
                    r.id_rol, r.nombre_rol AS role_name
             FROM tr_user u
             INNER JOIN tr_roles r ON u.id_rol = r.id_rol
-            WHERE u.correo = $1
+            WHERE u.n_cuenta = $1
         `;
 
-        const result = await db.query(query, [email]);
+        const result = await db.query(query, [n_cuenta]);
 
         console.log('Usuario encontrado:', result.rows.length > 0 ? 'Sí' : 'No');
 
