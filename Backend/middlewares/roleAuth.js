@@ -25,14 +25,20 @@ const verifyToken = (req, res, next) => {
 // Middleware para verificar roles (RBAC)
 const requireRole = (allowedRoles) => {
     return (req, res, next) => {
-        // req.user viene del middleware anterior (verifyToken)
-        if (!req.user || !req.user.rol) {
+        console.log('Roles permitidos:', allowedRoles);
+        console.log('Usuario en request:', req.user);
+        
+        if (!req.user || !req.user.role) {
             return res.status(403).json({ message: 'No se encontraron permisos para el usuario' });
         }
 
-        // Verificar si el rol del usuario está dentro de los roles permitidos
-        if (!allowedRoles.includes(req.user.rol)) {
-            return res.status(403).json({ message: 'Acceso denegado: permisos insuficientes' });
+        const userRole = req.user.role.toLowerCase();
+        const allowed = allowedRoles.map(r => r.toLowerCase());
+        
+        if (!allowed.includes(userRole)) {
+            return res.status(403).json({ 
+                message: `Acceso denegado. Se requiere rol: ${allowedRoles.join(', ')}` 
+            });
         }
 
         next();
