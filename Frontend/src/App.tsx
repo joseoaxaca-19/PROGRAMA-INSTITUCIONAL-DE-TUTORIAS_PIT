@@ -15,6 +15,7 @@ import Accesos from "./pages/Permisos/Accesos/Accesos"
 import Roles from "./pages/Permisos/Roles/Roles"
 import Usuarios from "./pages/Permisos/Usuarios/Usuarios"
 import ProtectedRoute from "./components/ProtectedRoute"
+import AdminCitas from "./pages/Admin/AdminCitas";
 
 function App() {
   return (
@@ -33,6 +34,12 @@ function App() {
         <Route path="/citas" element={
           <ProtectedRoute allowedRoles={['admin', 'tutor', 'tutorado']}>
             <GestionCitas />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/admin/citas" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+              <AdminCitas />
           </ProtectedRoute>
         } />
         

@@ -50,7 +50,7 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose, onLoginSuccess }) => {
         
         // Redirigir según el rol
         if (data.user.role === 'admin') {
-          navigate('/agenda');
+          navigate("/agenda");
         } else if (data.user.role === 'tutor' || data.user.role === 'tutorado') {
           navigate('/agenda');
         } else {

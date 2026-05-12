@@ -37,12 +37,14 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/userRoutes");
 const citasRoutes = require("./routes/citas");
 const avisoRoutes = require("./routes/avisoRoutes");
+const adminCitasRoutes = require("./routes/adminCitasRoutes");
 
 // Endpoints principales
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/citas", citasRoutes);
 app.use("/api/avisos", avisoRoutes);
+app.use("/api/admin/citas", adminCitasRoutes);
 
 // Endpoint de prueba
 app.get("/api/health", (req, res) => {

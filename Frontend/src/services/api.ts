@@ -149,6 +149,81 @@ export const asignarLugar = async (id: number, lugar: string) => {
 };
 
 
+//Admin citas
+// ============================================
+// ADMIN - CITAS
+// ============================================
+
+export const adminObtenerCitas = async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/admin/citas`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+export const adminCrearCita = async (citaData: {
+    materia: string;
+    tutor_nombre: string;
+    fecha: string;
+    hora: string;
+    capacidad: number;
+    tipo: string;
+    carrera: string;
+}) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/admin/citas`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify(citaData)
+    });
+    return response.json();
+};
+
+export const adminActualizarCita = async (id: number, citaData: any) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/admin/citas/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify(citaData)
+    });
+    return response.json();
+};
+
+export const adminEliminarCita = async (id: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/admin/citas/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+export const adminAsignarLugar = async (id: number, lugar: string) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/admin/citas/${id}/lugar`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify({ lugar })
+    });
+    return response.json();
+};
+
+
 //Estadisticas
 export const obtenerEstadisticas = async () => {
     const res = await fetch(`${API_URL}/auth/estadisticas`);
