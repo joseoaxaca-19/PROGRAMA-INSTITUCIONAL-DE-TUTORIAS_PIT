@@ -13,12 +13,19 @@ const loginSchema = z.object({
 });
 
 const registerSchema = z.object({
+    numero_cuenta: z.string({
+        required_error: "El número de cuenta es obligatorio",
+        invalid_type_error: "El número de cuenta debe ser texto"
+    }).min(1, "El número de cuenta no puede estar vacío"),
     nombre: z.string({
         required_error: "El nombre es obligatorio"
     }).min(1, "El nombre no puede estar vacío"),
     apellidos: z.string({
         required_error: "Los apellidos son obligatorios"
     }).min(1, "Los apellidos no pueden estar vacíos"),
+    correo: z.string({
+        required_error: "El correo electrónico es obligatorio"
+    }).email("El correo electrónico no tiene un formato válido"),
     id_carrera: z.number({
         required_error: "La carrera es obligatoria",
         invalid_type_error: "id_carrera debe ser un número"

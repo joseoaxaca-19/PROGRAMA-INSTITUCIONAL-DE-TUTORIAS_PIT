@@ -5,26 +5,48 @@ const { loginSchema, registerSchema } = require("../schemas/auth.schema");
 
 /**
  * Controlador para el registro de nuevos usuarios.
- * Recibe: nombre, apellidos, id_carrera, id_rol, password.
+ * Recibe: numero_cuenta, nombre, apellidos, correo, id_carrera, id_rol, password.
  */
 const register = async (req, res) => {
     try {
-        // Validación de datos estructurados con Zod
         const validatedData = registerSchema.parse(req.body);
-        const { nombre, apellidos, id_carrera, id_rol, password } = validatedData;
+        const { numero_cuenta, nombre, apellidos, correo, id_carrera, id_rol, password } = validatedData;
+
+        // Verificar que el número de cuenta sea único
+        const cuentaExistente = await db.query(
+            'SELECT id FROM usuarios WHERE numero_cuenta = $1',
+            [numero_cuenta]
+        );
+        if (cuentaExistente.rows.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "El número de cuenta ya está registrado."
+            });
+        }
+
+        // Verificar que el correo sea único
+        const correoExistente = await db.query(
+            'SELECT id FROM usuarios WHERE correo = $1',
+            [correo]
+        );
+        if (correoExistente.rows.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "El correo electrónico ya está registrado."
+            });
+        }
 
         // Encriptar la contraseña
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insertar en la tabla 'usuarios'
-        const query = `
-            INSERT INTO usuarios (nombre, apellidos, id_carrera, id_rol, contrasena)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, nombre, apellidos;
+        const insertQuery = `
+            INSERT INTO usuarios (numero_cuenta, nombre, apellidos, correo, id_carrera, id_rol, contrasena)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING id, numero_cuenta, nombre, apellidos, correo;
         `;
-        const values = [nombre, apellidos, id_carrera, id_rol, hashedPassword];
-        const result = await db.query(query, values);
+        const values = [numero_cuenta, nombre, apellidos, correo, id_carrera, id_rol, hashedPassword];
+        const result = await db.query(insertQuery, values);
 
         return res.status(201).json({
             success: true,
@@ -45,11 +67,18 @@ const register = async (req, res) => {
 
         console.error("Error en el registro:", error);
 
-        // Manejo básico de errores de BD (ej. violación de FK)
         if (error.code === '23503') {
             return res.status(400).json({
                 success: false,
                 message: "La carrera o el rol especificado no existen."
+            });
+        }
+
+        // Violación de unicidad a nivel de BD (número de cuenta o correo duplicado)
+        if (error.code === '23505') {
+            return res.status(409).json({
+                success: false,
+                message: "El número de cuenta o correo ya están en uso."
             });
         }
 
@@ -139,7 +168,29 @@ const login = async (req, res) => {
     }
 };
 
+const getRoles = async (req, res) => {
+    try {
+        const result = await db.query('SELECT id, nombre FROM roles ORDER BY id');
+        return res.status(200).json({ success: true, data: result.rows });
+    } catch (error) {
+        console.error("Error obteniendo roles:", error);
+        return res.status(500).json({ success: false, message: "Error al obtener roles." });
+    }
+};
+
+const getCarreras = async (req, res) => {
+    try {
+        const result = await db.query('SELECT id, nombre FROM carreras ORDER BY nombre');
+        return res.status(200).json({ success: true, data: result.rows });
+    } catch (error) {
+        console.error("Error obteniendo carreras:", error);
+        return res.status(500).json({ success: false, message: "Error al obtener carreras." });
+    }
+};
+
 module.exports = {
     register,
-    login
+    login,
+    getRoles,
+    getCarreras
 };

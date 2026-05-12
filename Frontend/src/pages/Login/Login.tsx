@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../../services/api';
 import './Login.css';
 
@@ -94,6 +94,13 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
             {loading ? 'Iniciando...' : 'Iniciar Sesión'}
           </button>
         </form>
+
+        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px', color: '#555' }}>
+          ¿No tienes cuenta?{' '}
+          <Link to="/registro" onClick={onClose} style={{ color: '#003DA5', fontWeight: 600, textDecoration: 'none' }}>
+            Regístrate
+          </Link>
+        </p>
       </div>
     </div>
   );

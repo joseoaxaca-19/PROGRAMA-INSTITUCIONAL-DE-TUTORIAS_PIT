@@ -7,60 +7,37 @@ const db = mysql.createPool({
     database: 'citas_db'
 });
 
-// ===============================
+
 // OBTENER CITAS DISPONIBLES
-// ===============================
+
 exports.obtenerDisponibles = async () => {
     try {
-        const [rows] = await db.query(`
-            SELECT 
-                c.id_cita,
-                c.fecha,
-                c.hora,
-                u.correo AS tutor
-            FROM tr_citas c
-            JOIN tr_user u ON c.id_tutor = u.id_user
-            WHERE c.disponible = true
-            ORDER BY c.fecha, c.hora
-        `);
-
+       const [rows] = await db.query(
+            "SELECT * FROM tr_citas WHERE disponible = TRUE ORDER BY fecha ASC, hora ASC"
+        );
         return rows;
-
     } catch (error) {
-        console.error("Error en obtenerDisponibles:", error);
+        console.error('Error al consultar las citas disponibles:', error);
         throw error;
     }
-}; // 🔥 ESTA LÍNEA FALTABA
+};
 
-// ===============================
+
 // SELECCIONAR CITA
-// ===============================
+
 exports.seleccionarCita = async (id_cita, id_tutorado) => {
+   if (!id_cita || !id_tutorado) {
+        throw new Error('id_cita and id_tutorado are required');
+    }
+    
     try {
-        const [cita] = await db.query(
-            "SELECT disponible FROM tr_citas WHERE id_cita = ?",
-            [id_cita]
-        );
-
-        if (cita.length === 0) {
-            throw new Error("La cita no existe");
-        }
-
-        if (!cita[0].disponible) {
-            throw new Error("La cita ya fue reservada");
-        }
-
-        await db.query(
-            `UPDATE tr_citas 
-             SET disponible = false, id_tutorado = ? 
-             WHERE id_cita = ?`,
+        const [result] = await db.query(
+            "UPDATE tr_citas SET disponible = FALSE, id_tutorado = ? WHERE id_cita = ? AND disponible = TRUE",
             [id_tutorado, id_cita]
         );
-
-        return { mensaje: "Cita registrada correctamente" };
-
+        return result.affectedRows > 0;
     } catch (error) {
-        console.error("Error en seleccionarCita:", error);
+        console.error('Error al registrar cita:', error);
         throw error;
     }
 };

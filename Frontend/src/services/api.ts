@@ -19,6 +19,37 @@ export const login = async (email: string, password: string) => {
     return response.json();
 };
 
+// Registro
+export interface RegisterData {
+    numero_cuenta: string;
+    nombre: string;
+    apellidos: string;
+    correo: string;
+    id_carrera: number;
+    id_rol: number;
+    password: string;
+}
+
+export const register = async (data: RegisterData) => {
+    const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    return response.json();
+};
+
+// Catálogos para el formulario de registro
+export const getRoles = async () => {
+    const response = await fetch(`${API_URL}/auth/roles`);
+    return response.json();
+};
+
+export const getCarreras = async () => {
+    const response = await fetch(`${API_URL}/auth/carreras`);
+    return response.json();
+};
+
 // Obtener citas disponibles
 export const getCitasDisponibles = async () => {
     const response = await fetch(`${API_URL}/citas/disponibles`, {

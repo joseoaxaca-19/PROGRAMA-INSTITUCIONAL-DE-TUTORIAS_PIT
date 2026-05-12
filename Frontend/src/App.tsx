@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import Inicio from "./pages/Inicio/Inicio"
+import Register from "./pages/Register/Register"
 import SobreNosotros from "./pages/SobreNosotros/SobreNosotros"
 import Servicios from "./pages/Servicios/Servicios"
 import GestionCitas from "./pages/Servicios/Citas/GestionCitas"
@@ -37,7 +38,8 @@ function App() {
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/roles" element={<Roles />} />
         <Route path="/reportes" element={<ReportesPIT />} />
-      
+        <Route path="/registro" element={<Register />} />
+
       </Routes>
     </BrowserRouter>
   )
