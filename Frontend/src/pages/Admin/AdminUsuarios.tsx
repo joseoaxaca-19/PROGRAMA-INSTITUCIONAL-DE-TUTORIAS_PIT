@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Container, Typography, Box, Button, Paper, Table, TableHead, TableRow, 
-    TableCell, TableBody, TableContainer, IconButton, Chip, Dialog, 
-    DialogTitle, DialogContent, DialogActions, TextField, MenuItem, 
-    FormControl, InputLabel, Select, Alert, Snackbar
+    Container, Box, Button, Paper, Table, TableHead, TableRow,
+    TableCell, TableBody, TableContainer, IconButton, Chip, Dialog,
+    DialogTitle, DialogContent, DialogActions, TextField, MenuItem,
+    FormControl, InputLabel, Select, Alert, Snackbar, Avatar
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Block as BlockIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Block as BlockIcon, CheckCircle as CheckCircleIcon, Add as AddIcon } from '@mui/icons-material';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import {
     adminObtenerUsuarios,
@@ -34,18 +34,39 @@ interface Rol {
     descripcion: string;
 }
 
+const carreras = [
+    "Actuaria", "Arquitectura", "Ciencia de Datos",
+    "Ciencias Politicas y Administracion Publica", "Comunicacion",
+    "Derecho", "Diseno Grafico", "Economia", "Ensenanza de Ingles",
+    "Filosofia", "Historia", "Ingenieria Civil",
+    "Lengua y Literatura Hispanicas", "Matematicas Aplicadas y Computacion",
+    "Pedagogia", "Relaciones Internacionales", "Sociologia"
+];
+
+const coloresPerfil = ['#003DA5', '#D6A600', '#001F54', '#4A4A4A', '#00897B', '#c62828', '#6a1b9a', '#00695c'];
+
 const AdminUsuarios: React.FC = () => {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [roles, setRoles] = useState<Rol[]>([]);
     const [loading, setLoading] = useState(true);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openRolModal, setOpenRolModal] = useState(false);
+    const [openAddModal, setOpenAddModal] = useState(false);
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Usuario | null>(null);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
     
     const [editForm, setEditForm] = useState({
         nombre_completo: '',
         carrera: ''
+    });
+    
+    const [addForm, setAddForm] = useState({
+        n_cuenta: '',
+        correo: '',
+        password: '',
+        nombre_completo: '',
+        carrera: '',
+        id_rol: 4
     });
     
     const [nuevoRol, setNuevoRol] = useState<number>(0);
@@ -70,6 +91,69 @@ const AdminUsuarios: React.FC = () => {
         cargarUsuarios();
         cargarRoles();
     }, []);
+
+    const getColorPerfil = (id: number) => {
+        return coloresPerfil[id % coloresPerfil.length];
+    };
+
+    const getInitials = (nombre: string) => {
+        if (!nombre) return 'U';
+        return nombre.charAt(0).toUpperCase();
+    };
+
+    const handleOpenAddModal = () => {
+        setAddForm({
+            n_cuenta: '',
+            correo: '',
+            password: '',
+            nombre_completo: '',
+            carrera: '',
+            id_rol: 4
+        });
+        setOpenAddModal(true);
+    };
+
+    const handleAddSubmit = async () => {
+        if (!addForm.n_cuenta || !addForm.correo || !addForm.password || !addForm.nombre_completo) {
+            setSnackbar({ open: true, message: 'Todos los campos son obligatorios', severity: 'error' });
+            return;
+        }
+
+        const emailCompleto = `${addForm.correo}@pcpuma.acatlan.unam.mx`;
+
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                },
+                body: JSON.stringify({
+                    n_cuenta: addForm.n_cuenta,
+                    email: emailCompleto,
+                    password: addForm.password,
+                    nombre_completo: addForm.nombre_completo,
+                    carrera: addForm.carrera,
+                    id_rol: addForm.id_rol
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                setSnackbar({ open: true, message: 'Usuario creado correctamente', severity: 'success' });
+                setOpenAddModal(false);
+                cargarUsuarios();
+            } else {
+                setSnackbar({ open: true, message: data.message || 'Error al crear usuario', severity: 'error' });
+            }
+        } catch (error) {
+            setSnackbar({ open: true, message: 'Error al crear usuario', severity: 'error' });
+        }
+    };
 
     const handleOpenEditModal = (usuario: Usuario) => {
         setUsuarioSeleccionado(usuario);
@@ -152,120 +236,213 @@ const AdminUsuarios: React.FC = () => {
     };
 
     return (
-        <Box className="admin-usuarios-container">
+        <div className="admin-usuarios-container">
             <Sidebar userRole="admin" />
             
-            <Box className="admin-usuarios-main">
-                <Container className="admin-usuarios-content">
-                    <Box className="admin-usuarios-header">
-                        <Typography variant="h4" className="admin-usuarios-titulo">
-                            Gestion de Usuarios
-                        </Typography>
-                    </Box>
+            <main className="admin-usuarios-main">
+                <header className="admin-usuarios-topbar">
+                    <span className="admin-usuarios-breadcrumb">Configuracion › Usuarios</span>
+                    <div className="admin-usuarios-topbar-right">
+                        <span className="admin-usuarios-topbar-bell">🔔</span>
+                        <div className="admin-usuarios-topbar-user">
+                            <div>
+                                <p className="admin-usuarios-topbar-name">Administrador</p>
+                                <p className="admin-usuarios-topbar-role">ADMIN</p>
+                            </div>
+                            <div className="admin-usuarios-topbar-avatar">AD</div>
+                        </div>
+                    </div>
+                </header>
 
-                    <Paper className="admin-usuarios-tabla-container">
-                        <TableContainer>
-                            <Table className="admin-usuarios-tabla">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>ID</TableCell>
-                                        <TableCell>Nombre</TableCell>
-                                        <TableCell>Correo</TableCell>
-                                        <TableCell>Numero Cuenta</TableCell>
-                                        <TableCell>Carrera</TableCell>
-                                        <TableCell>Rol</TableCell>
-                                        <TableCell>Estado</TableCell>
-                                        <TableCell>Acciones</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {loading ? (
-                                        <TableRow>
-                                            <TableCell colSpan={8} className="admin-usuarios-loading">
-                                                Cargando usuarios...
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : usuarios.length === 0 ? (
-                                        <TableRow>
-                                            <TableCell colSpan={8} className="admin-usuarios-loading">
-                                                No hay usuarios registrados
-                                            </TableCell>
-                                        </TableRow>
-                                    ) : (
-                                        usuarios.map((usuario) => (
-                                            <TableRow key={usuario.id_user}>
-                                                <TableCell>{usuario.id_user}</TableCell>
-                                                <TableCell>{usuario.nombre_completo || 'Sin nombre'}</TableCell>
-                                                <TableCell>{usuario.correo}</TableCell>
-                                                <TableCell>{usuario.n_cuenta}</TableCell>
-                                                <TableCell>{usuario.carrera || 'Sin carrera'}</TableCell>
-                                                <TableCell>
-                                                    <Chip 
-                                                        label={usuario.rol} 
-                                                        size="small"
+                <div className="admin-usuarios-content">
+                    <div className="admin-usuarios-top-actions">
+                        <div className="admin-usuarios-left-group">
+                            <button className="admin-usuarios-white-btn">📋 Exportar</button>
+                        </div>
+                        <button className="admin-usuarios-gold-btn" onClick={handleOpenAddModal}>
+                            <AddIcon /> Nuevo Usuario
+                        </button>
+                    </div>
+
+                    <div className="admin-usuarios-table-card">
+                        <table className="admin-usuarios-user-table">
+                            <thead>
+                                <tr>
+                                    <th>USUARIO</th>
+                                    <th>CORREO</th>
+                                    <th>NUMERO CUENTA</th>
+                                    <th>CARRERA</th>
+                                    <th>ROL</th>
+                                    <th>ESTADO</th>
+                                    <th>ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
+                                            Cargando usuarios...
+                                        </td>
+                                    </tr>
+                                ) : usuarios.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
+                                            No hay usuarios registrados
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    usuarios.map((usuario) => (
+                                        <tr key={usuario.id_user}>
+                                            <td data-label="USUARIO">
+                                                <div className="admin-usuarios-user-cell">
+                                                    <Avatar 
                                                         sx={{ 
-                                                            backgroundColor: getRolColor(usuario.rol),
-                                                            color: 'white',
+                                                            width: 45, 
+                                                            height: 45, 
+                                                            bgcolor: getColorPerfil(usuario.id_user),
+                                                            fontSize: '1.2rem',
                                                             fontWeight: 'bold'
                                                         }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Chip 
-                                                        label={usuario.activo ? 'Activo' : 'Inactivo'} 
-                                                        size="small"
-                                                        sx={{ 
-                                                            backgroundColor: usuario.activo ? '#28a745' : '#dc3545',
-                                                            color: 'white'
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell className="admin-usuarios-acciones">
-                                                    <IconButton 
-                                                        size="small" 
-                                                        onClick={() => handleOpenEditModal(usuario)}
-                                                        title="Editar usuario"
                                                     >
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                    <IconButton 
-                                                        size="small" 
-                                                        onClick={() => handleCambiarEstado(usuario)}
-                                                        title={usuario.activo ? 'Desactivar' : 'Activar'}
-                                                    >
-                                                        {usuario.activo ? <BlockIcon /> : <CheckCircleIcon />}
-                                                    </IconButton>
-                                                    <IconButton 
-                                                        size="small" 
-                                                        onClick={() => handleOpenRolModal(usuario)}
-                                                        title="Cambiar rol"
-                                                    >
+                                                        {getInitials(usuario.nombre_completo || usuario.correo)}
+                                                    </Avatar>
+                                                    <div>
+                                                        <div className="admin-usuarios-u-name">{usuario.nombre_completo || 'Sin nombre'}</div>
+                                                    </div>
+                                                </div>
+                                             </Fragment>
+                                            </div>
+                                            </td>
+                                            <td data-label="CORREO">{usuario.correo}</td>
+                                            <td data-label="NUMERO CUENTA">{usuario.n_cuenta}</td>
+                                            <td data-label="CARRERA">{usuario.carrera || 'Sin carrera'}</td>
+                                            <td data-label="ROL">
+                                                <div className="admin-usuarios-role-cell">
+                                                    <span className="admin-usuarios-dot-role" style={{ backgroundColor: getRolColor(usuario.rol) }}></span>
+                                                    {usuario.rol}
+                                                </div>
+                                            </Fragment>
+                                            </div>
+                                            </td>
+                                            <td data-label="ESTADO">
+                                                <span className={`admin-usuarios-status-pill ${usuario.activo ? 'activo' : 'inactivo'}`}>
+                                                    {usuario.activo ? 'Activo' : 'Inactivo'}
+                                                </span>
+                                            </Fragment>
+                                            </div>
+                                            </td>
+                                            <td data-label="ACCIONES">
+                                                <div className="admin-usuarios-action-btns">
+                                                    <button className="admin-usuarios-icon-action" onClick={() => handleOpenEditModal(usuario)} title="Editar">
+                                                        <EditIcon fontSize="small" />
+                                                    </button>
+                                                    <button className="admin-usuarios-icon-action" onClick={() => handleCambiarEstado(usuario)} title={usuario.activo ? 'Desactivar' : 'Activar'}>
+                                                        {usuario.activo ? <BlockIcon fontSize="small" /> : <CheckCircleIcon fontSize="small" />}
+                                                    </button>
+                                                    <button className="admin-usuarios-icon-action" onClick={() => handleOpenRolModal(usuario)} title="Cambiar rol">
                                                         👤
-                                                    </IconButton>
-                                                    <IconButton 
-                                                        size="small" 
-                                                        onClick={() => handleEliminar(usuario)}
-                                                        title="Eliminar usuario"
-                                                        className="admin-usuarios-icono-eliminar"
-                                                    >
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Paper>
-                </Container>
-            </Box>
+                                                    </button>
+                                                    <button className="admin-usuarios-icon-action" onClick={() => handleEliminar(usuario)} title="Eliminar" style={{ color: '#dc3545' }}>
+                                                        <DeleteIcon fontSize="small" />
+                                                    </button>
+                                                </div>
+                                             </Fragment>
+                                            </div>
+                                            </td>
+                                        </Fragment>
+                                            </div>
+                                        </Fragment>
+                                            </div>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+
+            {/* Modal Agregar Usuario */}
+            <Dialog open={openAddModal} onClose={() => setOpenAddModal(false)} maxWidth="sm" fullWidth>
+                <DialogTitle sx={{ bgcolor: '#003DA5', color: 'white' }}>
+                    Nuevo Usuario
+                    <IconButton onClick={() => setOpenAddModal(false)} sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}>
+                        ✕
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <TextField
+                        fullWidth
+                        label="Numero de cuenta"
+                        value={addForm.n_cuenta}
+                        onChange={(e) => setAddForm({ ...addForm, n_cuenta: e.target.value })}
+                        margin="normal"
+                        required
+                    />
+                    <TextField
+                        fullWidth
+                        label="Usuario (sin @)"
+                        value={addForm.correo}
+                        onChange={(e) => setAddForm({ ...addForm, correo: e.target.value })}
+                        margin="normal"
+                        helperText="El correo se completara automaticamente con @pcpuma.acatlan.unam.mx"
+                        required
+                    />
+                    <TextField
+                        fullWidth
+                        type="password"
+                        label="Contraseña"
+                        value={addForm.password}
+                        onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
+                        margin="normal"
+                        required
+                    />
+                    <TextField
+                        fullWidth
+                        label="Nombre completo"
+                        value={addForm.nombre_completo}
+                        onChange={(e) => setAddForm({ ...addForm, nombre_completo: e.target.value })}
+                        margin="normal"
+                        required
+                    />
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Carrera</InputLabel>
+                        <Select
+                            value={addForm.carrera}
+                            onChange={(e) => setAddForm({ ...addForm, carrera: e.target.value })}
+                        >
+                            {carreras.map((carrera) => (
+                                <MenuItem key={carrera} value={carrera}>{carrera}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Rol</InputLabel>
+                        <Select
+                            value={addForm.id_rol}
+                            onChange={(e) => setAddForm({ ...addForm, id_rol: Number(e.target.value) })}
+                        >
+                            {roles.map((rol) => (
+                                <MenuItem key={rol.id_rol} value={rol.id_rol}>
+                                    {rol.nombre_rol} - {rol.descripcion}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenAddModal(false)}>Cancelar</Button>
+                    <Button onClick={handleAddSubmit} variant="contained" sx={{ bgcolor: '#003DA5' }}>
+                        Crear Usuario
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             {/* Modal Editar Usuario */}
             <Dialog open={openEditModal} onClose={() => setOpenEditModal(false)} maxWidth="sm" fullWidth>
-                <DialogTitle className="admin-usuarios-modal-titulo">
+                <DialogTitle sx={{ bgcolor: '#003DA5', color: 'white' }}>
                     Editar Usuario
-                    <IconButton onClick={() => setOpenEditModal(false)} className="admin-usuarios-modal-close">
+                    <IconButton onClick={() => setOpenEditModal(false)} sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}>
                         ✕
                     </IconButton>
                 </DialogTitle>
@@ -276,20 +453,22 @@ const AdminUsuarios: React.FC = () => {
                         value={editForm.nombre_completo}
                         onChange={(e) => setEditForm({ ...editForm, nombre_completo: e.target.value })}
                         margin="normal"
-                        className="admin-usuarios-input"
                     />
-                    <TextField
-                        fullWidth
-                        label="Carrera"
-                        value={editForm.carrera}
-                        onChange={(e) => setEditForm({ ...editForm, carrera: e.target.value })}
-                        margin="normal"
-                        className="admin-usuarios-input"
-                    />
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Carrera</InputLabel>
+                        <Select
+                            value={editForm.carrera}
+                            onChange={(e) => setEditForm({ ...editForm, carrera: e.target.value })}
+                        >
+                            {carreras.map((carrera) => (
+                                <MenuItem key={carrera} value={carrera}>{carrera}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenEditModal(false)}>Cancelar</Button>
-                    <Button onClick={handleEditSubmit} variant="contained" className="admin-usuarios-btn-guardar">
+                    <Button onClick={handleEditSubmit} variant="contained" sx={{ bgcolor: '#003DA5' }}>
                         Guardar
                     </Button>
                 </DialogActions>
@@ -297,9 +476,9 @@ const AdminUsuarios: React.FC = () => {
 
             {/* Modal Cambiar Rol */}
             <Dialog open={openRolModal} onClose={() => setOpenRolModal(false)} maxWidth="sm" fullWidth>
-                <DialogTitle className="admin-usuarios-modal-titulo">
+                <DialogTitle sx={{ bgcolor: '#003DA5', color: 'white' }}>
                     Cambiar Rol
-                    <IconButton onClick={() => setOpenRolModal(false)} className="admin-usuarios-modal-close">
+                    <IconButton onClick={() => setOpenRolModal(false)} sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}>
                         ✕
                     </IconButton>
                 </DialogTitle>
@@ -320,7 +499,7 @@ const AdminUsuarios: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenRolModal(false)}>Cancelar</Button>
-                    <Button onClick={handleCambiarRol} variant="contained" className="admin-usuarios-btn-guardar">
+                    <Button onClick={handleCambiarRol} variant="contained" sx={{ bgcolor: '#003DA5' }}>
                         Cambiar Rol
                     </Button>
                 </DialogActions>
@@ -336,7 +515,7 @@ const AdminUsuarios: React.FC = () => {
                     {snackbar.message}
                 </Alert>
             </Snackbar>
-        </Box>
+        </div>
     );
 };
 
