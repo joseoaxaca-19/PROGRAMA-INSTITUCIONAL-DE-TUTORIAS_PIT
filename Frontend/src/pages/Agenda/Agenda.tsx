@@ -5,16 +5,11 @@ import {
   Alert, Snackbar, Tabs, Tab, Avatar
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EventIcon from '@mui/icons-material/Event';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Sidebar from "../../components/Sidebar/Sidebar";
-import PerfilUsuario from "../../components/PerfilUsuario/PerfilUsuario";
-
+import PerfilUsuario from '../../components/PerfilUsuario/PerfilUsuario';
 import { 
-  obtenerCitas, crearCita, editarCita, eliminarCita, 
-  inscribirseCita, misCitas
+  obtenerCitas, inscribirseCita, misCitas
 } from '../../services/api';
 import './Agenda.css';
 
@@ -47,25 +42,12 @@ const Agenda: React.FC = () => {
   const [citas, setCitas] = useState<Cita[]>([]);
   const [misCitasList, setMisCitasList] = useState<Cita[]>([]);
   const [tabValue, setTabValue] = useState(0);
-  const [openModal, setOpenModal] = useState(false);
   const [openPerfilModal, setOpenPerfilModal] = useState(false);
-  const [editandoCita, setEditandoCita] = useState<Cita | null>(null);
   const [userRole, setUserRole] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userCarrera, setUserCarrera] = useState<string>('');
-  const [userId, setUserId] = useState<number>(0);
   const [filtroCarrera, setFiltroCarrera] = useState<string>('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
-  
-  const [formData, setFormData] = useState({
-    materia: '',
-    tutor_nombre: '',
-    fecha: '',
-    hora: '',
-    capacidad: 20,
-    tipo: 'grupal',
-    carrera: ''
-  });
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -76,8 +58,6 @@ const Agenda: React.FC = () => {
           setUserRole(user.role || '');
           setUserName(user.nombre || user.nombre_completo || user.email?.split('@')[0] || 'Usuario');
           setUserCarrera(user.carrera || '');
-          setUserId(user.id || 0);
-          setFormData(prev => ({ ...prev, carrera: user.carrera || '' }));
         }
         await Promise.all([cargarCitas(), cargarMisCitas()]);
       } catch (error) {
@@ -113,73 +93,6 @@ const Agenda: React.FC = () => {
     setOpenPerfilModal(true);
   };
 
-  const handleOpenModal = (cita?: Cita) => {
-    if (cita) {
-      setEditandoCita(cita);
-      setFormData({
-        materia: cita.materia,
-        tutor_nombre: cita.tutor_nombre,
-        fecha: cita.fecha,
-        hora: cita.hora,
-        capacidad: cita.capacidad,
-        tipo: cita.tipo,
-        carrera: cita.carrera
-      });
-    } else {
-      setEditandoCita(null);
-      setFormData({
-        materia: '',
-        tutor_nombre: '',
-        fecha: '',
-        hora: '',
-        capacidad: 20,
-        tipo: 'grupal',
-        carrera: userCarrera
-      });
-    }
-    setOpenModal(true);
-  };
-
-  const handleSubmitCita = async () => {
-    if (!formData.materia || !formData.tutor_nombre || !formData.fecha || !formData.hora) {
-      setSnackbar({ open: true, message: 'Todos los campos son obligatorios', severity: 'error' });
-      return;
-    }
-
-    try {
-      let result;
-      if (editandoCita) {
-        result = await editarCita(editandoCita.id_cita, formData);
-      } else {
-        result = await crearCita(formData);
-      }
-      
-      if (result.success) {
-        setSnackbar({ open: true, message: `Cita ${editandoCita ? 'actualizada' : 'creada'} correctamente`, severity: 'success' });
-        setOpenModal(false);
-        cargarCitas();
-        cargarMisCitas();
-      } else {
-        setSnackbar({ open: true, message: result.error || 'Error al guardar cita', severity: 'error' });
-      }
-    } catch (error) {
-      setSnackbar({ open: true, message: 'Error al guardar cita', severity: 'error' });
-    }
-  };
-
-  const handleEliminarCita = async (id: number) => {
-    if (window.confirm('¿Estás seguro de eliminar esta cita?')) {
-      const result = await eliminarCita(id);
-      if (result.success) {
-        setSnackbar({ open: true, message: 'Cita eliminada correctamente', severity: 'success' });
-        cargarCitas();
-        cargarMisCitas();
-      } else {
-        setSnackbar({ open: true, message: result.error || 'Error al eliminar cita', severity: 'error' });
-      }
-    }
-  };
-
   const handleInscribirse = async (id: number) => {
     const result = await inscribirseCita(id);
     if (result.success) {
@@ -193,10 +106,6 @@ const Agenda: React.FC = () => {
 
   const estaInscrito = (citaId: number) => {
     return misCitasList.some(c => c.id_cita === citaId);
-  };
-
-  const puedeEditar = (cita: Cita) => {
-    return userRole === 'admin' || cita.id_creador === userId;
   };
 
   const citasFiltradas = () => {
@@ -248,26 +157,16 @@ const Agenda: React.FC = () => {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
               <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)}>
-                <Tab label="Tutorías Disponibles" />
-                <Tab label="Mis Tutorías" />
+                <Tab label="Tutorias Disponibles" />
+                <Tab label="Mis Tutorias" />
               </Tabs>
             </Box>
-
-            {(userRole === 'tutor' || userRole === 'tutorado' || userRole === 'admin') && (
-              <Button 
-                variant="contained" 
-                onClick={() => handleOpenModal()}
-                sx={{ mb: 2, bgcolor: '#D6A600', '&:hover': { bgcolor: '#c09500' } }}
-              >
-                + Crear Nueva Tutoría
-              </Button>
-            )}
 
             {tabValue === 0 && (
               <>
                 <Box className="filter-section" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                   <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <SearchIcon color="primary" /> Tutorías Disponibles
+                    <SearchIcon color="primary" /> Tutorias Disponibles
                   </Typography>
                   {userRole === 'alumno' && (
                     <FormControl size="small" sx={{ minWidth: 200 }}>
@@ -288,7 +187,9 @@ const Agenda: React.FC = () => {
                     <Card key={cita.id_cita} className="agenda-tutoria-card">
                       <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                          <Box className="agenda-icon-box"><EventIcon /></Box>
+                          <Box className="agenda-icon-box">
+                            <span role="img" aria-label="evento">📅</span>
+                          </Box>
                           <Chip 
                             label={(cita.inscritos || 0) >= (cita.capacidad || 1) ? "LLENO" : `${cita.inscritos || 0}/${cita.capacidad || 1} lugares`}
                             size="small" 
@@ -309,20 +210,11 @@ const Agenda: React.FC = () => {
                         <Typography variant="body2" color="textSecondary">🎓 {cita.carrera}</Typography>
                       </CardContent>
                       <Box sx={{ p: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                        {puedeEditar(cita) && (
-                          <>
-                            <Button size="small" onClick={() => handleOpenModal(cita)} startIcon={<EditIcon />}>
-                              Editar
-                            </Button>
-                            <Button size="small" color="error" onClick={() => handleEliminarCita(cita.id_cita)} startIcon={<DeleteIcon />}>
-                              Eliminar
-                            </Button>
-                          </>
-                        )}
                         {(userRole === 'alumno' || userRole === 'tutorado') && !estaInscrito(cita.id_cita) && (
                           <Button 
                             variant="contained" 
                             size="small"
+                            fullWidth
                             disabled={(cita.inscritos || 0) >= (cita.capacidad || 1)}
                             onClick={() => handleInscribirse(cita.id_cita)}
                             sx={{ bgcolor: '#003DA5' }}
@@ -331,7 +223,7 @@ const Agenda: React.FC = () => {
                           </Button>
                         )}
                         {estaInscrito(cita.id_cita) && (
-                          <Chip label="Inscrito" color="success" size="small" />
+                          <Chip label="Inscrito" color="success" size="small" sx={{ width: '100%' }} />
                         )}
                       </Box>
                     </Card>
@@ -366,84 +258,12 @@ const Agenda: React.FC = () => {
         </main>
       </Box>
 
-      {/* Modal de crear/editar cita */}
-      <Dialog open={openModal} onClose={() => setOpenModal(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editandoCita ? 'Editar Tutoría' : 'Crear Nueva Tutoría'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            label="Materia"
-            value={formData.materia}
-            onChange={(e) => setFormData({ ...formData, materia: e.target.value })}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            label="Tutor/Profesor"
-            value={formData.tutor_nombre}
-            onChange={(e) => setFormData({ ...formData, tutor_nombre: e.target.value })}
-            margin="normal"
-            required
-          />
-          <TextField
-            fullWidth
-            type="date"
-            label="Fecha"
-            value={formData.fecha}
-            onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-            required
-          />
-          <TextField
-            fullWidth
-            type="time"
-            label="Hora"
-            value={formData.hora}
-            onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
-            margin="normal"
-            InputLabelProps={{ shrink: true }}
-            required
-          />
-          <TextField
-            fullWidth
-            type="number"
-            label="Capacidad (máx. 20)"
-            value={formData.capacidad}
-            onChange={(e) => setFormData({ ...formData, capacidad: parseInt(e.target.value) })}
-            margin="normal"
-            inputProps={{ min: 1, max: 20 }}
-          />
-          <FormControl fullWidth margin="normal">
-            <Select
-              value={formData.tipo}
-              onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}
-            >
-              <MenuItem value="grupal">Grupal (hasta 20 personas)</MenuItem>
-              <MenuItem value="individual">Individual (1 persona)</MenuItem>
-            </Select>
-          </FormControl>
-          <Alert severity="info" sx={{ mt: 2 }}>
-            El salón será asignado por administración. Las tutorías grupales tienen cupo limitado.
-          </Alert>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenModal(false)}>Cancelar</Button>
-          <Button onClick={handleSubmitCita} variant="contained" sx={{ bgcolor: '#003DA5' }}>
-            {editandoCita ? 'Actualizar' : 'Crear'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Modal de perfil de usuario */}
       <PerfilUsuario 
         open={openPerfilModal} 
         onClose={() => setOpenPerfilModal(false)}
         onUpdate={handlePerfilUpdate}
       />
 
-      {/* Snackbar para notificaciones */}
       <Snackbar 
         open={snackbar.open} 
         autoHideDuration={6000} 

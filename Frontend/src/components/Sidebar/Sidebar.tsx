@@ -37,6 +37,9 @@ function Sidebar({ userRole }: SidebarProps) {
         {/* Solo admin ve estos enlaces */}
         {userRole === 'admin' && (
           <>
+            <Link to="/admin/citas" className={`nav-item ${isActive("/admin/citas") ? "active" : ""}`}>
+                <span>📅</span> Gestionar Citas
+            </Link>
             <Link to="/admin-avisos" className={`nav-item ${isActive("/admin-avisos") ? "active" : ""}`}>
               <span>📢</span> Administrar Avisos
             </Link>
