@@ -9,7 +9,7 @@ import Avisos from "./pages/Avisos/Avisos"
 import AdminAvisos from "./pages/Avisos/AdminAvisos"
 import SolicitarTutoria from "./pages/Servicios/SolicitarTutoria/SolicitarTutoria"
 import Agenda from "./pages/Agenda/Agenda"
-import Bitacora from "./pages/Permisos/Bitacora/Bitacora"
+import Bitacora from "./pages/Bitacora/Bitacora"
 import Divisiones from "./pages/Divisiones/Divisiones"
 import ProtectedRoute from "./components/ProtectedRoute"
 import AdminCitas from "./pages/Admin/AdminCitas";
