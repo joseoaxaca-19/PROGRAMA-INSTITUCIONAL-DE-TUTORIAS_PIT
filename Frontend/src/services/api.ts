@@ -220,6 +220,67 @@ export const adminAsignarLugar = async (id: number, lugar: string) => {
 };
 
 
+//Bitacora
+export const obtenerNotasPorCita = async (id_cita: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/bitacora/cita/${id_cita}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+export const agregarNota = async (id_cita: number, nota: string) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/bitacora/cita/${id_cita}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify({ nota })
+    });
+    return response.json();
+};
+
+export const editarNota = async (id_bitacora: number, nota: string) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/bitacora/${id_bitacora}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify({ nota })
+    });
+    return response.json();
+};
+
+export const eliminarNota = async (id_bitacora: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/bitacora/${id_bitacora}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+export const obtenerTodasNotas = async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/bitacora/todas`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+
 //Estadisticas
 export const obtenerEstadisticas = async () => {
     const res = await fetch(`${API_URL}/auth/estadisticas`);

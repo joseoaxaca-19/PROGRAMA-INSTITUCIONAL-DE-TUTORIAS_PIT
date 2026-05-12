@@ -36,6 +36,7 @@ app.use(express.json());
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/userRoutes");
 const citasRoutes = require("./routes/citas");
+const bitacoraRoutes = require("./routes/bitacoraRoutes");
 const avisoRoutes = require("./routes/avisoRoutes");
 const adminCitasRoutes = require("./routes/adminCitasRoutes");
 
@@ -43,6 +44,7 @@ const adminCitasRoutes = require("./routes/adminCitasRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/citas", citasRoutes);
+app.use("/api/bitacora", bitacoraRoutes);
 app.use("/api/avisos", avisoRoutes);
 app.use("/api/admin/citas", adminCitasRoutes);
 
