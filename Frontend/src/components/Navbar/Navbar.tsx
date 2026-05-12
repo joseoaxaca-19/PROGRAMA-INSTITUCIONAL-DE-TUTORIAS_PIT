@@ -3,6 +3,7 @@ import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/icons/unam_logo.svg";
 import Login from "../../pages/Login/Login";
+import Registro from "../../pages/Registro/Registro";
 import { isAuthenticated, logout } from "../../services/api";
 
 interface NavbarProps {
@@ -13,6 +14,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("inicio");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegistroModalOpen, setIsRegistroModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,8 +25,16 @@ function Navbar({ onLoginClick }: NavbarProps) {
     return navbar ? navbar.getBoundingClientRect().height : 80;
   };
 
+  // En Navbar.tsx - useEffect para detectar login
   useEffect(() => {
-    setIsLoggedIn(isAuthenticated());
+      setIsLoggedIn(isAuthenticated());
+      if (isAuthenticated()) {
+          const user = localStorage.getItem('user');
+          if (user) {
+              const userData = JSON.parse(user);
+              console.log('Usuario logueado:', userData);
+          }
+      }
   }, [location.pathname]);
 
   useEffect(() => {
@@ -34,7 +44,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
     }
 
     const checkSections = () => {
-      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
+      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "contacto"]; // Eliminado "avisos"
       sections.forEach(section => {
         const element = document.getElementById(section);
         if (!element) console.warn(`Sección no encontrada: ${section}`);
@@ -45,7 +55,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
 
     const handleScroll = () => {
       if (isScrolling.current) return;
-      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "avisos", "contacto"];
+      const sections = ["inicio", "sobre-nosotros", "servicios", "divisiones", "contacto"]; // Eliminado "avisos"
       const navbarHeight = getNavbarHeight();
       let currentSection = "";
 
@@ -113,13 +123,22 @@ function Navbar({ onLoginClick }: NavbarProps) {
     }
   };
 
-  const handleLogout = () => {
+  const handleRegistroClick = () => {
+    setMenuOpen(false);
+    setIsRegistroModalOpen(true);
+  };
+
+  const handleLogoutClick = () => {
     logout();
   };
 
-  const handleCloseModal = () => {
+  const handleCloseLoginModal = () => {
     setIsLoginModalOpen(false);
     setIsLoggedIn(isAuthenticated());
+  };
+
+  const handleCloseRegistroModal = () => {
+    setIsRegistroModalOpen(false);
   };
 
   const isActive = (sectionId: string) => {
@@ -145,11 +164,7 @@ function Navbar({ onLoginClick }: NavbarProps) {
               Inicio
             </button>
           </li>
-          <li>
-            <button className={`nav-button ${isActive("avisos") ? "active" : ""}`} onClick={() => handleClick("avisos")}>
-              Avisos
-            </button>
-          </li>
+          {/* Eliminado el botón de Avisos */}
           <li>
             <button className={`nav-button ${isActive("sobre-nosotros") ? "active" : ""}`} onClick={() => handleClick("sobre-nosotros")}>
               Sobre Nosotros
@@ -179,19 +194,25 @@ function Navbar({ onLoginClick }: NavbarProps) {
           )}
           <li>
             {isLoggedIn ? (
-              <button className="login-btn" onClick={handleLogout}>
+              <button className="login-btn" onClick={handleLogoutClick}>
                 Cerrar Sesión
               </button>
             ) : (
-              <button className="login-btn" onClick={handleLoginClick}>
-                Login
-              </button>
+              <div className="auth-buttons">
+                <button className="login-btn" onClick={handleLoginClick}>
+                  Iniciar Sesión
+                </button>
+                <button className="nav-button" onClick={handleRegistroClick}>
+                  Registrarse
+                </button>
+              </div>
             )}
           </li>
         </ul>
       </nav>
 
-      <Login isOpen={isLoginModalOpen} onClose={handleCloseModal} />
+      <Login isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
+      <Registro isOpen={isRegistroModalOpen} onClose={handleCloseRegistroModal} />
     </>
   );
 }

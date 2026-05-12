@@ -6,36 +6,63 @@ import './Login.css';
 interface LoginProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess?: () => void;
 }
 
-const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
-  const [email, setEmail] = useState('');
+const Login: React.FC<LoginProps> = ({ isOpen, onClose, onLoginSuccess }) => {
+  const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const handleUsuarioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    value = value.replace(/@.*$/, '');
+    setUsuario(value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
+    const emailCompleto = `${usuario}@pcpuma.acatlan.unam.mx`;
+
+    console.log('📧 Intentando login con:', emailCompleto);
+    console.log('🔑 Contraseña:', password);
+
     try {
-      const data = await login(email, password);
+      const data = await login(emailCompleto, password);
+      console.log('📥 Respuesta del servidor:', data);
       
       if (data.success) {
+        // Guardar token y datos del usuario
         localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify({ email, role: data.role }));
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('userId', String(data.user.id)); //Esta se eliminara(solo es prueba)
         
-        console.log('Login exitoso');
+        console.log('Login exitoso:', data.user);
+        
         onClose();
-        navigate('/agenda');
+        if (onLoginSuccess) onLoginSuccess();
+        
+        // Redirigir según el rol
+        if (data.user.role === 'admin') {
+          navigate("/agenda");
+        } else if (data.user.role === 'tutor' || data.user.role === 'tutorado') {
+          navigate('/agenda');
+        } else {
+          navigate('/agenda');
+        }
+        
         window.location.reload(); // Recargar para actualizar navbar
       } else {
         setError(data.message || 'Usuario o contraseña incorrectos');
       }
     } catch (err) {
+      console.error('Error en login:', err);
       setError('Error al conectar con el servidor');
     } finally {
       setLoading(false);
@@ -56,15 +83,19 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Correo electrónico:</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="correo@ejemplo.com"
-              required
-            />
+            <label htmlFor="usuario">Usuario (correo institucional):</label>
+            <div className="email-input-wrapper">
+              <input
+                type="text"
+                id="usuario"
+                value={usuario}
+                onChange={handleUsuarioChange}
+                placeholder="usuario"
+                required
+              />
+              <span className="email-domain">@pcpuma.acatlan.unam.mx</span>
+            </div>
+            <small>Ingresa solo tu usuario (sin el @)</small>
           </div>
           
           <div className="form-group">
@@ -79,11 +110,9 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
                 required
               />
               <button type="button" className="toggle-password" onClick={togglePasswordVisibility}>
-                {showPassword ? (
-                  <span className="material-symbols-outlined">visibility_off</span>
-                ) : (
-                  <span className="material-symbols-outlined">visibility</span>
-                )}
+                <span className="material-symbols-outlined">
+                  {showPassword ? 'visibility_off' : 'visibility'}
+                </span>
               </button>
             </div>
           </div>
