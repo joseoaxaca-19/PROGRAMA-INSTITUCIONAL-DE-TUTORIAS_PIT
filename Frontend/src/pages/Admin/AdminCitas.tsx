@@ -6,7 +6,7 @@ import {
     IconButton, Table, TableHead, TableRow, TableCell, TableBody,
     Alert, Snackbar, Chip, Paper, TableContainer
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import {
     adminObtenerCitas,
@@ -38,6 +38,7 @@ const AdminCitas: React.FC = () => {
     const [openLugarModal, setOpenLugarModal] = useState(false);
     const [editandoCita, setEditandoCita] = useState<Cita | null>(null);
     const [citaSeleccionada, setCitaSeleccionada] = useState<Cita | null>(null);
+    const [saving, setSaving] = useState(false);
     const [snackbar, setSnackbar] = useState({ 
         open: false, 
         message: '', 
@@ -105,10 +106,30 @@ const AdminCitas: React.FC = () => {
         setOpenModal(true);
     };
 
+    const handleCloseModal = () => {
+        setOpenModal(false);
+        setEditandoCita(null);
+        setFormData({
+            materia: '',
+            tutor_nombre: '',
+            fecha: '',
+            hora: '',
+            capacidad: 20,
+            tipo: 'grupal',
+            carrera: ''
+        });
+    };
+
     const handleOpenLugarModal = (cita: Cita) => {
         setCitaSeleccionada(cita);
         setLugarData({ lugar: cita.lugar === 'Por asignar' ? '' : cita.lugar });
         setOpenLugarModal(true);
+    };
+
+    const handleCloseLugarModal = () => {
+        setOpenLugarModal(false);
+        setCitaSeleccionada(null);
+        setLugarData({ lugar: '' });
     };
 
     const handleSubmit = async () => {
@@ -120,6 +141,8 @@ const AdminCitas: React.FC = () => {
             });
             return;
         }
+
+        setSaving(true);
 
         let result;
         if (editandoCita) {
@@ -134,7 +157,7 @@ const AdminCitas: React.FC = () => {
                 message: `Cita ${editandoCita ? 'actualizada' : 'creada'} correctamente`, 
                 severity: 'success' 
             });
-            setOpenModal(false);
+            handleCloseModal();
             cargarCitas();
         } else {
             setSnackbar({ 
@@ -143,6 +166,8 @@ const AdminCitas: React.FC = () => {
                 severity: 'error' 
             });
         }
+        
+        setSaving(false);
     };
 
     const handleEliminar = async (id: number) => {
@@ -175,7 +200,7 @@ const AdminCitas: React.FC = () => {
                 message: 'Salon asignado correctamente', 
                 severity: 'success' 
             });
-            setOpenLugarModal(false);
+            handleCloseLugarModal();
             cargarCitas();
         } else {
             setSnackbar({ 
@@ -307,13 +332,19 @@ const AdminCitas: React.FC = () => {
             {/* Modal Crear/Editar Cita */}
             <Dialog 
                 open={openModal} 
-                onClose={() => setOpenModal(false)} 
+                onClose={handleCloseModal} 
                 maxWidth="sm" 
                 fullWidth
                 className="admin-citas-modal"
             >
                 <DialogTitle className="admin-citas-modal-titulo">
                     {editandoCita ? 'Editar Cita' : 'Nueva Cita'}
+                    <IconButton 
+                        onClick={handleCloseModal} 
+                        className="admin-citas-modal-close"
+                    >
+                        <CloseIcon />
+                    </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <TextField
@@ -397,11 +428,16 @@ const AdminCitas: React.FC = () => {
                     </FormControl>
                 </DialogContent>
                 <DialogActions className="admin-citas-modal-acciones">
-                    <Button onClick={() => setOpenModal(false)} className="admin-citas-btn-cancelar">
+                    <Button onClick={handleCloseModal} className="admin-citas-btn-cancelar">
                         Cancelar
                     </Button>
-                    <Button onClick={handleSubmit} variant="contained" className="admin-citas-btn-guardar">
-                        Guardar
+                    <Button 
+                        onClick={handleSubmit} 
+                        variant="contained" 
+                        className="admin-citas-btn-guardar"
+                        disabled={saving}
+                    >
+                        {saving ? 'Guardando...' : 'Guardar'}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -409,13 +445,19 @@ const AdminCitas: React.FC = () => {
             {/* Modal Asignar Salon */}
             <Dialog 
                 open={openLugarModal} 
-                onClose={() => setOpenLugarModal(false)} 
+                onClose={handleCloseLugarModal} 
                 maxWidth="sm" 
                 fullWidth
                 className="admin-citas-modal"
             >
                 <DialogTitle className="admin-citas-modal-titulo">
                     Asignar Salon
+                    <IconButton 
+                        onClick={handleCloseLugarModal} 
+                        className="admin-citas-modal-close"
+                    >
+                        <CloseIcon />
+                    </IconButton>
                 </DialogTitle>
                 <DialogContent>
                     <TextField
@@ -429,7 +471,7 @@ const AdminCitas: React.FC = () => {
                     />
                 </DialogContent>
                 <DialogActions className="admin-citas-modal-acciones">
-                    <Button onClick={() => setOpenLugarModal(false)} className="admin-citas-btn-cancelar">
+                    <Button onClick={handleCloseLugarModal} className="admin-citas-btn-cancelar">
                         Cancelar
                     </Button>
                     <Button onClick={handleAsignarLugar} variant="contained" className="admin-citas-btn-guardar">
