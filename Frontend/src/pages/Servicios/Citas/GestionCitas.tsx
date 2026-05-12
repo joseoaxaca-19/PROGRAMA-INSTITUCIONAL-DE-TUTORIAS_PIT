@@ -15,8 +15,14 @@ function GestionCitas() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setUserRole(getUserRole() || '')
-    cargarCitas()
+    const role = getUserRole()
+    setUserRole(role || '')
+    
+    if (role === 'admin') {
+      navigate('/admin/citas')
+    } else {
+      cargarCitas()
+    }
   }, [])
 
   const cargarCitas = async () => {
@@ -35,7 +41,7 @@ function GestionCitas() {
 
   const handleSeleccionarCita = async (id_cita: number) => {
     if (!isAuthenticated()) {
-      alert("Debes iniciar sesión para seleccionar una cita")
+      alert("Debes iniciar sesion para seleccionar una cita")
       navigate('/')
       return
     }
@@ -54,7 +60,7 @@ function GestionCitas() {
   }
 
   const handleEliminarCita = async (id_cita: number) => {
-    if (window.confirm('¿Estás seguro de eliminar esta cita?')) {
+    if (window.confirm('¿Estas seguro de eliminar esta cita?')) {
       try {
         const result = await eliminarCita(id_cita)
         if (result.success) {
@@ -87,18 +93,24 @@ function GestionCitas() {
             <span className="gc-topbar-bell">🔔</span>
             <div className="gc-topbar-user">
               <div>
-                <p className="gc-topbar-name">Admin Usuario</p>
-                <p className="gc-topbar-role">COORDINADOR</p>
+                <p className="gc-topbar-name">Usuario</p>
+                <p className="gc-topbar-role">
+                  {userRole === 'admin' ? 'ADMINISTRADOR' : 
+                   userRole === 'tutor' ? 'TUTOR' :
+                   userRole === 'tutorado' ? 'TUTORADO' : 'ALUMNO'}
+                </p>
               </div>
-              <div className="gc-topbar-avatar">AU</div>
+              <div className="gc-topbar-avatar">
+                {userRole === 'admin' ? 'A' : userRole === 'tutor' ? 'T' : userRole === 'tutorado' ? 'T' : 'U'}
+              </div>
             </div>
           </div>
         </header>
 
         <div className="gc-header">
           <div>
-            <h1>Gestión de Citas de Tutoría</h1>
-            <p>Administra y programa las sesiones académicas de acompañamiento.</p>
+            <h1>Gestion de Citas de Tutoria</h1>
+            <p>Administra y programa las sesiones academicas de acompañamiento.</p>
           </div>
           {(userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
             <button className="gc-btn-nueva" onClick={() => setOpenModal(true)}>
@@ -141,9 +153,13 @@ function GestionCitas() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={7} className="gc-empty">Cargando citas...</td></tr>
+                <tr>
+                  <td colSpan={7} className="gc-empty">Cargando citas...</td>
+                </tr>
               ) : citasFiltradas.length === 0 ? (
-                <tr><td colSpan={7} className="gc-empty">No hay citas disponibles</td></tr>
+                <tr>
+                  <td colSpan={7} className="gc-empty">No hay citas disponibles</td>
+                </tr>
               ) : (
                 citasFiltradas.map((cita, i) => (
                   <tr key={i}>
@@ -163,8 +179,9 @@ function GestionCitas() {
                           className="gc-btn-icono" 
                           onClick={() => handleEliminarCita(cita.id_cita)}
                           style={{ color: 'red' }}
+                          title="Eliminar cita"
                         >
-                          🗑️ Eliminar
+                          🗑️
                         </button>
                       )}
                       {(userRole === 'alumno' || userRole === 'tutorado') && (
@@ -172,8 +189,9 @@ function GestionCitas() {
                           className="gc-btn-icono" 
                           onClick={() => handleSeleccionarCita(cita.id_cita)}
                           disabled={(cita.inscritos || 0) >= (cita.capacidad || 1)}
+                          title={ (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
                         >
-                          📅 Inscribirse
+                          📅 { (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
                         </button>
                       )}
                     </td>
