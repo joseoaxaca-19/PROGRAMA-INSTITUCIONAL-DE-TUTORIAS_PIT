@@ -35,6 +35,7 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose, onLoginSuccess }) => {
 
     try {
       const data = await login(emailCompleto, password);
+      console.log('📥 Respuesta del servidor:', data);
       
       if (data.success) {
         // Guardar token y datos del usuario
@@ -49,9 +50,9 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose, onLoginSuccess }) => {
         
         // Redirigir según el rol
         if (data.user.role === 'admin') {
-          navigate('/admin');
+          navigate('/agenda');
         } else if (data.user.role === 'tutor' || data.user.role === 'tutorado') {
-          navigate('/citas');
+          navigate('/agenda');
         } else {
           navigate('/agenda');
         }
