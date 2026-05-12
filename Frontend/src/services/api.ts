@@ -279,3 +279,88 @@ export const actualizarOrdenAvisos = async (avisos: { id_aviso: number }[]) => {
     });
     return response.json();
 };
+
+
+//Admin usuarios
+export const adminObtenerUsuarios = async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/users`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+export const adminObtenerUsuario = async (id: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+export const adminActualizarUsuario = async (id: number, userData: any) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify(userData)
+    });
+    return response.json();
+};
+
+export const adminCambiarEstado = async (id: number, activo: boolean) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/users/${id}/estado`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify({ activo })
+    });
+    return response.json();
+};
+
+export const adminCambiarRol = async (id: number, id_rol: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/users/${id}/rol`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify({ id_rol })
+    });
+    return response.json();
+};
+
+export const adminEliminarUsuario = async (id: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+export const adminObtenerRoles = async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/users/roles/list`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};

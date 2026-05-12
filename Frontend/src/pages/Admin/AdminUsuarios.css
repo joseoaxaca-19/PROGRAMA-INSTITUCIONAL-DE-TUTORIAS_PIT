@@ -1,0 +1,134 @@
+.admin-usuarios-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.admin-usuarios-main {
+    flex-grow: 1;
+    margin-left: 200px;
+    padding: 20px;
+    margin-top: 64px;
+}
+
+.admin-usuarios-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.admin-usuarios-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.admin-usuarios-titulo {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 600;
+    color: #003DA5;
+}
+
+.admin-usuarios-tabla-container {
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+}
+
+.admin-usuarios-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-usuarios-tabla thead th {
+    background-color: #003DA5;
+    color: white;
+    font-weight: 600;
+    padding: 14px 16px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.admin-usuarios-tabla tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.admin-usuarios-tabla tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.admin-usuarios-acciones {
+    white-space: nowrap;
+}
+
+.admin-usuarios-acciones button {
+    margin: 0 2px;
+}
+
+.admin-usuarios-icono-eliminar {
+    color: #dc3545 !important;
+}
+
+.admin-usuarios-loading {
+    text-align: center !important;
+    padding: 40px !important;
+    color: #888;
+}
+
+.admin-usuarios-modal-titulo {
+    background-color: #003DA5 !important;
+    color: white !important;
+    font-family: 'Lexend', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 16px 24px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.admin-usuarios-modal-close {
+    color: white !important;
+    padding: 4px !important;
+}
+
+.admin-usuarios-modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.admin-usuarios-modal-acciones {
+    padding: 16px 24px !important;
+    border-top: 1px solid #e0e0e0;
+    gap: 12px;
+}
+
+.admin-usuarios-input .MuiOutlinedInput-root {
+    border-radius: 8px;
+}
+
+.admin-usuarios-btn-guardar {
+    background-color: #003DA5 !important;
+    text-transform: none !important;
+    border-radius: 8px !important;
+}
+
+.admin-usuarios-btn-guardar:hover {
+    background-color: #002c7a !important;
+}
+
+@media (max-width: 1024px) {
+    .admin-usuarios-main {
+        margin-left: 0;
+        padding: 16px;
+    }
+    
+    .admin-usuarios-tabla-container {
+        overflow-x: auto;
+    }
+    
+    .admin-usuarios-tabla {
+        min-width: 900px;
+    }
+}

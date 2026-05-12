@@ -16,6 +16,7 @@ import Roles from "./pages/Permisos/Roles/Roles"
 import Usuarios from "./pages/Permisos/Usuarios/Usuarios"
 import ProtectedRoute from "./components/ProtectedRoute"
 import AdminCitas from "./pages/Admin/AdminCitas";
+import AdminUsuarios from "./pages/Admin/AdminUsuarios";
 
 function App() {
   return (
@@ -83,6 +84,12 @@ function App() {
         <Route path="/usuarios" element={
           <ProtectedRoute allowedRoles={['admin']}>
             <Usuarios />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/usuarios" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminUsuarios />
           </ProtectedRoute>
         } />
       </Routes>
