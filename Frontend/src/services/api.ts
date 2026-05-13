@@ -272,6 +272,69 @@ export const obtenerTodasNotasBitacora = async () => {
 };
 
 
+//Materiales(repositorio)
+export const obtenerMateriales = async (params?: { tipo?: string; carrera?: string }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.tipo) queryParams.append('tipo', params.tipo);
+    if (params?.carrera) queryParams.append('carrera', params.carrera);
+    
+    const response = await fetch(`${API_URL}/materiales?${queryParams.toString()}`);
+    return response.json();
+};
+
+export const obtenerMaterialesPorCategoria = async (categoria: string) => {
+    const response = await fetch(`${API_URL}/materiales/categoria/${categoria}`);
+    return response.json();
+};
+
+export const obtenerMaterialesPorCarrera = async (carrera: string) => {
+    const response = await fetch(`${API_URL}/materiales/carrera/${encodeURIComponent(carrera)}`);
+    return response.json();
+};
+
+export const obtenerCategorias = async () => {
+    const response = await fetch(`${API_URL}/materiales/categorias`);
+    return response.json();
+};
+
+export const crearMaterial = async (materialData: any) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/materiales`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify(materialData)
+    });
+    return response.json();
+};
+
+export const actualizarMaterial = async (id: number, materialData: any) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/materiales/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+        body: JSON.stringify(materialData)
+    });
+    return response.json();
+};
+
+export const eliminarMaterial = async (id: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/materiales/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
+
 //Estadisticas
 export const obtenerEstadisticas = async () => {
     const res = await fetch(`${API_URL}/auth/estadisticas`);

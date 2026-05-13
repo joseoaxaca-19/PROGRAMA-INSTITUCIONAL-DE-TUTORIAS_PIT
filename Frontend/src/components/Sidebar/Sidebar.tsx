@@ -49,6 +49,9 @@ function Sidebar({ userRole }: SidebarProps) {
             <Link to="/usuarios" className={`nav-item ${isActive("/usuarios") ? "active" : ""}`}>
               <span>👥</span> Usuarios
             </Link>
+            <Link to="/admin/materiales" className={`nav-item ${isActive("/admin/materiales") ? "active" : ""}`}>
+              <span>📚</span> Gestionar Materiales
+            </Link>
           </>
         )}
 
