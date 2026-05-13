@@ -7,31 +7,25 @@ exports.obtenerCitas = async (req, res) => {
         const userRole = req.user.role;
         const userCarrera = req.user.carrera;
         
+        console.log("Usuario:", { userId, userRole, userCarrera });
+        
         let query = `
-            SELECT c.id_cita, c.materia, c.tutor_nombre, c.fecha, c.hora, 
-                   c.lugar, c.capacidad, c.inscritos, c.tipo, c.estado,
-                   u.nombre_completo as creador_nombre
+            SELECT c.*, u.nombre_completo as creador_nombre
             FROM tr_citas c
             LEFT JOIN tr_user u ON c.id_creador = u.id_user
-            WHERE 1=1
+            WHERE c.estado = 'disponible'
         `;
         
-        // Alumno solo ve citas disponibles de su carrera
+        // Alumno solo ve citas de su carrera
         if (userRole === 'alumno') {
-            query += ` AND c.carrera = '${userCarrera}' AND c.estado = 'disponible'`;
-        }
-        // Tutor y Tutorado ven todas las citas
-        else if (userRole === 'tutor' || userRole === 'tutorado') {
-            query += ` AND (c.estado = 'disponible' OR c.id_creador = ${userId})`;
-        }
-        // Admin ve todo
-        else if (userRole === 'admin') {
-            
+            query += ` AND c.carrera = '${userCarrera}'`;
         }
         
         query += ` ORDER BY c.fecha DESC, c.hora DESC`;
         
         const result = await db.query(query);
+        console.log("Citas encontradas:", result.rows.length);
+        
         res.json({ success: true, citas: result.rows });
     } catch (error) {
         console.error("Error al obtener citas:", error);
