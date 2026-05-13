@@ -14,7 +14,7 @@ exports.obtenerCitas = async (req, res) => {
             SELECT c.*, u.nombre_completo as creador_nombre
             FROM tr_citas c
             LEFT JOIN tr_user u ON c.id_creador = u.id_user
-            WHERE c.estado = 'disponible'
+            WHERE c.estado = "disponible"
         `;
         const params = [];
         
