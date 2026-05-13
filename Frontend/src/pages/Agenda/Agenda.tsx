@@ -92,6 +92,15 @@ const Agenda: React.FC = () => {
     setOpenPerfilModal(true);
   };
 
+  const handlePerfilUpdate = () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setUserName(user.nombre || user.nombre_completo || user.email?.split('@')[0] || 'Usuario');
+      setUserCarrera(user.carrera || '');
+    }
+  };
+
   const handleInscribirse = async (id: number) => {
     const result = await inscribirseCita(id);
     if (result.success) {
@@ -107,7 +116,6 @@ const Agenda: React.FC = () => {
     return misCitasList.some(c => c.id_cita === citaId);
   };
 
-  // Filtrar citas disponibles por carrera (para alumnos)
   const citasDisponibles = () => {
     let filtradas = citas;
     if (filtroCarrera) {
@@ -118,7 +126,6 @@ const Agenda: React.FC = () => {
     return filtradas;
   };
 
-  // Mis citas (solo las que esta inscrito)
   const misCitasFiltradas = misCitasList;
 
   return (
