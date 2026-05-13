@@ -39,6 +39,15 @@ function GestionCitas() {
     }
   }
 
+  const handleOpenModal = () => {
+    setOpenModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    cargarCitas()
+  }
+
   const handleSeleccionarCita = async (id_cita: number) => {
     if (!isAuthenticated()) {
       alert("Debes iniciar sesion para seleccionar una cita")
@@ -113,7 +122,7 @@ function GestionCitas() {
             <p>Administra y programa las sesiones academicas de acompañamiento.</p>
           </div>
           {(userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
-            <button className="gc-btn-nueva" onClick={() => setOpenModal(true)}>
+            <button className="gc-btn-nueva" onClick={handleOpenModal}>
               + Nueva Cita
             </button>
           )}
@@ -153,13 +162,9 @@ function GestionCitas() {
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={7} className="gc-empty">Cargando citas...</td>
-                </tr>
+                <tr><td colSpan={7} className="gc-empty">Cargando citas...</td></tr>
               ) : citasFiltradas.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="gc-empty">No hay citas disponibles</td>
-                </tr>
+                <tr><td colSpan={7} className="gc-empty">No hay citas disponibles</td></tr>
               ) : (
                 citasFiltradas.map((cita, i) => (
                   <tr key={i}>
@@ -175,12 +180,7 @@ function GestionCitas() {
                     </td>
                     <td>
                       {(userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
-                        <button 
-                          className="gc-btn-icono" 
-                          onClick={() => handleEliminarCita(cita.id_cita)}
-                          style={{ color: 'red' }}
-                          title="Eliminar cita"
-                        >
+                        <button className="gc-btn-icono" onClick={() => handleEliminarCita(cita.id_cita)} style={{ color: 'red' }} title="Eliminar cita">
                           🗑️
                         </button>
                       )}
@@ -189,9 +189,9 @@ function GestionCitas() {
                           className="gc-btn-icono" 
                           onClick={() => handleSeleccionarCita(cita.id_cita)}
                           disabled={(cita.inscritos || 0) >= (cita.capacidad || 1)}
-                          title={ (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
+                          title={(cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse"}
                         >
-                          📅 { (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
+                          📅 {(cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse"}
                         </button>
                       )}
                     </td>
@@ -207,7 +207,7 @@ function GestionCitas() {
 
       <NuevaCitaModal 
         isOpen={openModal} 
-        onClose={() => setOpenModal(false)}
+        onClose={handleCloseModal}
         onCitaCreada={cargarCitas}
       />
     </div>

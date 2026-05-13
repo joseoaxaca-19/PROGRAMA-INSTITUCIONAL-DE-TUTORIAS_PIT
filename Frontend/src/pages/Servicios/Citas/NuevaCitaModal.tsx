@@ -31,16 +31,13 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
     userName = user.nombre || user.nombre_completo || user.email?.split('@')[0] || ""
   }
 
-  // Establecer el tutor automaticamente al abrir el modal
+  // Resetear formulario cuando se abre el modal
   useEffect(() => {
-    if (isOpen && (userRole === 'tutor' || userRole === 'tutorado') && userName) {
-      setForm(prev => ({ ...prev, tutor_nombre: userName }))
-    }
-    // Resetear formulario cuando se abre
     if (isOpen) {
+      console.log("Modal abierto, reseteando formulario")
       setForm({
         tema: "",
-        tutor_nombre: userRole === 'tutor' || userRole === 'tutorado' ? userName : "",
+        tutor_nombre: (userRole === 'tutor' || userRole === 'tutorado') ? userName : "",
         fecha: "",
         hora: "",
         lugar: "",
@@ -51,7 +48,6 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
     }
   }, [isOpen, userRole, userName])
 
-  // Ajustar capacidad cuando cambia el tipo
   useEffect(() => {
     if (form.tipo === 'individual') {
       setForm(prev => ({ ...prev, capacidad: 1 }))
@@ -73,7 +69,7 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
   }
 
   const handleClose = () => {
-    console.log("Cerrando modal")
+    console.log("Cerrando modal desde NuevaCitaModal")
     onClose()
   }
 
@@ -87,7 +83,6 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
       return
     }
 
-    // Asegurar que el tutor_nombre no este vacio
     const tutorNombre = form.tutor_nombre || userName
 
     const citaData = {
@@ -105,7 +100,7 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
       if (result.success) {
         alert("Cita creada correctamente")
         if (onCitaCreada) onCitaCreada()
-        handleClose() // Cierra el modal
+        handleClose()
       } else {
         alert(result.error || "Error al crear cita")
       }
@@ -115,6 +110,9 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
       setLoading(false)
     }
   }
+
+  // Log para verificar que el modal recibe isOpen
+  console.log("NuevaCitaModal - isOpen:", isOpen)
 
   if (!isOpen) return null
 
@@ -129,6 +127,7 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
         </div>
 
         <form className="modal-form-nueva" onSubmit={handleSubmit}>
+          {/* Resto del formulario... */}
           <div className="form-row-nueva">
             <div className="form-group-nueva">
               <label>TEMA *</label>
@@ -200,9 +199,6 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
                 max="20"
                 disabled={form.tipo === 'individual'}
               />
-              {form.tipo === 'individual' && (
-                <small>Individual: capacidad 1 persona</small>
-              )}
             </div>
           </div>
 
@@ -225,7 +221,6 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
               onChange={handleChange}
               placeholder="Ej. Salon 301, Virtual"
             />
-            <small>El salon sera asignado por administracion</small>
           </div>
 
           <div className="acciones-nueva">
