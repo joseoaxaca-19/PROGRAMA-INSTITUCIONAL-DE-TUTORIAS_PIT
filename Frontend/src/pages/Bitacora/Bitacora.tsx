@@ -8,7 +8,7 @@ import {
     FormControl, InputLabel, Box, Typography, Chip, Divider
 } from '@mui/material';
 import {
-    Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon,
+    Add as AddIcon,
     ExpandMore as ExpandMoreIcon, Person as PersonIcon,
     Schedule as ScheduleIcon, LocationOn as LocationIcon
 } from '@mui/icons-material';
