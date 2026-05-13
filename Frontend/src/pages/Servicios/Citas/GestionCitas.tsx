@@ -205,7 +205,11 @@ function GestionCitas() {
         <p className="gc-total">Mostrando {citasFiltradas.length} de {citas.length} citas disponibles</p>
       </main>
 
-      <NuevaCitaModal isOpen={openModal} onClose={cargarCitas} />
+      <NuevaCitaModal 
+        isOpen={openModal} 
+        onClose={() => setOpenModal(false)}
+        onCitaCreada={cargarCitas}
+      />
     </div>
   )
 }

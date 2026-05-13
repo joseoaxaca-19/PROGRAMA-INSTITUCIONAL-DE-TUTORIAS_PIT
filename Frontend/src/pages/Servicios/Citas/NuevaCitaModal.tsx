@@ -36,6 +36,19 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
     if (isOpen && (userRole === 'tutor' || userRole === 'tutorado') && userName) {
       setForm(prev => ({ ...prev, tutor_nombre: userName }))
     }
+    // Resetear formulario cuando se abre
+    if (isOpen) {
+      setForm({
+        tema: "",
+        tutor_nombre: userRole === 'tutor' || userRole === 'tutorado' ? userName : "",
+        fecha: "",
+        hora: "",
+        lugar: "",
+        capacidad: 20,
+        tipo: "grupal",
+        carrera: ""
+      })
+    }
   }, [isOpen, userRole, userName])
 
   // Ajustar capacidad cuando cambia el tipo
@@ -60,6 +73,7 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
   }
 
   const handleClose = () => {
+    console.log("Cerrando modal")
     onClose()
   }
 
@@ -91,7 +105,7 @@ function NuevaCitaModal({ isOpen, onClose, onCitaCreada }: Props) {
       if (result.success) {
         alert("Cita creada correctamente")
         if (onCitaCreada) onCitaCreada()
-        handleClose()
+        handleClose() // Cierra el modal
       } else {
         alert(result.error || "Error al crear cita")
       }

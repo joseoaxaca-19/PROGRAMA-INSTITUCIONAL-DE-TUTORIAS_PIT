@@ -13,6 +13,11 @@
   z-index: 9999;
 }
 
+/* Ocultar el modal cuando no esta visible */
+.modal-overlay-nueva:not(.visible) {
+  display: none;
+}
+
 /* Contenido del modal - mas compacto */
 .modal-cita-nueva {
   background: white;
