@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import Footer from '../../components/Footer/Footer';
-import { obtenerMaterialesPorCategoria, obtenerMaterialesPorCarrera, obtenerCategorias } from '../../services/api';
+import { obtenerMaterialesPorCategoria } from '../../services/api';
 import './Repositorio.css';
 
 interface Material {
