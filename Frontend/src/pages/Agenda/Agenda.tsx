@@ -113,7 +113,6 @@ const Agenda: React.FC = () => {
     return cita.id_creador === userId;
   };
 
-  // Determinar el estado de la cita para el usuario
   const getEstadoUsuario = (cita: Cita) => {
     if (esCreador(cita)) {
       return { label: 'Creador', color: '#D6A600', bgColor: '#FFF3E0' };
@@ -124,13 +123,24 @@ const Agenda: React.FC = () => {
     return null;
   };
 
+  // Filtrar citas disponibles por carrera (para alumnos)
   const citasDisponibles = () => {
     let filtradas = citas;
-    if (filtroCarrera && userRole === 'alumno') {
+    // Filtrar por carrera si el filtro está activo
+    if (filtroCarrera) {
       filtradas = filtradas.filter(c => c.carrera === filtroCarrera);
+    }
+    // Para alumnos, mostrar solo citas de su carrera
+    if (userRole === 'alumno' && !filtroCarrera) {
+      filtradas = filtradas.filter(c => c.carrera === userCarrera);
     }
     return filtradas;
   };
+
+  // Filtrar mis citas (inscritas + creadas)
+  const misCitasFiltradas = misCitasList.filter(cita => {
+    return estaInscrito(cita.id_cita) || esCreador(cita);
+  });
 
   const handlePerfilUpdate = () => {
     const userStr = localStorage.getItem('user');
@@ -184,83 +194,104 @@ const Agenda: React.FC = () => {
                   <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <SearchIcon color="primary" /> Tutorias Disponibles
                   </Typography>
-                  {userRole === 'alumno' && (
-                    <FormControl size="small" sx={{ minWidth: 200 }}>
-                      <Select
-                        value={filtroCarrera}
-                        onChange={(e) => setFiltroCarrera(e.target.value)}
-                        displayEmpty
-                      >
-                        <MenuItem value="">Todas las carreras</MenuItem>
-                        <MenuItem value={userCarrera}>{userCarrera}</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
+                  <FormControl size="small" sx={{ minWidth: 200 }}>
+                    <Select
+                      value={filtroCarrera}
+                      onChange={(e) => setFiltroCarrera(e.target.value)}
+                      displayEmpty
+                    >
+                      <MenuItem value="">Todas las carreras</MenuItem>
+                      <MenuItem value="Actuaria">Actuaria</MenuItem>
+                      <MenuItem value="Arquitectura">Arquitectura</MenuItem>
+                      <MenuItem value="Ciencias Politicas y Administracion Publica">Ciencias Politicas</MenuItem>
+                      <MenuItem value="Comunicacion">Comunicacion</MenuItem>
+                      <MenuItem value="Derecho">Derecho</MenuItem>
+                      <MenuItem value="Diseño Grafico">Diseño Grafico</MenuItem>
+                      <MenuItem value="Economia">Economia</MenuItem>
+                      <MenuItem value="Enseñanza de Ingles">Enseñanza de Ingles</MenuItem>
+                      <MenuItem value="Filosofia">Filosofia</MenuItem>
+                      <MenuItem value="Historia">Historia</MenuItem>
+                      <MenuItem value="Ingenieria Civil">Ingenieria Civil</MenuItem>
+                      <MenuItem value="Lengua y Literaturas Hispanicas">Lengua y Literaturas</MenuItem>
+                      <MenuItem value="Matematicas Aplicadas y Computacion">Matematicas Aplicadas</MenuItem>
+                      <MenuItem value="Pedagogia">Pedagogia</MenuItem>
+                      <MenuItem value="Relaciones Internacionales">Relaciones Internacionales</MenuItem>
+                      <MenuItem value="Sociologia">Sociologia</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Box>
 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
-                  {citasDisponibles().map((cita) => (
-                    <Card key={cita.id_cita} className="agenda-tutoria-card">
-                      <CardContent>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                          <Box className="agenda-icon-box">
-                            <span role="img" aria-label="evento">📅</span>
+                  {citasDisponibles().length === 0 ? (
+                    <Box sx={{ textAlign: 'center', py: 4, width: '100%' }}>
+                      <Typography variant="body1" color="textSecondary">
+                        No hay tutorias disponibles para tu carrera
+                      </Typography>
+                    </Box>
+                  ) : (
+                    citasDisponibles().map((cita) => (
+                      <Card key={cita.id_cita} className="agenda-tutoria-card">
+                        <CardContent>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                            <Box className="agenda-icon-box">
+                              <span role="img" aria-label="evento">📅</span>
+                            </Box>
+                            <Chip 
+                              label={(cita.inscritos || 0) >= (cita.capacidad || 1) ? "LLENO" : `${cita.inscritos || 0}/${cita.capacidad || 1} lugares`}
+                              size="small" 
+                              sx={{ 
+                                fontWeight: 'bold',
+                                backgroundColor: (cita.inscritos || 0) >= (cita.capacidad || 1) ? '#ffebee' : '#e8f5e9',
+                                color: (cita.inscritos || 0) >= (cita.capacidad || 1) ? '#c62828' : '#2e7d32'
+                              }} 
+                            />
                           </Box>
-                          <Chip 
-                            label={(cita.inscritos || 0) >= (cita.capacidad || 1) ? "LLENO" : `${cita.inscritos || 0}/${cita.capacidad || 1} lugares`}
-                            size="small" 
-                            sx={{ 
-                              fontWeight: 'bold',
-                              backgroundColor: (cita.inscritos || 0) >= (cita.capacidad || 1) ? '#ffebee' : '#e8f5e9',
-                              color: (cita.inscritos || 0) >= (cita.capacidad || 1) ? '#c62828' : '#2e7d32'
-                            }} 
-                          />
+                          <Typography variant="h6">{cita.materia}</Typography>
+                          <Typography variant="body2" color="textSecondary">{cita.tutor_nombre}</Typography>
+                          <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                            📅 {new Date(cita.fecha).toLocaleDateString('es-MX')}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">⏰ {cita.hora}</Typography>
+                          <Typography variant="body2" color="textSecondary">📍 {cita.lugar || 'Por asignar'}</Typography>
+                          <Typography variant="body2" color="textSecondary">🎓 {cita.carrera}</Typography>
+                        </CardContent>
+                        <Box sx={{ p: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                          {!estaInscrito(cita.id_cita) && !esCreador(cita) && (
+                            <Button 
+                              variant="contained" 
+                              size="small"
+                              fullWidth
+                              disabled={(cita.inscritos || 0) >= (cita.capacidad || 1)}
+                              onClick={() => handleInscribirse(cita.id_cita)}
+                              sx={{ bgcolor: '#003DA5' }}
+                            >
+                              {(cita.inscritos || 0) >= (cita.capacidad || 1) ? 'Sin cupo' : 'Inscribirse'}
+                            </Button>
+                          )}
+                          {estaInscrito(cita.id_cita) && (
+                            <Chip label="Ya inscrito" color="success" size="small" sx={{ width: '100%' }} />
+                          )}
+                          {esCreador(cita) && (
+                            <Chip label="Creada por ti" size="small" sx={{ width: '100%', bgcolor: '#D6A600', color: '#001F54' }} />
+                          )}
                         </Box>
-                        <Typography variant="h6">{cita.materia}</Typography>
-                        <Typography variant="body2" color="textSecondary">{cita.tutor_nombre}</Typography>
-                        <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                          📅 {new Date(cita.fecha).toLocaleDateString('es-MX')}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">⏰ {cita.hora}</Typography>
-                        <Typography variant="body2" color="textSecondary">📍 {cita.lugar || 'Por asignar'}</Typography>
-                        <Typography variant="body2" color="textSecondary">🎓 {cita.carrera}</Typography>
-                      </CardContent>
-                      <Box sx={{ p: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                        {(userRole === 'alumno' || userRole === 'tutorado') && !estaInscrito(cita.id_cita) && !esCreador(cita) && (
-                          <Button 
-                            variant="contained" 
-                            size="small"
-                            fullWidth
-                            disabled={(cita.inscritos || 0) >= (cita.capacidad || 1)}
-                            onClick={() => handleInscribirse(cita.id_cita)}
-                            sx={{ bgcolor: '#003DA5' }}
-                          >
-                            {(cita.inscritos || 0) >= (cita.capacidad || 1) ? 'Sin cupo' : 'Inscribirse'}
-                          </Button>
-                        )}
-                        {estaInscrito(cita.id_cita) && (
-                          <Chip label="Inscrito" color="success" size="small" sx={{ width: '100%' }} />
-                        )}
-                        {esCreador(cita) && (
-                          <Chip label="Creada por ti" size="small" sx={{ width: '100%', bgcolor: '#D6A600', color: '#001F54' }} />
-                        )}
-                      </Box>
-                    </Card>
-                  ))}
+                      </Card>
+                    ))
+                  )}
                 </Box>
               </>
             )}
 
             {tabValue === 1 && (
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
-                {misCitasList.length === 0 ? (
+                {misCitasFiltradas.length === 0 ? (
                   <Box sx={{ textAlign: 'center', py: 4, width: '100%' }}>
                     <Typography variant="body1" color="textSecondary">
-                      No tienes tutorias registradas
+                      No estas inscrito en ninguna tutoria
                     </Typography>
                   </Box>
                 ) : (
-                  misCitasList.map((cita) => {
+                  misCitasFiltradas.map((cita) => {
                     const estado = getEstadoUsuario(cita);
                     return (
                       <Card key={cita.id_cita} className="agenda-tutoria-card">
