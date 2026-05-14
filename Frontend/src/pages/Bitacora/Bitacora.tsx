@@ -8,7 +8,7 @@ import {
     Switch, FormControlLabel, Checkbox, ListItemText
 } from '@mui/material';
 import {
-    Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon,
+    Add as AddIcon,
     ExpandMore as ExpandMoreIcon, Person as PersonIcon,
     Schedule as ScheduleIcon, LocationOn as LocationIcon,
     Download as DownloadIcon
