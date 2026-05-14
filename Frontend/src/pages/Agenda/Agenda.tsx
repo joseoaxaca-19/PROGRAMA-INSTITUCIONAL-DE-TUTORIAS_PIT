@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Sidebar from "../../components/Sidebar/Sidebar";
 import PerfilUsuario from '../../components/PerfilUsuario/PerfilUsuario';
 import { 
-  obtenerCitas, inscribirseCita, misCitas
+  obtenerCitas, inscribirseCita, misCitas, cancelarInscripcionCita
 } from '../../services/api';
 import './Agenda.css';
 
@@ -45,6 +45,7 @@ const Agenda: React.FC = () => {
   const [userRole, setUserRole] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userCarrera, setUserCarrera] = useState<string>('');
+  const [userId, setUserId] = useState<number>(0);
   const [filtroCarrera, setFiltroCarrera] = useState<string>('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
@@ -57,6 +58,7 @@ const Agenda: React.FC = () => {
           setUserRole(user.role || '');
           setUserName(user.nombre || user.nombre_completo || user.email?.split('@')[0] || 'Usuario');
           setUserCarrera(user.carrera || '');
+          setUserId(user.id || 0);
         }
         await Promise.all([cargarCitas(), cargarMisCitas()]);
       } catch (error) {
@@ -92,6 +94,15 @@ const Agenda: React.FC = () => {
     setOpenPerfilModal(true);
   };
 
+  const handlePerfilUpdate = () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setUserName(user.nombre || user.nombre_completo || user.email?.split('@')[0] || 'Usuario');
+      setUserCarrera(user.carrera || '');
+    }
+  };
+
   const handleInscribirse = async (id: number) => {
     const result = await inscribirseCita(id);
     if (result.success) {
@@ -103,25 +114,59 @@ const Agenda: React.FC = () => {
     }
   };
 
+  const handleCancelarInscripcion = async (id: number) => {
+    if (window.confirm('¿Estás seguro de que deseas cancelar tu inscripción a esta tutoría?')) {
+      const result = await cancelarInscripcionCita(id);
+      if (result.success) {
+        setSnackbar({ open: true, message: 'Has cancelado tu inscripción', severity: 'success' });
+        cargarCitas();
+        cargarMisCitas();
+      } else {
+        setSnackbar({ open: true, message: result.error || 'Error al cancelar inscripción', severity: 'error' });
+      }
+    }
+  };
+
   const estaInscrito = (citaId: number) => {
     return misCitasList.some(c => c.id_cita === citaId);
   };
 
-  const citasFiltradas = () => {
-    let filtradas = citas;
-    if (filtroCarrera && userRole === 'alumno') {
-      filtradas = filtradas.filter(c => c.carrera === filtroCarrera);
-    }
-    return filtradas;
+  const esCreador = (cita: Cita) => {
+    return cita.id_creador === userId;
   };
 
-  const handlePerfilUpdate = () => {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      setUserName(user.nombre || user.nombre_completo || user.email?.split('@')[0] || 'Usuario');
-      setUserCarrera(user.carrera || '');
+  // Verificar si el usuario puede inscribirse (solo alumno y tutorado)
+  const puedeInscribirse = () => {
+    return userRole === 'alumno' || userRole === 'tutorado';
+  };
+
+  const citasDisponibles = () => {
+    if (userRole === 'alumno') {
+      if (filtroCarrera) {
+        return citas.filter(c => c.carrera === filtroCarrera);
+      }
+      return citas.filter(c => c.carrera === userCarrera);
     }
+    return citas;
+  };
+
+  const misCitasFiltradas = () => {
+    if (userRole === 'alumno') {
+      return misCitasList;
+    }
+    return misCitasList.filter(cita => {
+      return estaInscrito(cita.id_cita) || esCreador(cita);
+    });
+  };
+
+  const getEstadoUsuario = (cita: Cita) => {
+    if (esCreador(cita)) {
+      return { label: 'Creador', color: '#D6A600', bgColor: '#FFF3E0' };
+    }
+    if (estaInscrito(cita.id_cita)) {
+      return { label: 'Inscrito', color: '#28a745', bgColor: '#E8F5E9' };
+    }
+    return null;
   };
 
   return (
@@ -174,15 +219,30 @@ const Agenda: React.FC = () => {
                         onChange={(e) => setFiltroCarrera(e.target.value)}
                         displayEmpty
                       >
-                        <MenuItem value="">Todas las carreras</MenuItem>
-                        <MenuItem value={userCarrera}>{userCarrera}</MenuItem>
+                        <MenuItem value="">Mi carrera ({userCarrera})</MenuItem>
+                        <MenuItem value="Actuaria">Actuaria</MenuItem>
+                        <MenuItem value="Arquitectura">Arquitectura</MenuItem>
+                        <MenuItem value="Ciencias Politicas y Administracion Publica">Ciencias Politicas</MenuItem>
+                        <MenuItem value="Comunicacion">Comunicacion</MenuItem>
+                        <MenuItem value="Derecho">Derecho</MenuItem>
+                        <MenuItem value="Diseño Grafico">Diseño Grafico</MenuItem>
+                        <MenuItem value="Economia">Economia</MenuItem>
+                        <MenuItem value="Enseñanza de Ingles">Enseñanza de Ingles</MenuItem>
+                        <MenuItem value="Filosofia">Filosofia</MenuItem>
+                        <MenuItem value="Historia">Historia</MenuItem>
+                        <MenuItem value="Ingenieria Civil">Ingenieria Civil</MenuItem>
+                        <MenuItem value="Lengua y Literaturas Hispanicas">Lengua y Literaturas</MenuItem>
+                        <MenuItem value="Matematicas Aplicadas y Computacion">Matematicas Aplicadas</MenuItem>
+                        <MenuItem value="Pedagogia">Pedagogia</MenuItem>
+                        <MenuItem value="Relaciones Internacionales">Relaciones Internacionales</MenuItem>
+                        <MenuItem value="Sociologia">Sociologia</MenuItem>
                       </Select>
                     </FormControl>
                   )}
                 </Box>
 
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
-                  {citasFiltradas().map((cita) => (
+                  {citasDisponibles().map((cita) => (
                     <Card key={cita.id_cita} className="agenda-tutoria-card">
                       <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -208,8 +268,8 @@ const Agenda: React.FC = () => {
                         <Typography variant="body2" color="textSecondary">📍 {cita.lugar || 'Por asignar'}</Typography>
                         <Typography variant="body2" color="textSecondary">🎓 {cita.carrera}</Typography>
                       </CardContent>
-                      <Box sx={{ p: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                        {(userRole === 'alumno' || userRole === 'tutorado') && !estaInscrito(cita.id_cita) && (
+                      <Box sx={{ p: 2 }}>
+                        {puedeInscribirse() && !estaInscrito(cita.id_cita) && !esCreador(cita) && (
                           <Button 
                             variant="contained" 
                             size="small"
@@ -221,8 +281,19 @@ const Agenda: React.FC = () => {
                             {(cita.inscritos || 0) >= (cita.capacidad || 1) ? 'Sin cupo' : 'Inscribirse'}
                           </Button>
                         )}
-                        {estaInscrito(cita.id_cita) && (
-                          <Chip label="Inscrito" color="success" size="small" sx={{ width: '100%' }} />
+                        {puedeInscribirse() && estaInscrito(cita.id_cita) && (
+                          <Button 
+                            variant="outlined" 
+                            size="small"
+                            fullWidth
+                            color="error"
+                            onClick={() => handleCancelarInscripcion(cita.id_cita)}
+                          >
+                            Cancelar inscripción
+                          </Button>
+                        )}
+                        {esCreador(cita) && (
+                          <Chip label="Creada por ti" size="small" sx={{ width: '100%', bgcolor: '#D6A600', color: '#001F54' }} />
                         )}
                       </Box>
                     </Card>
@@ -233,24 +304,53 @@ const Agenda: React.FC = () => {
 
             {tabValue === 1 && (
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }, gap: 3 }}>
-                {misCitasList.map((cita) => (
-                  <Card key={cita.id_cita} className="agenda-tutoria-card">
-                    <CardContent>
-                      <Typography variant="h6">{cita.materia}</Typography>
-                      <Typography variant="body2" color="textSecondary">{cita.tutor_nombre}</Typography>
-                      <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                        📅 {new Date(cita.fecha).toLocaleDateString('es-MX')}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">⏰ {cita.hora}</Typography>
-                      <Typography variant="body2" color="textSecondary">📍 {cita.lugar || 'Por asignar'}</Typography>
-                      <Chip 
-                        label={cita.estado === 'disponible' ? 'Activa' : 'Completada'}
-                        size="small" 
-                        sx={{ mt: 1 }}
-                      />
-                    </CardContent>
-                  </Card>
-                ))}
+                {misCitasFiltradas().map((cita) => {
+                  const estado = getEstadoUsuario(cita);
+                  return (
+                    <Card key={cita.id_cita} className="agenda-tutoria-card">
+                      <CardContent>
+                        <Typography variant="h6">{cita.materia}</Typography>
+                        <Typography variant="body2" color="textSecondary">{cita.tutor_nombre}</Typography>
+                        <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                          📅 {new Date(cita.fecha).toLocaleDateString('es-MX')}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">⏰ {cita.hora}</Typography>
+                        <Typography variant="body2" color="textSecondary">📍 {cita.lugar || 'Por asignar'}</Typography>
+                        {estado && (
+                          <Chip 
+                            label={estado.label} 
+                            size="small" 
+                            sx={{ mt: 1, bgcolor: estado.bgColor, color: estado.color, fontWeight: 'bold' }}
+                          />
+                        )}
+                        <Chip 
+                          label={cita.estado === 'disponible' ? 'Activa' : 'Completada'}
+                          size="small" 
+                          sx={{ mt: 1, ml: estado ? 1 : 0 }}
+                        />
+                        {puedeInscribirse() && estado?.label === 'Inscrito' && (
+                          <Button 
+                            variant="outlined" 
+                            size="small"
+                            fullWidth
+                            color="error"
+                            sx={{ mt: 1 }}
+                            onClick={() => handleCancelarInscripcion(cita.id_cita)}
+                          >
+                            Cancelar inscripción
+                          </Button>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+                {misCitasFiltradas().length === 0 && (
+                  <Box sx={{ textAlign: 'center', py: 4, width: '100%' }}>
+                    <Typography variant="body1" color="textSecondary">
+                      No hay tutorias registradas
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             )}
           </Container>

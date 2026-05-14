@@ -1,89 +1,180 @@
-import "./Repositorio.css"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import Navbar from "../../components/Navbar/Navbar"
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar/Navbar';
+import Footer from '../../components/Footer/Footer';
+import { obtenerMaterialesPorCategoria } from '../../services/api';
+import DescriptionIcon from '@mui/icons-material/Description';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import SchoolIcon from '@mui/icons-material/School';
+import './Repositorio.css';
 
-function Repositorio(){
-
-const navigate = useNavigate()
-
-const carreras = [
-
-"Actuaría",
-"Arquitectura",
-"Ciencia de Datos",
-"Ciencias Políticas y Administración Pública",
-"Comunicación",
-"Derecho",
-"Diseño Gráfico",
-"Economía",
-"Enseñanza de Inglés",
-"Filosofía",
-"Historia",
-"Ingeniería Civil",
-"Lengua y Literatura Hispánicas",
-"Matemáticas Aplicadas y Computación",
-"Pedagogía",
-"Relaciones Internacionales",
-"Sociología"
-
-]
-
-const [carrera,setCarrera] = useState("")
-
-const irRepositorio = () => {
-
-if(carrera !== ""){
-navigate(`/repositorio/${carrera}`)
+interface Material {
+    id_material: number;
+    titulo: string;
+    descripcion: string;
+    tipo: string;
+    archivo_url: string;
+    tamano: string;
 }
 
-}
+const Repositorio = () => {
+    const navigate = useNavigate();
+    const [seccionActiva, setSeccionActiva] = useState('documentos');
+    const [materialesDoc, setMaterialesDoc] = useState<Material[]>([]);
+    const [materialesFormacion, setMaterialesFormacion] = useState<Material[]>([]);
+    const [loading, setLoading] = useState(true);
 
-return(
+    const carreras = [
+        "Actuaría", "Arquitectura", "Ciencias Políticas y Administración Pública",
+        "Comunicación", "Derecho", "Diseño Gráfico", "Economía",
+        "Enseñanza de (Español) (Inglés) Como Lengua Extranjera", "Enseñanza de Inglés",
+        "Filosofía", "Historia", "Ingeniería Civil", "Lengua y Literaturas Hispánicas",
+        "Matemáticas Aplicadas y Computación", "Pedagogía", "Relaciones Internacionales",
+        "Sociología", "Derecho (SUAyED)", "Relaciones Internacionales (SUAyED)", "LICEL"
+    ];
 
-<div>
+    useEffect(() => {
+        cargarDatos();
+    }, []);
 
-<Navbar/>
+    const cargarDatos = async () => {
+        setLoading(true);
+        const [docRes, formacionRes] = await Promise.all([
+            obtenerMaterialesPorCategoria('documentos_institucionales'),
+            obtenerMaterialesPorCategoria('recursos_formacion')
+        ]);
+        
+        if (docRes.success) setMaterialesDoc(docRes.materiales || []);
+        if (formacionRes.success) setMaterialesFormacion(formacionRes.materiales || []);
+        
+        setLoading(false);
+    };
 
-<section className="repositorio">
+    const handleCarreraClick = (carrera: string) => {
+        navigate(`/repositorio/${encodeURIComponent(carrera)}`);
+    };
 
-<h1>Repositorio Académico</h1>
+    return (
+        <div className="repositorio-page">
+            <Navbar />
+            
+            <section className="repositorio-section">
+                <div className="repositorio-container">
+                    <h1 className="repositorio-titulo">Repositorio Académico</h1>
+                    <p className="repositorio-subtitulo">
+                        Accede a documentos institucionales, materiales académicos y recursos de formación
+                    </p>
 
-<p>
-Selecciona tu carrera para acceder a los recursos académicos disponibles.
-</p>
+                    <div className="repositorio-tabs">
+                        <button 
+                            className={`repositorio-tab ${seccionActiva === 'documentos' ? 'activo' : ''}`}
+                            onClick={() => setSeccionActiva('documentos')}
+                        >
+                            Documentos Institucionales
+                        </button>
+                        <button 
+                            className={`repositorio-tab ${seccionActiva === 'materiales' ? 'activo' : ''}`}
+                            onClick={() => setSeccionActiva('materiales')}
+                        >
+                            Materiales Académicos
+                        </button>
+                        <button 
+                            className={`repositorio-tab ${seccionActiva === 'formacion' ? 'activo' : ''}`}
+                            onClick={() => setSeccionActiva('formacion')}
+                        >
+                            Recursos de Formación
+                        </button>
+                    </div>
 
-<div className="selector">
+                    {seccionActiva === 'documentos' && (
+                        <div className="repositorio-seccion">
+                            <h2 className="seccion-titulo">Documentos Institucionales</h2>
+                            <p className="seccion-descripcion">
+                                Documentos oficiales, reglamentos y formatos del Programa Institucional de Tutorías
+                            </p>
+                            {loading ? (
+                                <div className="loading-text">Cargando documentos...</div>
+                            ) : materialesDoc.length === 0 ? (
+                                <div className="empty-text">No hay documentos disponibles</div>
+                            ) : (
+                                <div className="repositorio-grid">
+                                    {materialesDoc.map((doc) => (
+                                        <div key={doc.id_material} className="repositorio-card">
+                                            <div className="card-icon"><DescriptionIcon /></div>
+                                            <div className="card-content">
+                                                <h3 className="card-titulo">{doc.titulo}</h3>
+                                                {doc.descripcion && <p className="card-descripcion">{doc.descripcion}</p>}
+                                                <div className="card-meta">
+                                                    <span className="card-tipo">{doc.tipo}</span>
+                                                    {doc.tamano && <span className="card-tamaño">{doc.tamano}</span>}
+                                                </div>
+                                                <a href={doc.archivo_url} target="_blank" rel="noopener noreferrer" className="card-btn">
+                                                    Ver documento
+                                                </a>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
 
-<select
-value={carrera}
-onChange={(e)=>setCarrera(e.target.value)}
->
+                    {seccionActiva === 'materiales' && (
+                        <div className="repositorio-seccion">
+                            <h2 className="seccion-titulo">Materiales Académicos por Carrera</h2>
+                            <p className="seccion-descripcion">
+                                Selecciona tu carrera para acceder a materiales académicos específicos
+                            </p>
+                            <div className="carreras-grid">
+                                {carreras.map((carrera, index) => (
+                                    <div key={index} className="carrera-card" onClick={() => handleCarreraClick(carrera)}>
+                                        <div className="carrera-icon"><MenuBookIcon /></div>
+                                        <h3 className="carrera-nombre">{carrera}</h3>
+                                        <p className="carrera-descripcion">Ver materiales académicos</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
-<option value="">Selecciona tu carrera</option>
+                    {seccionActiva === 'formacion' && (
+                        <div className="repositorio-seccion">
+                            <h2 className="seccion-titulo">Recursos de Formación</h2>
+                            <p className="seccion-descripcion">
+                                Cursos, talleres y guías para la formación continua de tutores y estudiantes
+                            </p>
+                            {loading ? (
+                                <div className="loading-text">Cargando recursos...</div>
+                            ) : materialesFormacion.length === 0 ? (
+                                <div className="empty-text">No hay recursos disponibles</div>
+                            ) : (
+                                <div className="repositorio-grid">
+                                    {materialesFormacion.map((recurso) => (
+                                        <div key={recurso.id_material} className="repositorio-card">
+                                            <div className="card-icon"><SchoolIcon /></div>
+                                            <div className="card-content">
+                                                <h3 className="card-titulo">{recurso.titulo}</h3>
+                                                {recurso.descripcion && <p className="card-descripcion">{recurso.descripcion}</p>}
+                                                <div className="card-meta">
+                                                    <span className="card-tipo">{recurso.tipo}</span>
+                                                    {recurso.tamano && <span className="card-tamaño">{recurso.tamano}</span>}
+                                                </div>
+                                                <a href={recurso.archivo_url} target="_blank" rel="noopener noreferrer" className="card-btn">
+                                                    Ver recurso
+                                                </a>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </section>
 
-{carreras.map((carrera,index)=>(
+            <Footer />
+        </div>
+    );
+};
 
-<option key={index} value={carrera}>
-{carrera}
-</option>
-
-))}
-
-</select>
-
-<button onClick={irRepositorio}>
-Entrar al repositorio
-</button>
-
-</div>
-
-</section>
-
-</div>
-
-)
-
-}
-
-export default Repositorio
+export default Repositorio;

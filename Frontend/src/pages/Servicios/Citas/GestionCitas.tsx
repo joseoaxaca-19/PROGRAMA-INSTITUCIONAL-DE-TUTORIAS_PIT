@@ -3,6 +3,11 @@ import NuevaCitaModal from "./NuevaCitaModal"
 import Sidebar from "../../../components/Sidebar/Sidebar"
 import { obtenerCitas, inscribirseCita, eliminarCita, isAuthenticated, getUserRole } from "../../../services/api"
 import { useNavigate } from "react-router-dom"
+import SearchIcon from '@mui/icons-material/Search'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EventAvailableIcon from '@mui/icons-material/EventAvailable'
 import "./GestionCitas.css"
 
 function GestionCitas() {
@@ -39,9 +44,18 @@ function GestionCitas() {
     }
   }
 
+  const handleOpenModal = () => {
+    setOpenModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    cargarCitas()
+  }
+
   const handleSeleccionarCita = async (id_cita: number) => {
     if (!isAuthenticated()) {
-      alert("Debes iniciar sesion para seleccionar una cita")
+      alert("Debes iniciar sesión para seleccionar una cita")
       navigate('/')
       return
     }
@@ -60,7 +74,7 @@ function GestionCitas() {
   }
 
   const handleEliminarCita = async (id_cita: number) => {
-    if (window.confirm('¿Estas seguro de eliminar esta cita?')) {
+    if (window.confirm('¿Estás seguro de eliminar esta cita?')) {
       try {
         const result = await eliminarCita(id_cita)
         if (result.success) {
@@ -90,7 +104,7 @@ function GestionCitas() {
         <header className="gc-topbar">
           <span className="gc-breadcrumb">Panel › Citas</span>
           <div className="gc-topbar-right">
-            <span className="gc-topbar-bell">🔔</span>
+            <NotificationsIcon className="gc-topbar-bell" />
             <div className="gc-topbar-user">
               <div>
                 <p className="gc-topbar-name">Usuario</p>
@@ -109,11 +123,11 @@ function GestionCitas() {
 
         <div className="gc-header">
           <div>
-            <h1>Gestion de Citas de Tutoria</h1>
-            <p>Administra y programa las sesiones academicas de acompañamiento.</p>
+            <h1>Gestión de Citas de Tutoría</h1>
+            <p>Administra y programa las sesiones académicas de acompañamiento.</p>
           </div>
           {(userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
-            <button className="gc-btn-nueva" onClick={() => setOpenModal(true)}>
+            <button className="gc-btn-nueva" onClick={handleOpenModal}>
               + Nueva Cita
             </button>
           )}
@@ -121,7 +135,7 @@ function GestionCitas() {
 
         <div className="gc-filtros">
           <div className="gc-search">
-            <span>🔍</span>
+            <SearchIcon />
             <input
               type="text"
               placeholder="Buscar materias, tutores..."
@@ -135,7 +149,9 @@ function GestionCitas() {
             value={fechaFiltro}
             onChange={e => setFechaFiltro(e.target.value)}
           />
-          <button className="gc-btn-filtros">☰ Filtros</button>
+          <button className="gc-btn-filtros">
+            <FilterListIcon /> Filtros
+          </button>
         </div>
 
         <div className="gc-tabla-wrapper">
@@ -175,13 +191,8 @@ function GestionCitas() {
                     </td>
                     <td>
                       {(userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
-                        <button 
-                          className="gc-btn-icono" 
-                          onClick={() => handleEliminarCita(cita.id_cita)}
-                          style={{ color: 'red' }}
-                          title="Eliminar cita"
-                        >
-                          🗑️
+                        <button className="gc-btn-icono" onClick={() => handleEliminarCita(cita.id_cita)} title="Eliminar cita">
+                          <DeleteIcon />
                         </button>
                       )}
                       {(userRole === 'alumno' || userRole === 'tutorado') && (
@@ -189,9 +200,9 @@ function GestionCitas() {
                           className="gc-btn-icono" 
                           onClick={() => handleSeleccionarCita(cita.id_cita)}
                           disabled={(cita.inscritos || 0) >= (cita.capacidad || 1)}
-                          title={ (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
+                          title={(cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse"}
                         >
-                          📅 { (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
+                          <EventAvailableIcon /> {(cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse"}
                         </button>
                       )}
                     </td>
@@ -205,7 +216,11 @@ function GestionCitas() {
         <p className="gc-total">Mostrando {citasFiltradas.length} de {citas.length} citas disponibles</p>
       </main>
 
-      <NuevaCitaModal isOpen={openModal} onClose={cargarCitas} />
+      <NuevaCitaModal 
+        isOpen={openModal} 
+        onClose={handleCloseModal}
+        onCitaCreada={cargarCitas}
+      />
     </div>
   )
 }
