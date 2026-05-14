@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom"
 import "./GestionCitas.css"
 
 function GestionCitas() {
+  console.log("=== GestionCitas renderizado ===")
+  
   const [openModal, setOpenModal] = useState(false)
   const [citas, setCitas] = useState<any[]>([])
   const [busqueda, setBusqueda] = useState("")
@@ -16,16 +18,17 @@ function GestionCitas() {
 
   useEffect(() => {
     const role = getUserRole()
+    console.log("useEffect - rol obtenido:", role)
     setUserRole(role || '')
-    
-    if (role === 'admin') {
-      navigate('/admin/citas')
-    } else {
-      cargarCitas()
-    }
+    cargarCitas()
   }, [])
 
+  useEffect(() => {
+    console.log("openModal cambió a:", openModal)
+  }, [openModal])
+
   const cargarCitas = async () => {
+    console.log("Cargando citas...")
     setLoading(true)
     try {
       const data = await obtenerCitas()
@@ -37,6 +40,17 @@ function GestionCitas() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleOpenModal = () => {
+    console.log("handleOpenModal - Abriendo modal")
+    setOpenModal(true)
+  }
+
+  const handleCloseModal = () => {
+    console.log("handleCloseModal - Cerrando modal")
+    setOpenModal(false)
+    cargarCitas()
   }
 
   const handleSeleccionarCita = async (id_cita: number) => {
@@ -112,8 +126,8 @@ function GestionCitas() {
             <h1>Gestion de Citas de Tutoria</h1>
             <p>Administra y programa las sesiones academicas de acompañamiento.</p>
           </div>
-          {(userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
-            <button className="gc-btn-nueva" onClick={() => setOpenModal(true)}>
+          {userRole && (userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
+            <button className="gc-btn-nueva" onClick={handleOpenModal}>
               + Nueva Cita
             </button>
           )}
@@ -153,13 +167,9 @@ function GestionCitas() {
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={7} className="gc-empty">Cargando citas...</td>
-                </tr>
+                <tr><td colSpan={7} className="gc-empty">Cargando citas...</td></tr>
               ) : citasFiltradas.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="gc-empty">No hay citas disponibles</td>
-                </tr>
+                <tr><td colSpan={7} className="gc-empty">No hay citas disponibles</td></tr>
               ) : (
                 citasFiltradas.map((cita, i) => (
                   <tr key={i}>
@@ -175,12 +185,7 @@ function GestionCitas() {
                     </td>
                     <td>
                       {(userRole === 'admin' || userRole === 'tutor' || userRole === 'tutorado') && (
-                        <button 
-                          className="gc-btn-icono" 
-                          onClick={() => handleEliminarCita(cita.id_cita)}
-                          style={{ color: 'red' }}
-                          title="Eliminar cita"
-                        >
+                        <button className="gc-btn-icono" onClick={() => handleEliminarCita(cita.id_cita)} style={{ color: 'red' }} title="Eliminar cita">
                           🗑️
                         </button>
                       )}
@@ -189,9 +194,9 @@ function GestionCitas() {
                           className="gc-btn-icono" 
                           onClick={() => handleSeleccionarCita(cita.id_cita)}
                           disabled={(cita.inscritos || 0) >= (cita.capacidad || 1)}
-                          title={ (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
+                          title={(cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse"}
                         >
-                          📅 { (cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse" }
+                          📅 {(cita.inscritos || 0) >= (cita.capacidad || 1) ? "Sin cupo" : "Inscribirse"}
                         </button>
                       )}
                     </td>
@@ -205,7 +210,11 @@ function GestionCitas() {
         <p className="gc-total">Mostrando {citasFiltradas.length} de {citas.length} citas disponibles</p>
       </main>
 
-      <NuevaCitaModal isOpen={openModal} onClose={cargarCitas} />
+      <NuevaCitaModal 
+        isOpen={openModal} 
+        onClose={handleCloseModal}
+        onCitaCreada={cargarCitas}
+      />
     </div>
   )
 }
