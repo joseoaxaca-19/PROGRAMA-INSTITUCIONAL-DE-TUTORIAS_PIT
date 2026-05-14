@@ -5,7 +5,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, Tooltip } from '@mui/material';
-import { useTheme } from '../components/ThemeWrapper';
+import { useTheme } from "../ThemeWrapper";
 import Logo from "../../assets/icons/unam_logo.svg";
 import Login from "../../pages/Login/Login";
 import Registro from "../../pages/Registro/Registro";
