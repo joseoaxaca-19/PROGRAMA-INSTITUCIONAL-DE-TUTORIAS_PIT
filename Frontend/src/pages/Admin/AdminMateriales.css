@@ -91,4 +91,8 @@
   .admin-materiales-table-container {
     overflow-x: auto;
   }
+
+  .tu-clase-main {
+    margin-left: 0 !important;
+  }
 }

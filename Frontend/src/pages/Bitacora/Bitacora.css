@@ -330,4 +330,8 @@
     width: 100%;
     flex-direction: column;
   }
+
+  .tu-clase-main {
+    margin-left: 0 !important;
+  }
 }

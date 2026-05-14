@@ -290,4 +290,8 @@
   .btn-cancelar {
     width: 100%;
   }
+
+  .tu-clase-main {
+    margin-left: 0 !important;
+  }
 }

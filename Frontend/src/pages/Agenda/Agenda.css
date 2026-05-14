@@ -122,4 +122,8 @@
     flex-direction: column;
     gap: var(--spacing-md);
   }
+  
+  .tu-clase-main {
+    margin-left: 0 !important;
+  }
 }
