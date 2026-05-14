@@ -60,13 +60,14 @@ function App() {
           </ProtectedRoute>
         } />
         
-        {/* Rutas de administración */}
+        
         <Route path="/bitacora" element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['admin', 'tutor', 'tutorado']}>
             <Bitacora />
           </ProtectedRoute>
         } />
 
+        {/* Rutas de administración */}
         <Route path="/admin/materiales" element={
           <ProtectedRoute allowedRoles={['admin']}>
             <AdminMateriales />
