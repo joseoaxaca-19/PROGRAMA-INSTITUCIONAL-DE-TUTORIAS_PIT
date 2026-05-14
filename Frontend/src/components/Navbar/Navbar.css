@@ -123,6 +123,22 @@ body {
   font-size: 30px;
   color: #003DA5;
 }
+/*Modo obscuro*/
+
+.dark-mode-toggle {
+  margin-left: 8px;
+}
+
+.dark-mode-toggle button {
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle button:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
 
 /* ==================== RESPONSIVE MÓVIL ==================== */
 @media (max-width: 900px) {
@@ -137,9 +153,20 @@ body {
   }
 }
 
+
 @media (max-width: 768px) {
   .navbar {
     padding: 12px 20px;
+  
+  }
+  .dark-mode-toggle {
+    margin: 8px 0;
+    width: 100%;
+    text-align: center;
+  }
+  .dark-mode-toggle button {
+    width: 100%;
+    justify-content: center;
   }
 
   .hamburger {
