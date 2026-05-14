@@ -60,7 +60,6 @@ function App() {
           </ProtectedRoute>
         } />
         
-        
         <Route path="/bitacora" element={
           <ProtectedRoute allowedRoles={['admin', 'tutor', 'tutorado']}>
             <Bitacora />
