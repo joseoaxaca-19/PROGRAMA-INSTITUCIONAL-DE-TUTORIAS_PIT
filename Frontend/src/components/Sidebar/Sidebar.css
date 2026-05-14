@@ -13,11 +13,6 @@
   overflow-x: hidden;
 }
 
-/* Modo oscuro */
-body.dark-mode .sidebar {
-  background: #1a1a2e;
-}
-
 /* Scrollbar personalizado */
 .sidebar::-webkit-scrollbar {
   width: 4px;

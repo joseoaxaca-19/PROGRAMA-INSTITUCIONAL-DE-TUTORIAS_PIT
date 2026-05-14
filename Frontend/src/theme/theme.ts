@@ -22,7 +22,6 @@ const statusColors = {
   info: '#17a2b8',
 };
 
-// Tema claro
 export const lightTheme = createTheme({
   palette: {
     mode: 'light',
@@ -136,108 +135,6 @@ export const lightTheme = createTheme({
       styleOverrides: {
         indicator: {
           backgroundColor: primaryColors.main,
-          height: 3,
-        },
-      },
-    },
-  },
-});
-
-// Tema oscuro
-export const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: primaryColors,
-    secondary: secondaryColors,
-    success: { main: statusColors.success },
-    error: { main: statusColors.error },
-    warning: { main: statusColors.warning },
-    info: { main: statusColors.info },
-    background: {
-      default: '#121212',
-      paper: '#1e1e2e',
-    },
-    text: {
-      primary: '#e0e0e0',
-      secondary: '#a0a0a0',
-    },
-  },
-  typography: {
-    fontFamily: '"Lexend", "Montserrat", sans-serif',
-    h1: { fontFamily: '"Lexend", sans-serif', fontWeight: 700 },
-    h2: { fontFamily: '"Lexend", sans-serif', fontWeight: 700 },
-    h3: { fontFamily: '"Lexend", sans-serif', fontWeight: 600 },
-    h4: { fontFamily: '"Lexend", sans-serif', fontWeight: 600 },
-    h5: { fontFamily: '"Lexend", sans-serif', fontWeight: 600 },
-    h6: { fontFamily: '"Lexend", sans-serif', fontWeight: 600 },
-    button: { fontFamily: '"Montserrat", sans-serif', fontWeight: 600, textTransform: 'none' },
-  },
-  shape: {
-    borderRadius: 8,
-  },
-  spacing: 8,
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 30,
-          padding: '8px 24px',
-          fontWeight: 600,
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          background: '#1e1e2e',
-          transition: 'transform 0.2s ease',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-          },
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        rounded: {
-          borderRadius: 16,
-          background: '#1e1e2e',
-        },
-      },
-    },
-    MuiDialog: {
-      styleOverrides: {
-        paper: {
-          borderRadius: 20,
-          background: '#1e1e2e',
-        },
-      },
-    },
-    MuiTableCell: {
-      styleOverrides: {
-        head: {
-          fontWeight: 700,
-          backgroundColor: primaryColors.dark,
-          color: '#ffffff',
-        },
-      },
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-          fontWeight: 600,
-          '&.Mui-selected': {
-            color: secondaryColors.main,
-          },
-        },
-      },
-    },
-    MuiTabs: {
-      styleOverrides: {
-        indicator: {
-          backgroundColor: secondaryColors.main,
           height: 3,
         },
       },

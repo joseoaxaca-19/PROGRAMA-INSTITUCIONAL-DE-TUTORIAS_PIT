@@ -1,11 +1,7 @@
 import "./Navbar.css";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 import MenuIcon from '@mui/icons-material/Menu';
-import { IconButton, Tooltip } from '@mui/material';
-import { useTheme } from "../ThemeWrapper";
 import Logo from "../../assets/icons/unam_logo.svg";
 import Login from "../../pages/Login/Login";
 import Registro from "../../pages/Registro/Registro";
@@ -24,7 +20,6 @@ function Navbar({ onLoginClick }: NavbarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const isScrolling = useRef(false);
-  const { darkMode, toggleDarkMode } = useTheme();
 
   const getNavbarHeight = () => {
     const navbar = document.querySelector('.navbar');
@@ -211,13 +206,6 @@ function Navbar({ onLoginClick }: NavbarProps) {
                 </button>
               </div>
             )}
-          </li>
-          <li className="dark-mode-toggle">
-            <Tooltip title={darkMode ? "Modo claro" : "Modo oscuro"}>
-              <IconButton onClick={toggleDarkMode} color="inherit">
-                {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-              </IconButton>
-            </Tooltip>
           </li>
         </ul>
       </nav>

@@ -7,10 +7,6 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-body.dark-mode .footer {
-  background-color: #0d2137;
-}
-
 .footer-container {
   max-width: 1000px;
   margin: 0 auto;
