@@ -9,5 +9,6 @@ router.use(verifyToken);
 router.get('/', controller.obtenerCitas);
 router.get('/mis-citas', controller.misCitas);
 router.post('/:id/inscribirse', controller.inscribirseCita);
+router.delete('/:id/cancelar-inscripcion', controller.cancelarInscripcionCita);
 
 module.exports = router;

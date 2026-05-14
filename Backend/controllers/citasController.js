@@ -180,6 +180,40 @@ exports.inscribirseCita = async (req, res) => {
     }
 };
 
+exports.cancelarInscripcionCita = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+        
+        // Verificar si está inscrito
+        const checkInscripcion = await db.query(
+            `SELECT * FROM tr_citas_inscritos WHERE id_cita = $1 AND id_usuario = $2`,
+            [id, userId]
+        );
+        
+        if (checkInscripcion.rows.length === 0) {
+            return res.status(400).json({ success: false, error: "No estás inscrito en esta cita" });
+        }
+        
+        // Eliminar inscripción
+        await db.query(
+            `DELETE FROM tr_citas_inscritos WHERE id_cita = $1 AND id_usuario = $2`,
+            [id, userId]
+        );
+        
+        // Disminuir contador de inscritos
+        await db.query(
+            `UPDATE tr_citas SET inscritos = inscritos - 1 WHERE id_cita = $1`,
+            [id]
+        );
+        
+        res.json({ success: true, message: "Has cancelado tu inscripción correctamente" });
+    } catch (error) {
+        console.error("Error al cancelar inscripción:", error);
+        res.status(500).json({ success: false, error: "Error al cancelar inscripción" });
+    }
+};
+
 // Obtener citas donde el usuario está inscrito o es el creador
 exports.misCitas = async (req, res) => {
     try {

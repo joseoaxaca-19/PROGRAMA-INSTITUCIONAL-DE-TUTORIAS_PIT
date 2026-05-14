@@ -126,6 +126,17 @@ export const eliminarCita = async (id: number) => {
     return res.json();
 };
 
+export const cancelarInscripcionCita = async (id: number) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/citas/${id}/cancelar-inscripcion`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+        }
+    });
+    return response.json();
+};
+
 export const inscribirseCita = async (id: number) => {
     const res = await fetch(`${API_URL}/citas/${id}/inscribirse`, {
         method: 'POST',

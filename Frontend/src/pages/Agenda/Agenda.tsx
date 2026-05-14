@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Sidebar from "../../components/Sidebar/Sidebar";
 import PerfilUsuario from '../../components/PerfilUsuario/PerfilUsuario';
 import { 
-  obtenerCitas, inscribirseCita, misCitas
+  obtenerCitas, inscribirseCita, misCitas, cancelarInscripcionCita
 } from '../../services/api';
 import './Agenda.css';
 
@@ -114,6 +114,19 @@ const Agenda: React.FC = () => {
     }
   };
 
+  const handleCancelarInscripcion = async (id: number) => {
+    if (window.confirm('¿Estás seguro de que deseas cancelar tu inscripción a esta tutoría?')) {
+      const result = await cancelarInscripcionCita(id);
+      if (result.success) {
+        setSnackbar({ open: true, message: 'Has cancelado tu inscripción', severity: 'success' });
+        cargarCitas();
+        cargarMisCitas();
+      } else {
+        setSnackbar({ open: true, message: result.error || 'Error al cancelar inscripción', severity: 'error' });
+      }
+    }
+  };
+
   const estaInscrito = (citaId: number) => {
     return misCitasList.some(c => c.id_cita === citaId);
   };
@@ -122,7 +135,6 @@ const Agenda: React.FC = () => {
     return cita.id_creador === userId;
   };
 
-  // Para alumnos: filtrar citas disponibles por su carrera
   const citasDisponibles = () => {
     if (userRole === 'alumno') {
       if (filtroCarrera) {
@@ -133,12 +145,10 @@ const Agenda: React.FC = () => {
     return citas;
   };
 
-  // Para alumnos: solo mostrar citas donde está inscrito
   const misCitasFiltradas = () => {
     if (userRole === 'alumno') {
       return misCitasList;
     }
-    // Para admin, tutor, tutorado: mostrar citas donde está inscrito o es creador
     return misCitasList.filter(cita => {
       return estaInscrito(cita.id_cita) || esCreador(cita);
     });
@@ -254,7 +264,7 @@ const Agenda: React.FC = () => {
                         <Typography variant="body2" color="textSecondary">🎓 {cita.carrera}</Typography>
                       </CardContent>
                       <Box sx={{ p: 2 }}>
-                        {(userRole === 'alumno' || userRole === 'tutorado') && !estaInscrito(cita.id_cita) && !esCreador(cita) && (
+                        {!estaInscrito(cita.id_cita) && !esCreador(cita) && (
                           <Button 
                             variant="contained" 
                             size="small"
@@ -267,7 +277,15 @@ const Agenda: React.FC = () => {
                           </Button>
                         )}
                         {estaInscrito(cita.id_cita) && (
-                          <Chip label="Inscrito" color="success" size="small" sx={{ width: '100%' }} />
+                          <Button 
+                            variant="outlined" 
+                            size="small"
+                            fullWidth
+                            color="error"
+                            onClick={() => handleCancelarInscripcion(cita.id_cita)}
+                          >
+                            Cancelar inscripción
+                          </Button>
                         )}
                         {esCreador(cita) && (
                           <Chip label="Creada por ti" size="small" sx={{ width: '100%', bgcolor: '#D6A600', color: '#001F54' }} />
@@ -305,6 +323,18 @@ const Agenda: React.FC = () => {
                           size="small" 
                           sx={{ mt: 1, ml: estado ? 1 : 0 }}
                         />
+                        {userRole === 'alumno' && estado?.label === 'Inscrito' && (
+                          <Button 
+                            variant="outlined" 
+                            size="small"
+                            fullWidth
+                            color="error"
+                            sx={{ mt: 1 }}
+                            onClick={() => handleCancelarInscripcion(cita.id_cita)}
+                          >
+                            Cancelar inscripción
+                          </Button>
+                        )}
                       </CardContent>
                     </Card>
                   );
