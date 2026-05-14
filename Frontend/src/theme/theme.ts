@@ -22,63 +22,6 @@ const statusColors = {
   info: '#17a2b8',
 };
 
-// Definir sombras completas (25 elementos)
-const lightShadows = [
-  'none',
-  '0px 2px 4px rgba(0,0,0,0.05)',
-  '0px 4px 8px rgba(0,0,0,0.08)',
-  '0px 8px 16px rgba(0,0,0,0.1)',
-  '0px 12px 24px rgba(0,0,0,0.1)',
-  '0px 16px 32px rgba(0,0,0,0.1)',
-  '0px 20px 40px rgba(0,0,0,0.1)',
-  '0px 24px 48px rgba(0,0,0,0.1)',
-  '0px 28px 56px rgba(0,0,0,0.1)',
-  '0px 32px 64px rgba(0,0,0,0.1)',
-  '0px 36px 72px rgba(0,0,0,0.1)',
-  '0px 40px 80px rgba(0,0,0,0.1)',
-  '0px 44px 88px rgba(0,0,0,0.1)',
-  '0px 48px 96px rgba(0,0,0,0.1)',
-  '0px 52px 104px rgba(0,0,0,0.1)',
-  '0px 56px 112px rgba(0,0,0,0.1)',
-  '0px 60px 120px rgba(0,0,0,0.1)',
-  '0px 64px 128px rgba(0,0,0,0.1)',
-  '0px 68px 136px rgba(0,0,0,0.1)',
-  '0px 72px 144px rgba(0,0,0,0.1)',
-  '0px 76px 152px rgba(0,0,0,0.1)',
-  '0px 80px 160px rgba(0,0,0,0.1)',
-  '0px 84px 168px rgba(0,0,0,0.1)',
-  '0px 88px 176px rgba(0,0,0,0.1)',
-  '0px 92px 184px rgba(0,0,0,0.1)',
-] as const;
-
-const darkShadows = [
-  'none',
-  '0px 2px 4px rgba(0,0,0,0.2)',
-  '0px 4px 8px rgba(0,0,0,0.25)',
-  '0px 8px 16px rgba(0,0,0,0.25)',
-  '0px 12px 24px rgba(0,0,0,0.25)',
-  '0px 16px 32px rgba(0,0,0,0.25)',
-  '0px 20px 40px rgba(0,0,0,0.25)',
-  '0px 24px 48px rgba(0,0,0,0.25)',
-  '0px 28px 56px rgba(0,0,0,0.25)',
-  '0px 32px 64px rgba(0,0,0,0.25)',
-  '0px 36px 72px rgba(0,0,0,0.25)',
-  '0px 40px 80px rgba(0,0,0,0.25)',
-  '0px 44px 88px rgba(0,0,0,0.25)',
-  '0px 48px 96px rgba(0,0,0,0.25)',
-  '0px 52px 104px rgba(0,0,0,0.25)',
-  '0px 56px 112px rgba(0,0,0,0.25)',
-  '0px 60px 120px rgba(0,0,0,0.25)',
-  '0px 64px 128px rgba(0,0,0,0.25)',
-  '0px 68px 136px rgba(0,0,0,0.25)',
-  '0px 72px 144px rgba(0,0,0,0.25)',
-  '0px 76px 152px rgba(0,0,0,0.25)',
-  '0px 80px 160px rgba(0,0,0,0.25)',
-  '0px 84px 168px rgba(0,0,0,0.25)',
-  '0px 88px 176px rgba(0,0,0,0.25)',
-  '0px 92px 184px rgba(0,0,0,0.25)',
-] as const;
-
 // Tema claro
 export const lightTheme = createTheme({
   palette: {
@@ -112,7 +55,6 @@ export const lightTheme = createTheme({
     borderRadius: 8,
   },
   spacing: 8,
-  shadows: lightShadows,
   components: {
     MuiButton: {
       styleOverrides: {
@@ -141,11 +83,9 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          boxShadow: lightShadows[2],
           transition: 'transform 0.2s ease, box-shadow 0.2s ease',
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: lightShadows[4],
           },
         },
       },
@@ -236,7 +176,6 @@ export const darkTheme = createTheme({
     borderRadius: 8,
   },
   spacing: 8,
-  shadows: darkShadows,
   components: {
     MuiButton: {
       styleOverrides: {
