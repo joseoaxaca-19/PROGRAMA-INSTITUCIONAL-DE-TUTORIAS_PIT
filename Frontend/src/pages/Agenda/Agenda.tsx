@@ -135,6 +135,11 @@ const Agenda: React.FC = () => {
     return cita.id_creador === userId;
   };
 
+  // Verificar si el usuario puede inscribirse (solo alumno y tutorado)
+  const puedeInscribirse = () => {
+    return userRole === 'alumno' || userRole === 'tutorado';
+  };
+
   const citasDisponibles = () => {
     if (userRole === 'alumno') {
       if (filtroCarrera) {
@@ -264,7 +269,7 @@ const Agenda: React.FC = () => {
                         <Typography variant="body2" color="textSecondary">🎓 {cita.carrera}</Typography>
                       </CardContent>
                       <Box sx={{ p: 2 }}>
-                        {!estaInscrito(cita.id_cita) && !esCreador(cita) && (
+                        {puedeInscribirse() && !estaInscrito(cita.id_cita) && !esCreador(cita) && (
                           <Button 
                             variant="contained" 
                             size="small"
@@ -276,7 +281,7 @@ const Agenda: React.FC = () => {
                             {(cita.inscritos || 0) >= (cita.capacidad || 1) ? 'Sin cupo' : 'Inscribirse'}
                           </Button>
                         )}
-                        {estaInscrito(cita.id_cita) && (
+                        {puedeInscribirse() && estaInscrito(cita.id_cita) && (
                           <Button 
                             variant="outlined" 
                             size="small"
@@ -323,7 +328,7 @@ const Agenda: React.FC = () => {
                           size="small" 
                           sx={{ mt: 1, ml: estado ? 1 : 0 }}
                         />
-                        {userRole === 'alumno' && estado?.label === 'Inscrito' && (
+                        {puedeInscribirse() && estado?.label === 'Inscrito' && (
                           <Button 
                             variant="outlined" 
                             size="small"
