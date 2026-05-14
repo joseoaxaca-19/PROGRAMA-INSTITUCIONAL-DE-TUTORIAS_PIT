@@ -1,31 +1,21 @@
 .sidebar {
   width: 200px;
-  background: #0d1b3e;
+  background: var(--bg-dark);
   display: flex;
   flex-direction: column;
-  padding: 24px 0;
+  padding: var(--spacing-lg) 0;
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  z-index: 100;
+  z-index: var(--z-fixed);
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-/* Scrollbar personalizado */
-.sidebar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.1);
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.3);
-  border-radius: 4px;
-}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: var(--border-radius-sm); }
 
 .sidebar-logo {
   display: flex;
@@ -37,7 +27,7 @@
   width: 44px;
   height: 44px;
   background: #1a3a7c;
-  border-radius: 10px;
+  border-radius: var(--border-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,13 +65,13 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--border-radius-md);
   color: rgba(255,255,255,0.6);
   text-decoration: none;
   font-size: 13px;
-  transition: background 0.15s, color 0.15s;
+  transition: var(--transition-fast);
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-secondary);
 }
 
 .nav-item:hover {
@@ -92,7 +82,7 @@
 .nav-item.active {
   background: #1a3a7c;
   color: white;
-  border-left: 3px solid #D6A600;
+  border-left: 3px solid var(--color-secondary);
 }
 
 .sidebar-footer {
@@ -113,22 +103,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 70px;
-  }
-  
+  .sidebar { width: 70px; }
   .sidebar-user,
-  .nav-item span:first-child {
-    margin-right: 0;
-  }
-  
+  .nav-item span:first-child { margin-right: 0; }
   .sidebar-role,
   .sidebar-school,
-  .nav-item span:last-child {
-    display: none;
-  }
-  
-  .nav-item {
-    justify-content: center;
-  }
+  .nav-item span:last-child { display: none; }
+  .nav-item { justify-content: center; }
 }
